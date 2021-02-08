@@ -11,8 +11,8 @@ function makeRazorpayPayment(index) {
 }
 
 function attachPaymentListener() {
-  const button1 = $(".razor-payment-1");
-  const button2 = $(".razor-payment-2");
+  const button1 = $("[data-payment='1']");
+  const button2 = $("[data-payment='2']");
 
   const buttons = [button1, button2];
   buttons.forEach(function (button, index) {
