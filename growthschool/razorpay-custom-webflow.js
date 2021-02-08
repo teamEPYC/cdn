@@ -1,3 +1,8 @@
+// Author: Prateek Kumar
+// Email: prateek@epyc.in
+// Website: https://askprateek.com
+
+
 function makeRazorpayPayment(index) {
   var razorpayButtons = document.getElementsByClassName(
     "PaymentButton--rzp-light-standard"
