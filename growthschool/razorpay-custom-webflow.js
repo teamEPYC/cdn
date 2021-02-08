@@ -4,9 +4,7 @@
 
 
 function makeRazorpayPayment(index) {
-  var razorpayButtons = document.getElementsByClassName(
-    "PaymentButton--rzp-light-standard"
-  );
+  var razorpayButtons = $(".razorpay-payment-button .PaymentButton");
   razorpayButtons[index].click();
 }
 
@@ -16,9 +14,12 @@ function attachPaymentListener() {
 
   const buttons = [button1, button2];
   buttons.forEach(function (button, index) {
-    button.on("click", function () {
-      makeRazorpayPayment(index);
-    });
+    if (button) {
+          button.on("click", function () {
+            makeRazorpayPayment(index);
+          });
+    }
+
   });
 }
 $(document).ready(function () {
