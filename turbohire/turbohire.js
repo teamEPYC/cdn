@@ -230,6 +230,13 @@ function addClearFilterEventListener() {
       //   $(checkbox).checked = false;
       checkbox.checked = false;
     }
+    appliedFilter = {
+      ...{
+        JobTitle: {},
+        Department: {},
+        CompanyName: {},
+      },
+    };
   });
 }
 
