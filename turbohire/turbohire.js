@@ -157,10 +157,15 @@ function setFacets(data) {
 function getCheckbox(checkboxLabel, facetName) {
   let id = checkboxLabel.toLowerCase().replace(/ /g, "-");
   return `
-  <a class="dropdown-link-4 w-dropdown-link" tabindex="0" style="padding:0 0 0 16px">
-    <input class="filter-checkbox" type="checkbox" id="${id}" name="name-${id}" data-facet="${facetName}" value="${checkboxLabel}">
-    <label for="${id}" style="display: inline-block; padding:16px 16px 16px 8px" > ${checkboxLabel}</label>
-    <br>
+  <a class="dropdown-link-4 w-dropdown-link" tabindex="0" style="padding:0">
+
+    <label for="${id}" class="epyc-checkbox" style="padding:16px 16px 16px 44px">${checkboxLabel}
+          <input class="filter-checkbox" type="checkbox" id="${id}" name="name-${id}" data-facet="${facetName}" value="${checkboxLabel}">
+
+        <span class="checkmark" style="top: 18px;
+        left: 16px;"></span>
+    </label>
+    
   </a>
   `;
 }
@@ -222,7 +227,7 @@ function addClearFilterEventListener() {
     // console.log(checkboxes);
     for (var i = 0; i < checkboxes.length; i++) {
       var checkbox = checkboxes[i];
-    //   $(checkbox).checked = false;
+      //   $(checkbox).checked = false;
       checkbox.checked = false;
     }
   });
