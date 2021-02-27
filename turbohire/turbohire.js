@@ -7,49 +7,55 @@
  */
 
 var appliedFilter = {
+  JobTitle: {},
+  Department: {},
+  CompanyName: {},
+};
+var facetNames = Object.keys(appliedFilter);
+
+var jobData = [];
+
+var facets = {
   JobTitle: [],
   Department: [],
   CompanyName: [],
 };
-const facets = Object.keys(appliedFilter);
 
-var jobData = [];
+// function renderFieldCards(filterName) {
+//   var validJobs = [];
+//   jobData.forEach(function (jobItem) {
+//     if (jobItem.JobTitle.indexOf(filterName) > -1) {
+//       validJobs.push(jobItem);
+//     }
+//   });
+//   renderCards(validJobs);
+// }
 
-function renderFieldCards(filterName) {
-  var validJobs = [];
-  jobData.forEach(function (jobItem) {
-    if (jobItem.JobTitle.indexOf(filterName) > -1) {
-      validJobs.push(jobItem);
-    }
-  });
-  renderCards(validJobs);
-}
+// function renderDepartmentCards(departmentName) {
+//   var validJobs = [];
+//   jobData.forEach(function (jobItem) {
+//     if (jobItem.Department.indexOf(departmentName) > -1) {
+//       validJobs.push(jobItem);
+//     }
+//   });
+//   renderCards(validJobs);
+// }
 
-function renderDepartmentCards(departmentName) {
-  var validJobs = [];
-  jobData.forEach(function (jobItem) {
-    if (jobItem.Department.indexOf(departmentName) > -1) {
-      validJobs.push(jobItem);
-    }
-  });
-  renderCards(validJobs);
-}
-
-function renderCompanyCards(companyName) {
-  var validJobs = [];
-  jobData.forEach(function (jobItem) {
-    if (jobItem.CompanyName.indexOf(companyName) > -1) {
-      validJobs.push(jobItem);
-    }
-  });
-  renderCards(validJobs);
-}
+// function renderCompanyCards(companyName) {
+//   var validJobs = [];
+//   jobData.forEach(function (jobItem) {
+//     if (jobItem.CompanyName.indexOf(companyName) > -1) {
+//       validJobs.push(jobItem);
+//     }
+//   });
+//   renderCards(validJobs);
+// }
 
 function renderCards(jobs) {
   $("#jobs>.grid-22").empty();
-  $("#w-dropdown-list-8").empty();
-  $("#w-dropdown-list-9").empty();
-  $("#w-dropdown-list-7").empty();
+  //   $("#w-dropdown-list-8").empty();
+  //   $("#w-dropdown-list-9").empty();
+  //   $("#w-dropdown-list-7").empty();
   var departments = [];
   var companies = [];
   var fields = [];
@@ -139,28 +145,116 @@ function renderCards(jobs) {
     }
   });
 
-  departments.forEach(function (item) {
-    $("#w-dropdown-list-8").append(
-      $(
-        `<a onClick="renderDepartmentCards('${item}');" class="dropdown-link-4 w-dropdown-link" tabindex="0">${item}</a>`
-      )
-    );
-  });
+  //   departments.forEach(function (item) {
+  //     $("#w-dropdown-list-8").append(
+  //       $(
+  //         `<a onClick="renderDepartmentCards('${item}');" class="dropdown-link-4 w-dropdown-link" tabindex="0">${item}</a>`
+  //       )
+  //     );
+  //   });
 
-  companies.forEach(function (item) {
-    $("#w-dropdown-list-9").append(
-      $(
-        `<a onClick="renderCompanyCards('${item}');" class="dropdown-link-4 w-dropdown-link" tabindex="0">${item}</a>`
-      )
-    );
-  });
+  //   companies.forEach(function (item) {
+  //     $("#w-dropdown-list-9").append(
+  //       $(
+  //         `<a onClick="renderCompanyCards('${item}');" class="dropdown-link-4 w-dropdown-link" tabindex="0">${item}</a>`
+  //       )
+  //     );
+  //   });
 
-  fields.forEach(function (item) {
-    $("#w-dropdown-list-7").append(
-      $(
-        `<a onClick="renderFieldCards('${item}');" class="dropdown-link-4 w-dropdown-link" tabindex="0">${item}</a>`
-      )
-    );
+  //   fields.forEach(function (item) {
+  //     $("#w-dropdown-list-7").append(
+  //       $(
+  //         `<a onClick="renderFieldCards('${item}');" class="dropdown-link-4 w-dropdown-link" tabindex="0">${item}</a>`
+  //       )
+  //     );
+  //   });
+}
+
+function setFacets(data) {
+  var departments = {};
+  var companies = {};
+  var jobTitle = {};
+  data.forEach(function (job) {
+    departments[job.Department] = true;
+    companies[job.CompanyName] = true;
+    jobTitle[job.JobTitle] = true;
+  });
+  facets.CompanyName = Object.keys(companies);
+  facets.Department = Object.keys(departments);
+  facets.JobTitle = Object.keys(jobTitle);
+  console.log("[+] FACETS", facets);
+}
+function getCheckbox(checkboxLabel, facetName) {
+  let id = checkboxLabel.toLowerCase().replace(/ /g, "-");
+  return `
+  <a class="dropdown-link-4 w-dropdown-link" tabindex="0" style="padding:0 0 0 16px">
+    <input class="filter-checkbox" type="checkbox" id="${id}" name="name-${id}" data-facet="${facetName}" value="${checkboxLabel}">
+    <label for="${id}" style="display: inline-block; padding:16px 16px 16px 8px" > ${checkboxLabel}</label>
+    <br>
+  </a>
+  `;
+}
+function renderRefinementList(selector, data, facetName) {
+  $(selector).empty();
+  data.forEach(function (item) {
+    var checkbox = getCheckbox(item, facetName);
+    $(selector).append(checkbox);
+  });
+}
+function addFilterEventListener() {
+  const checkboxes = document.getElementsByClassName("filter-checkbox");
+  for (var i = 0; i < checkboxes.length; i++) {
+    var checkbox = checkboxes[i];
+    checkbox.addEventListener("change", (event) => {
+      //   console.log("event", event);
+      var checked = event.target.checked;
+      var facetName = event.target.dataset.facet;
+      var filterLabel = event.target.value;
+      //   console.log(facetName, filterLabel);
+      appliedFilter[facetName][filterLabel] = checked;
+
+      var appliedFilterList = {};
+
+      facetNames.forEach(function (name) {
+        var map = appliedFilter[name];
+        var list = Object.keys(appliedFilter[name]).filter(function (item) {
+          return map[item];
+        });
+        appliedFilterList[name] = list;
+      });
+
+      //   console.log("appliedFilterList", appliedFilterList);
+      filterData(appliedFilterList);
+    });
+  }
+}
+
+function filterData(appliedFilterList) {
+  var filteredJobs = [];
+  var filterJobMap = {};
+  jobData.forEach(function (job) {
+    facetNames.forEach(function (facetName) {
+      if (appliedFilterList[facetName].includes(job[facetName])) {
+        filteredJobs.push(job);
+        filterJobMap[job.jobId] = true;
+      }
+    });
+  });
+  console.log("[+] Filtered Job List", filteredJobs);
+  var jobs = filteredJobs.length > 0 ? filteredJobs : jobData;
+  renderCards(jobs);
+}
+
+function addClearFilterEventListener() {
+  $("#clear-filter").on("click", function () {
+    renderCards(jobData);
+    var checkboxes = $(".filter-checkbox");
+    // console.log(checkboxes);
+    for (var i = 0; i < checkboxes.length; i++) {
+      var checkbox = checkboxes[i];
+    //   $(checkbox).checked = false;
+      checkbox.checked = false;
+    }
   });
 }
 
@@ -183,6 +277,16 @@ $(document).ready(function () {
   };
   $.ajax(settings).done(function (response) {
     jobData = response.Result;
+    setFacets(jobData);
+    renderRefinementList("#w-dropdown-list-8", facets.Department, "Department");
+    renderRefinementList(
+      "#w-dropdown-list-9",
+      facets.CompanyName,
+      "CompanyName"
+    );
+    renderRefinementList("#w-dropdown-list-7", facets.JobTitle, "JobTitle");
+    addFilterEventListener();
+    addClearFilterEventListener();
     renderCards(response.Result);
   });
   $("#search-2").on("keyup", function () {
