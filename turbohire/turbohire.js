@@ -21,36 +21,6 @@ var facets = {
   CompanyName: [],
 };
 
-// function renderFieldCards(filterName) {
-//   var validJobs = [];
-//   jobData.forEach(function (jobItem) {
-//     if (jobItem.JobTitle.indexOf(filterName) > -1) {
-//       validJobs.push(jobItem);
-//     }
-//   });
-//   renderCards(validJobs);
-// }
-
-// function renderDepartmentCards(departmentName) {
-//   var validJobs = [];
-//   jobData.forEach(function (jobItem) {
-//     if (jobItem.Department.indexOf(departmentName) > -1) {
-//       validJobs.push(jobItem);
-//     }
-//   });
-//   renderCards(validJobs);
-// }
-
-// function renderCompanyCards(companyName) {
-//   var validJobs = [];
-//   jobData.forEach(function (jobItem) {
-//     if (jobItem.CompanyName.indexOf(companyName) > -1) {
-//       validJobs.push(jobItem);
-//     }
-//   });
-//   renderCards(validJobs);
-// }
-
 function renderCards(jobs) {
   $("#jobs>.grid-22").empty();
   //   $("#w-dropdown-list-8").empty();
