@@ -151,7 +151,7 @@ function setFacets(data) {
   });
   facets.CompanyName = Object.keys(companies);
   facets.Department = Object.keys(departments);
-  facets.JobTitle = Object.keys(jobTitle);
+  facets.JobTitle = ["Director", "Head", "VP"]; //Object.keys(jobTitle);
   console.log("[+] FACETS", facets);
 }
 function getCheckbox(checkboxLabel, facetName) {
@@ -203,18 +203,31 @@ function addFilterEventListener() {
     });
   }
 }
+function fuzzySearchInArray(string, matchArray) {
+  var result = false;
+  matchArray.forEach(function (item) {
+    // console.log(item);
+    var regex = new RegExp(item.toLowerCase(), "g");
+    // console.log(regex);
+    if (string.toLowerCase().match(regex)) {
+      result = true;
+    }
+  });
+  return result;
+}
 
 function filterData(appliedFilterList) {
   var filteredJobs = [];
   var filterJobMap = {};
   jobData.forEach(function (job) {
     facetNames.forEach(function (facetName) {
-      if (appliedFilterList[facetName].includes(job[facetName])) {
+      if (fuzzySearchInArray(job[facetName], appliedFilterList[facetName])) {
         filteredJobs.push(job);
         filterJobMap[job.jobId] = true;
       }
     });
   });
+
   console.log("[+] Filtered Job List", filteredJobs);
   var jobs = filteredJobs.length > 0 ? filteredJobs : jobData;
   renderCards(jobs);
