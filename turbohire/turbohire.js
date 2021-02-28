@@ -151,7 +151,7 @@ function setFacets(data) {
   });
   facets.CompanyName = Object.keys(companies);
   facets.Department = Object.keys(departments);
-  facets.JobTitle = Object.keys(jobTitle);
+  facets.JobTitle =  ["Director", "VP", "Head"] // Object.keys(jobTitle);
   console.log("[+] FACETS", facets);
 }
 function getCheckbox(checkboxLabel, facetName) {
@@ -196,7 +196,7 @@ function addFilterEventListener() {
           return map[item];
         });
         appliedFilterList[name] = list;
-      });
+      });      
 
       //   console.log("appliedFilterList", appliedFilterList);
       filterData(appliedFilterList);
@@ -215,6 +215,7 @@ function filterData(appliedFilterList) {
       }
     });
   });
+  
   console.log("[+] Filtered Job List", filteredJobs);
   var jobs = filteredJobs.length > 0 ? filteredJobs : jobData;
   renderCards(jobs);
