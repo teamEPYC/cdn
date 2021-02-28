@@ -196,7 +196,7 @@ function addFilterEventListener() {
           return map[item];
         });
         appliedFilterList[name] = list;
-      });
+      });      
 
       //   console.log("appliedFilterList", appliedFilterList);
       filterData(appliedFilterList);
@@ -227,7 +227,6 @@ function filterData(appliedFilterList) {
       }
     });
   });
-
   console.log("[+] Filtered Job List", filteredJobs);
   var jobs = filteredJobs.length > 0 ? filteredJobs : jobData;
   renderCards(jobs);
