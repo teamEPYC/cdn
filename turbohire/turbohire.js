@@ -151,7 +151,7 @@ function setFacets(data) {
   });
   facets.CompanyName = Object.keys(companies);
   facets.Department = Object.keys(departments);
-  facets.JobTitle =  ["Director", "VP", "Head"] // Object.keys(jobTitle);
+  facets.JobTitle = Object.keys(jobTitle);
   console.log("[+] FACETS", facets);
 }
 function getCheckbox(checkboxLabel, facetName) {
