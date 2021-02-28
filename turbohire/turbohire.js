@@ -196,7 +196,7 @@ function addFilterEventListener() {
           return map[item];
         });
         appliedFilterList[name] = list;
-      });      
+      });
 
       //   console.log("appliedFilterList", appliedFilterList);
       filterData(appliedFilterList);
@@ -251,8 +251,7 @@ function addClearFilterEventListener() {
     };
   });
 }
-
-$(document).ready(function () {
+function getDataFromTurbohire() {
   var settings = {
     async: true,
     crossDomain: true,
@@ -283,6 +282,10 @@ $(document).ready(function () {
     addClearFilterEventListener();
     renderCards(response.Result);
   });
+}
+
+$(document).ready(function () {
+  getDataFromTurbohire();
   $("#search-2").on("keyup", function () {
     var value = $(this).val().toLowerCase();
     var validJobs = [];
