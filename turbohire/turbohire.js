@@ -138,18 +138,39 @@ function fuzzySearchInArray(string, matchArray) {
   });
   return result;
 }
+function recursiveFilter(allJobs, filterList) {
+  var filteredJobs = [...allJobs];
 
-function filterData(appliedFilterList) {
-  var filteredJobs = [];
-  var filterJobMap = {};
-  jobData.forEach(function (job) {
-    facetNames.forEach(function (facetName) {
-      if (fuzzySearchInArray(job[facetName], appliedFilterList[facetName])) {
-        filteredJobs.push(job);
-        filterJobMap[job.jobId] = true;
+  facetNames.forEach(function (facetName) {
+    var thisJobs = [];
+    var filters = filterList[facetName];
+    console.log("filters", filters);
+    filteredJobs.forEach(function (job) {
+      if (fuzzySearchInArray(job[facetName], filters)) {
+        // filteredJobs.push(job);
+        thisJobs.push(job);
       }
     });
+    if (thisJobs.length) {
+      filteredJobs = [...thisJobs];
+    }
   });
+
+  return filteredJobs;
+}
+
+function filterData(appliedFilterList) {
+  var filteredJobs = recursiveFilter(jobData, appliedFilterList);
+
+  // var filterJobMap = {};
+  // jobData.forEach(function (job) {
+  //   facetNames.forEach(function (facetName) {
+  //     if (fuzzySearchInArray(job[facetName], appliedFilterList[facetName])) {
+  //       filteredJobs.push(job);
+  //       filterJobMap[job.jobId] = true;
+  //     }
+  //   });
+  // });
   console.log("[+] Filtered Job List", filteredJobs);
   var jobs = filteredJobs.length > 0 ? filteredJobs : jobData;
   renderCards(jobs);
