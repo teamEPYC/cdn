@@ -61,6 +61,14 @@ function renderCards(jobs) {
 
     $(".text-block-" + job.JobId).html(momentAgo);
   });
+  if (jobs.length == 0) {
+    $(".empty-state-new").removeClass("hide");
+    $(".view-more-div").css("display", "none");
+  } else {    
+    $(".empty-state-new").addClass("hide");
+    $(".view-more-div").css("display", "block")
+  }
+
 }
 
 function setFacets(data) {
@@ -145,14 +153,16 @@ function recursiveFilter(allJobs, filterList) {
     var thisJobs = [];
     var filters = filterList[facetName];
     console.log("filters", filters);
-    filteredJobs.forEach(function (job) {
-      if (fuzzySearchInArray(job[facetName], filters)) {
-        // filteredJobs.push(job);
-        thisJobs.push(job);
-      }
-    });
-    if (thisJobs.length) {
+    if (filters.length) {
+      filteredJobs.forEach(function (job) {
+        if (fuzzySearchInArray(job[facetName], filters)) {
+          // filteredJobs.push(job);
+          thisJobs.push(job);
+        }
+      });
+      // if (thisJobs.length) {
       filteredJobs = [...thisJobs];
+      // }
     }
   });
 
@@ -172,8 +182,8 @@ function filterData(appliedFilterList) {
   //   });
   // });
   console.log("[+] Filtered Job List", filteredJobs);
-  var jobs = filteredJobs.length > 0 ? filteredJobs : jobData;
-  renderCards(jobs);
+  // var jobs = filteredJobs.length > 0 ? filteredJobs : jobData;
+  renderCards(filteredJobs);
 }
 
 function addClearFilterEventListener() {
