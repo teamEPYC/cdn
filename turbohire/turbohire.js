@@ -48,7 +48,7 @@ function renderCards(jobs) {
           </div>
           <div class="apply-container">
               <a href="${
-                job.ApplyUrl
+                job.ApplyUrl.replace("turbohire.co","seedtoscale.com")
               }" target="_blank" class="job-apply-button w-button">Apply Now</a>
               <div class="text-block-${job.JobId}"></div>
           </div>
