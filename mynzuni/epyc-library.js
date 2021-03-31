@@ -31,7 +31,7 @@ function isEpycLoaded() {
 function main() {
 
   var APP_ID = window.APP_ID || "munzuni-development";
-  var serverURL = window.serverURL || "http://localhost:8080/api/v1";
+  var serverURL = window.serverURL || "https://dev.mynzuni.com/api/v1";
   Parse.initialize(APP_ID);
 
   Parse.serverURL = serverURL;
