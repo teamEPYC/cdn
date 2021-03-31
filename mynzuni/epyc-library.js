@@ -12,8 +12,12 @@ function showProfileDropDown(user) {
 function handleLogout() {
   var logoutButton = document.getElementById("parse-logout");
   logoutButton.addEventListener("click", function () {
-    console.log("Logme out");
-    Parse.User.logOut();
+    try {
+      Parse.User.logOut();
+
+    } catch (error) {
+      console.log("error", error);
+    }
     window.location.reload();
   })
 }
@@ -41,7 +45,7 @@ function main() {
       showProfileDropDown(user);
 
       handleLogout();
-      isEpycLoaded();
+
     }).catch(function (error) {
       console.log(error);
     })
@@ -55,4 +59,5 @@ function main() {
 if (!window.epycLoaded) {
   console.log("[+]");
   main();
+  isEpycLoaded();
 }
