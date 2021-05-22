@@ -82,6 +82,8 @@
         $('.scratch_legen').addClass('hide');
         setTimeout(function(){
           $('.chatter').addClass('active');
+          $('.fin-body').addClass('active');
+          $('.fin-heading-title').addClass('hide');
         }, 2000);
         $('#confetti_btn')[0].click();  
       }
