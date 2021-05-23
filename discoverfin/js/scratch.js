@@ -81,7 +81,7 @@
         $('.body').addClass('result');
         $('.scratch_legen').addClass('hide');
         setTimeout(function(){
-          $('.chatter').addClass('active');
+          //$('.chatter').addClass('active');
           $('.fin-body').addClass('active');
           $('.fin-heading-title').addClass('hide');
         }, 2000);
