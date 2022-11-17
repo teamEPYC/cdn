@@ -55,6 +55,25 @@ var _typeof2 = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterato
               for (var s, i = n.querySelectorAll("a")[Symbol.iterator](); !(o = (s = i.next()).done); o = !0) {
                 var c = s.value;c.textContent.includes("View your contributions in 3D, VR and IRL!") && c.parentElement.remove();
               }
+              var list = n.querySelectorAll('.ContributionCalendar-day');
+              list.forEach(function (rect) {
+                rect.setAttribute('rx',0);
+                rect.setAttribute('ry',0);
+              })
+              var days = n.querySelectorAll('.ContributionCalendar-label');
+            //   console.log("days", days);
+              days.forEach(function(elem) {
+                var value = elem.getAttribute('text-anchor');
+                // console.log("elem",elem); 
+                if (value == "start") {
+                    // console.log("REMOVING");
+                    elem.remove();
+                }
+              })
+              var parentG = n.querySelector('.js-calendar-graph-svg g');
+            //   console.log(parentG);
+              parentG.setAttribute("transform",'translate(-15, 20)');
+
             } catch (e) {
               a = !0, u = e;
             } finally {
