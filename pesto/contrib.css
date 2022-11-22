@@ -10,6 +10,9 @@
   --color-calendar-graph-day-L3-bg: hsl(116deg 20% 47%);
   --color-calendar-graph-day-L4-bg: hsl(116deg 20% 35%);
 }
+body {
+  margin: 0px;
+}
 
 rect.ContributionCalendar-day[data-level="0"] {
   fill: var(--color-calendar-graph-day-bg);
