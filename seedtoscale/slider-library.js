@@ -12,5 +12,450 @@
  * Released on: February 21, 2023
  */
 
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):(e="undefined"!=typeof globalThis?globalThis:e||self).createStoriesSlider=t()}(this,(function(){"use strict";return function(e,t={}){const i=e.querySelector(".swiper"),{autoplayDuration:s=5e3,Swiper:r,EffectCube:n,onSlidesIndexesChange:o,onAutoplayStart:a,onAutoplayStop:l}=t;let d,c,{enabled:u=!0}=t,p=0;const m=[];let f,v,h,y,b,E,S,g;const A=(e,t)=>{const i=m.indexOf(e);let r=void 0===t?s:t,n=parseInt(e.slides[e.activeIndex].getAttribute("data-duration"),10);const o=e.slides[e.activeIndex].querySelector("video");return Number.isNaN(n)&&o&&(n=1e3*o.duration),!Number.isNaN(n)&&n>0&&void 0===t&&(r=n),S=r,e.storiesSliderAutoplayTimeout=setTimeout((()=>{if(e.isEnd){if(p!==i)return;d.isEnd||d.slideNext()}else e.slideNext()}),r),a&&a(e),r},q=e=>{clearTimeout(e.storiesSliderAutoplayTimeout),l&&l(e)},T=e=>{q(e);const t=e.slides[e.activeIndex].querySelector("video");t&&(cancelAnimationFrame(c),t.pause());const i=S||s;let r=parseInt(e.slides[e.activeIndex].getAttribute("data-duration"),10);if(Number.isNaN(r)&&(r=void 0),!r&&t&&(r=1e3*t.duration),S=i-((new Date).getTime()-E),e.isEnd&&S<0)return;S<0&&(S=0);const n=1-S/(r||s),o=e.el.querySelector(`.stories-slider-pagination-bullet:nth-child(${e.activeIndex+1})`);o.querySelector("span").remove(),o.insertAdjacentHTML("beforeend",`<span style="transform:translateX(${100*n-100}%)"></span>`)},x=e=>{q(e),A(e),E=(new Date).getTime();const t=e.el.querySelector(".stories-slider-pagination-bullet-current");t&&t.classList.remove("stories-slider-pagination-bullet-current");const i=e.el.querySelector(`.stories-slider-pagination-bullet:nth-child(${e.activeIndex+1})`),s=e.slides[e.activeIndex].querySelector("video");if(s){s.currentTime=0;try{c=requestAnimationFrame((()=>{s.play()}))}catch(e){}}e.slides.forEach((e=>{e.querySelectorAll("video").forEach((e=>{e!==s&&(e.currentTime=0,cancelAnimationFrame(c),e.pause())}))})),m.filter(((e,t)=>t!==p)).forEach((e=>{e.el.querySelectorAll("video").forEach((e=>{cancelAnimationFrame(c),e.pause()}))}));const r=[...i.parentElement.children],n=[...r].filter(((e,t)=>t<r.indexOf(i))),a=[...r].filter(((e,t)=>t>r.indexOf(i)));n.forEach((e=>{e.classList.add("stories-slider-pagination-bullet-viewed"),e.querySelectorAll("span").forEach((e=>e.remove())),e.insertAdjacentHTML("beforeend","<span></span>")})),a.forEach((e=>{e.classList.remove("stories-slider-pagination-bullet-viewed","stories-slider-pagination-bullet-current"),e.querySelectorAll("span").forEach((e=>e.remove())),e.insertAdjacentHTML("beforeend","<span></span>")})),i.classList.remove("stories-slider-pagination-bullet-viewed"),i.classList.add("stories-slider-pagination-bullet-current"),[...i.children].forEach((e=>e.remove())),i.insertAdjacentHTML("beforeend","<span></span>"),i.clientWidth,i.querySelector("span").style.transform="translateX(0%)",i.querySelector("span").style.transitionDuration=`${S}ms`,o&&(cancelAnimationFrame(f),f=requestAnimationFrame((()=>{o(p,e.activeIndex)})))};return(()=>{const t=()=>{e.classList.add("stories-slider-perspective")},s=()=>{e.classList.remove("stories-slider-perspective")};d=new r(i,{modules:void 0!==n?[n]:[],effect:"cube",speed:500,threshold:5,cubeEffect:{shadow:!1},observer:!0,on:{transitionStart(){s()},sliderFirstMove(){s()},transitionEnd(){t()},init(e){e.params.resistanceRatio=.5,t()},slideChange(){const e=m[p];p=d.activeIndex;const t=m[p];q(e),A(t),x(t)}}})})(),e.querySelectorAll(".swiper .swiper").forEach(((e,t)=>{const i=new r(e,{speed:1,nested:!0,allowTouchMove:!1,observer:!0,on:{touchStart(e){v=!0,g=!1,h=(new Date).getTime(),y=setTimeout((()=>{g=!0,T(e)}),200)},touchEnd(e){clearTimeout(y),p===t&&v&&(b=(new Date).getTime()-h,g&&(e=>{if(e.isEnd&&S<0)return;E=(new Date).getTime(),A(e,S);const t=e.slides[e.activeIndex].querySelector("video");if(t)try{c=requestAnimationFrame((()=>{t.play()}))}catch(e){}const i=e.el.querySelector(`.stories-slider-pagination-bullet:nth-child(${e.activeIndex+1}) > span`);i.style.transform="translateX(0%)",i.style.transitionDuration=`${S}ms`})(e),g=!1,v=!1)},init(e){u&&(p!==t?q(e):requestAnimationFrame((()=>{x(e)})))},slideChange(e){x(e)}}});(e=>{const t=e.querySelectorAll(".swiper-slide"),i=document.createElement("div");i.classList.add("stories-slider-pagination");for(let e=0;e<t.length;e+=1){const e=document.createElement("div");e.classList.add("stories-slider-pagination-bullet"),e.appendChild(document.createElement("span")),i.appendChild(e)}e.appendChild(i)})(e),((e,t)=>{e.querySelectorAll(".swiper-slide").forEach((e=>{const i=document.createElement("div"),s=document.createElement("div");i.classList.add("stories-slider-button","stories-slider-button-prev"),s.classList.add("stories-slider-button","stories-slider-button-next"),e.appendChild(i),e.appendChild(s),i.addEventListener("click",(()=>{b>200||(t.isBeginning?d.slidePrev():t.slidePrev())})),s.addEventListener("click",(()=>{b>200||(t.isEnd?d.slideNext():t.slideNext())}))}))})(e,i),m.push(i)})),{el:e,mainSwiper:d,subSwipers:m,destroy:()=>{d&&d.destroy&&d.destroy(),m.forEach((e=>{q(e),e.el.querySelectorAll(".stories-slider-pagination, .stories-slider-pagination-bullet").forEach((e=>e.remove())),(e=>{e.el.querySelectorAll(".stories-slider-button").forEach((e=>e.remove()))})(e),e.destroy&&e.destroy()}))},slideTo:(e,t)=>{if(d&&d.slideTo&&!d.destroyed&&d.slideTo(e,0),void 0!==t){const i=m[e];i.slideTo&&!i.destroyed&&(i.activeIndex===t?x(i):i.slideTo(t,0))}},enable:()=>{u||m.forEach(((e,t)=>{t===p&&x(e)}))},disable:()=>{u=!1,m.forEach(((e,t)=>{e.el.querySelectorAll("video").forEach((e=>{cancelAnimationFrame(c),e.pause()})),t===p?T(e):q(e)}))}}}}));
-//# sourceMappingURL=stories-slider.min.js.map
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.createStoriesSlider = factory());
+})(this, (function () { 'use strict';
+
+  /* eslint-disable no-shadow */
+  function createStoriesSlider(el, params = {}) {
+    const mainSwiperEl = el.querySelector('.swiper');
+    const {
+      autoplayDuration = 5000,
+      Swiper,
+      EffectCube,
+      onSlidesIndexesChange,
+      onAutoplayStart,
+      onAutoplayStop,
+    } = params;
+    let { enabled = true } = params;
+
+    let activeSubSwiperIndex = 0;
+
+    let mainSwiper;
+    let videoRaf;
+    const subSwipers = [];
+
+    let slideIndexesChangeRaf;
+
+    let isTouched;
+    let touchStartTime;
+    let touchStartTimeout;
+    let touchHoldDuration;
+    let autoplayStartTime;
+    let autoplayTimeLeft;
+    let autoplayTouchPaused;
+
+    const startAutoplay = (swiper, durationForce) => {
+      const subSwiperIndex = subSwipers.indexOf(swiper);
+      let duration =
+        typeof durationForce === 'undefined' ? autoplayDuration : durationForce;
+      let currentSlideDuration = parseInt(
+        swiper.slides[swiper.activeIndex].getAttribute('data-duration'),
+        10,
+      );
+      const videoEl = swiper.slides[swiper.activeIndex].querySelector('video');
+      if (Number.isNaN(currentSlideDuration) && videoEl) {
+        currentSlideDuration = videoEl.duration * 1000;
+      }
+      if (
+        !Number.isNaN(currentSlideDuration) &&
+        currentSlideDuration > 0 &&
+        typeof durationForce === 'undefined'
+      ) {
+        duration = currentSlideDuration;
+      }
+      autoplayTimeLeft = duration;
+
+      swiper.storiesSliderAutoplayTimeout = setTimeout(() => {
+        if (!swiper.isEnd) {
+          swiper.slideNext();
+        } else {
+          if (activeSubSwiperIndex !== subSwiperIndex) return;
+          if (!mainSwiper.isEnd) mainSwiper.slideNext();
+        }
+      }, duration);
+
+      if (onAutoplayStart) onAutoplayStart(swiper);
+      return duration;
+    };
+    const stopAutoplay = (swiper) => {
+      clearTimeout(swiper.storiesSliderAutoplayTimeout);
+      if (onAutoplayStop) onAutoplayStop(swiper);
+    };
+    const pauseAutoplay = (swiper) => {
+      stopAutoplay(swiper);
+      // find current video
+      const videoEl = swiper.slides[swiper.activeIndex].querySelector('video');
+      if (videoEl) {
+        cancelAnimationFrame(videoRaf);
+        videoEl.pause();
+      }
+      const duration = autoplayTimeLeft || autoplayDuration;
+      let currentSlideDuration = parseInt(
+        swiper.slides[swiper.activeIndex].getAttribute('data-duration'),
+        10,
+      );
+      if (Number.isNaN(currentSlideDuration)) currentSlideDuration = undefined;
+      if (!currentSlideDuration && videoEl) {
+        currentSlideDuration = videoEl.duration * 1000;
+      }
+      autoplayTimeLeft = duration - (new Date().getTime() - autoplayStartTime);
+      if (swiper.isEnd && autoplayTimeLeft < 0) return;
+      if (autoplayTimeLeft < 0) autoplayTimeLeft = 0;
+
+      const calcTranslate =
+        1 - autoplayTimeLeft / (currentSlideDuration || autoplayDuration);
+      const currentBullet = swiper.el.querySelector(
+        `.stories-slider-pagination-bullet:nth-child(${swiper.activeIndex + 1})`,
+      );
+
+      currentBullet.querySelector('span').remove();
+      currentBullet.insertAdjacentHTML(
+        'beforeend',
+        `<span style="transform:translateX(${
+        -100 + calcTranslate * 100
+      }%)"></span>`,
+      );
+    };
+    const resumeAutoPlay = (swiper) => {
+      if (swiper.isEnd && autoplayTimeLeft < 0) return;
+      autoplayStartTime = new Date().getTime();
+
+      startAutoplay(swiper, autoplayTimeLeft);
+      // find current video
+      const videoEl = swiper.slides[swiper.activeIndex].querySelector('video');
+      if (videoEl) {
+        try {
+          videoRaf = requestAnimationFrame(() => {
+            videoEl.play();
+          });
+        } catch (err) {
+          // error
+        }
+      }
+      const bullet = swiper.el.querySelector(
+        `.stories-slider-pagination-bullet:nth-child(${
+        swiper.activeIndex + 1
+      }) > span`,
+      );
+
+      bullet.style.transform = 'translateX(0%)';
+      bullet.style.transitionDuration = `${autoplayTimeLeft}ms`;
+    };
+
+    const onSubSwiperSlideChange = (swiper) => {
+      stopAutoplay(swiper);
+      startAutoplay(swiper);
+      autoplayStartTime = new Date().getTime();
+
+      const removeBullet = swiper.el.querySelector(
+        '.stories-slider-pagination-bullet-current',
+      );
+      if (removeBullet) {
+        removeBullet.classList.remove('stories-slider-pagination-bullet-current');
+      }
+
+      const currentBullet = swiper.el.querySelector(
+        `.stories-slider-pagination-bullet:nth-child(${swiper.activeIndex + 1})`,
+      );
+      // find current video
+      const videoEl = swiper.slides[swiper.activeIndex].querySelector('video');
+      if (videoEl) {
+        videoEl.currentTime = 0;
+        try {
+          videoRaf = requestAnimationFrame(() => {
+            videoEl.play();
+          });
+        } catch (err) {
+          // error
+        }
+      }
+      // find other videos
+      swiper.slides.forEach((slideEl) => {
+        slideEl.querySelectorAll('video').forEach((vEl) => {
+          if (vEl === videoEl) return;
+          vEl.currentTime = 0;
+          cancelAnimationFrame(videoRaf);
+          vEl.pause();
+        });
+      });
+
+      subSwipers
+        .filter((s, index) => index !== activeSubSwiperIndex)
+        .forEach((s) => {
+          s.el.querySelectorAll('video').forEach((videoEl) => {
+            cancelAnimationFrame(videoRaf);
+
+            videoEl.pause();
+          });
+        });
+      const allBullets = [...currentBullet.parentElement.children];
+      const prevBullets = [...allBullets].filter(
+        (el, index) => index < allBullets.indexOf(currentBullet),
+      );
+      const nextBullets = [...allBullets].filter(
+        (el, index) => index > allBullets.indexOf(currentBullet),
+      );
+      // prev bullets
+      prevBullets.forEach((el) => {
+        el.classList.add('stories-slider-pagination-bullet-viewed');
+        el.querySelectorAll('span').forEach((e) => e.remove());
+        el.insertAdjacentHTML('beforeend', '<span></span>');
+      });
+
+      // next bullets
+      nextBullets.forEach((el) => {
+        el.classList.remove(
+          'stories-slider-pagination-bullet-viewed',
+          'stories-slider-pagination-bullet-current',
+        );
+        el.querySelectorAll('span').forEach((e) => e.remove());
+        el.insertAdjacentHTML('beforeend', '<span></span>');
+      });
+
+      // current bullet
+      currentBullet.classList.remove('stories-slider-pagination-bullet-viewed');
+      currentBullet.classList.add('stories-slider-pagination-bullet-current');
+      [...currentBullet.children].forEach((el) => el.remove());
+      currentBullet.insertAdjacentHTML('beforeend', '<span></span>');
+
+      // eslint-disable-next-line
+      currentBullet.clientWidth;
+      currentBullet.querySelector('span').style.transform = 'translateX(0%)';
+      currentBullet.querySelector(
+        'span',
+      ).style.transitionDuration = `${autoplayTimeLeft}ms`;
+
+      if (onSlidesIndexesChange) {
+        cancelAnimationFrame(slideIndexesChangeRaf);
+        slideIndexesChangeRaf = requestAnimationFrame(() => {
+          onSlidesIndexesChange(activeSubSwiperIndex, swiper.activeIndex);
+        });
+      }
+    };
+
+    const initMainSwiper = () => {
+      const setPerspectiveFix = () => {
+        el.classList.add('stories-slider-perspective');
+      };
+      const removePerspectiveFix = () => {
+        el.classList.remove('stories-slider-perspective');
+      };
+      mainSwiper = new Swiper(mainSwiperEl, {
+        modules: typeof EffectCube !== 'undefined' ? [EffectCube] : [],
+        effect: 'cube',
+        speed: 500,
+        threshold: 5,
+        cubeEffect: {
+          shadow: false,
+        },
+        observer: true,
+        on: {
+          transitionStart() {
+            removePerspectiveFix();
+          },
+          sliderFirstMove() {
+            removePerspectiveFix();
+          },
+          transitionEnd() {
+            setPerspectiveFix();
+          },
+          init(mainSwiper) {
+            mainSwiper.params.resistanceRatio = 0.5;
+            setPerspectiveFix();
+          },
+          slideChange() {
+            const prevSubSwiper = subSwipers[activeSubSwiperIndex];
+            activeSubSwiperIndex = mainSwiper.activeIndex;
+            const currentSubSwiper = subSwipers[activeSubSwiperIndex];
+            stopAutoplay(prevSubSwiper);
+            startAutoplay(currentSubSwiper);
+            onSubSwiperSlideChange(currentSubSwiper);
+          },
+        },
+      });
+    };
+
+    const initSubSwiperPagination = (subSwiperEl) => {
+      const slides = subSwiperEl.querySelectorAll('.swiper-slide');
+      const paginationContainerEl = document.createElement('div');
+      paginationContainerEl.classList.add('stories-slider-pagination');
+
+      for (let i = 0; i < slides.length; i += 1) {
+        const paginationBulletEl = document.createElement('div');
+        paginationBulletEl.classList.add('stories-slider-pagination-bullet');
+        paginationBulletEl.appendChild(document.createElement('span'));
+        paginationContainerEl.appendChild(paginationBulletEl);
+      }
+
+      subSwiperEl.appendChild(paginationContainerEl);
+    };
+    const destroySubSwiperPagination = (swiper) => {
+      swiper.el
+        .querySelectorAll(
+          '.stories-slider-pagination, .stories-slider-pagination-bullet',
+        )
+        .forEach((el) => el.remove());
+    };
+    const initSubSwiperNavigation = (subSwiperEl, swiper) => {
+      const slides = subSwiperEl.querySelectorAll('.swiper-slide');
+
+      slides.forEach((slideEl) => {
+        const navLeftEl = document.createElement('div');
+        const navRightEl = document.createElement('div');
+
+        navLeftEl.classList.add(
+          'stories-slider-button',
+          'stories-slider-button-prev',
+        );
+        navRightEl.classList.add(
+          'stories-slider-button',
+          'stories-slider-button-next',
+        );
+
+        slideEl.appendChild(navLeftEl);
+        slideEl.appendChild(navRightEl);
+
+        const onNavLeftClick = () => {
+          if (touchHoldDuration > 200) return;
+          if (swiper.isBeginning) {
+            mainSwiper.slidePrev();
+            return;
+          }
+          swiper.slidePrev();
+        };
+        const onNavRightClick = () => {
+          if (touchHoldDuration > 200) return;
+          if (swiper.isEnd) {
+            mainSwiper.slideNext();
+            return;
+          }
+          swiper.slideNext();
+        };
+
+        navLeftEl.addEventListener('click', onNavLeftClick);
+        navRightEl.addEventListener('click', onNavRightClick);
+      });
+    };
+
+    const destroySubSwiperNavigation = (swiper) => {
+      swiper.el
+        .querySelectorAll('.stories-slider-button')
+        .forEach((el) => el.remove());
+    };
+    const initSubSwipers = () => {
+      el.querySelectorAll('.swiper .swiper').forEach(
+        (subSwiperEl, subSwiperIndex) => {
+          const swiper = new Swiper(subSwiperEl, {
+            speed: 1,
+            nested: true,
+            allowTouchMove: false,
+            observer: true,
+            on: {
+              touchStart(swiper) {
+                isTouched = true;
+                autoplayTouchPaused = false;
+                touchStartTime = new Date().getTime();
+                touchStartTimeout = setTimeout(() => {
+                  autoplayTouchPaused = true;
+                  pauseAutoplay(swiper);
+                }, 200);
+              },
+              touchEnd(swiper) {
+                clearTimeout(touchStartTimeout);
+                if (activeSubSwiperIndex !== subSwiperIndex) return;
+                if (!isTouched) {
+                  return;
+                }
+                touchHoldDuration = new Date().getTime() - touchStartTime;
+                if (autoplayTouchPaused) resumeAutoPlay(swiper);
+                autoplayTouchPaused = false;
+                isTouched = false;
+              },
+              init(swiper) {
+                if (!enabled) return;
+                if (activeSubSwiperIndex !== subSwiperIndex) {
+                  stopAutoplay(swiper);
+                } else {
+                  requestAnimationFrame(() => {
+                    onSubSwiperSlideChange(swiper);
+                  });
+                }
+              },
+              slideChange(swiper) {
+                onSubSwiperSlideChange(swiper);
+              },
+            },
+          });
+
+          initSubSwiperPagination(subSwiperEl);
+
+          initSubSwiperNavigation(subSwiperEl, swiper);
+
+          subSwipers.push(swiper);
+        },
+      );
+    };
+
+    initMainSwiper();
+    initSubSwipers();
+
+    const enable = () => {
+      if (enabled) return;
+      subSwipers.forEach((subSwiper, subSwiperIndex) => {
+        if (subSwiperIndex === activeSubSwiperIndex) {
+          onSubSwiperSlideChange(subSwiper);
+        }
+      });
+    };
+
+    const disable = () => {
+      enabled = false;
+      subSwipers.forEach((subSwiper, subSwiperIndex) => {
+        subSwiper.el.querySelectorAll('video').forEach((videoEl) => {
+          cancelAnimationFrame(videoRaf);
+          videoEl.pause();
+        });
+        if (subSwiperIndex === activeSubSwiperIndex) {
+          pauseAutoplay(subSwiper);
+        } else {
+          stopAutoplay(subSwiper);
+        }
+      });
+    };
+
+    const destroy = () => {
+      if (mainSwiper && mainSwiper.destroy) mainSwiper.destroy();
+      subSwipers.forEach((subSwiper) => {
+        stopAutoplay(subSwiper);
+        destroySubSwiperPagination(subSwiper);
+        destroySubSwiperNavigation(subSwiper);
+        if (subSwiper.destroy) subSwiper.destroy();
+      });
+    };
+
+    const slideTo = (mainIndex, subIndex) => {
+      if (mainSwiper && mainSwiper.slideTo && !mainSwiper.destroyed) {
+        mainSwiper.slideTo(mainIndex, 0);
+      }
+      if (typeof subIndex !== 'undefined') {
+        const subSwiper = subSwipers[mainIndex];
+        if (subSwiper.slideTo && !subSwiper.destroyed) {
+          if (subSwiper.activeIndex === subIndex) {
+            onSubSwiperSlideChange(subSwiper);
+          } else {
+            subSwiper.slideTo(subIndex, 0);
+          }
+        }
+      }
+    };
+
+    return { el, mainSwiper, subSwipers, destroy, slideTo, enable, disable };
+  }
+
+  return createStoriesSlider;
+
+}));
+//# sourceMappingURL=stories-slider.js.map
