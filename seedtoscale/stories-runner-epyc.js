@@ -1,7 +1,8 @@
-const storiesSliderEl = document.querySelector(".stories-slider");
 //
 function main() {
-  storiesSliderEl.style.display = "flex";
+  console.log("[+] [ONLINE] STARTING LIBRARY - SWIPER");
+  const storiesSliderEl = document.querySelector(".stories-slider");
+  // storiesSliderEl.style.display = "flex";
   const storiesSlider = createStoriesSlider(storiesSliderEl, {
     Swiper,
     autoplayDuration: 5000,
