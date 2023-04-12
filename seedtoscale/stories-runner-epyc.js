@@ -1,7 +1,7 @@
 const storiesSliderEl = document.querySelector(".stories-slider");
 //
 function main() {
-  storiesSliderEl.style.display = "block";
+  storiesSliderEl.style.display = "flex";
   const storiesSlider = createStoriesSlider(storiesSliderEl, {
     Swiper,
     autoplayDuration: 5000,
@@ -17,7 +17,7 @@ function main() {
     userEl.addEventListener("click", (e) => {
       e.preventDefault();
       // add "in" class (used in demo for animated appearance)
-      
+      // storiesSliderEl.style.display = "";
       storiesSliderEl.classList.add("stories-slider-in");
       
       // console.log(storiesSlider);
