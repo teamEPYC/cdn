@@ -38,14 +38,6 @@ function main() {
     }
   });
 
-  // document.querySelector(".stories-slider").addEventListener("click", (e) => {
-  //   // disable slider as we don't need it autoplay stories while it is hidden
-  //   storiesSlider.disable();
-  //   storiesWrapper.style.opacity = 0;
-  //   // add "out" class (used in demo for animated disappearance)
-
-  //   storiesSliderEl.classList.add("stories-slider-out");
-  // });
 
   // when slider became hidden we need to remove "in" and "out" class to return it initial state
   storiesSliderEl.addEventListener("animationend", () => {
@@ -54,8 +46,14 @@ function main() {
       storiesSliderEl.classList.remove("stories-slider-out");
     }
   });
+  if (window.hasOwnProperty("storiesLoaded")) {
+    window.storiesLoaded = true;
+  }
 }
 
 $(document).ready(function () {
-  main();
+  if (!window.storiesLoaded) {
+    main();
+
+  } 
 });
