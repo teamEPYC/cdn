@@ -400,7 +400,11 @@
     };
 
     initMainSwiper();
-    initSubSwipers();
+    try {
+      initSubSwipers();
+    } catch (error) {
+      console.log(error);
+    }
 
     const enable = () => {
       if (enabled) return;
