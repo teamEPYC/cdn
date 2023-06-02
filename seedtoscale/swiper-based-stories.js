@@ -251,7 +251,7 @@
         cubeEffect: {
           shadow: false,
         },
-        observer: true,
+        observer: false,
         on: {
           transitionStart() {
             removePerspectiveFix();
