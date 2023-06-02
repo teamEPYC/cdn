@@ -252,7 +252,7 @@
           shadow: false,
         },
         observer: true,
-        virtual: true,
+        virtual: {addSlidesAfter: 1, enabled: true},
         on: {
           transitionStart() {
             removePerspectiveFix();
@@ -354,7 +354,6 @@
             nested: true,
             allowTouchMove: false,
             observer: true,
-            virtual: true,
             on: {
               touchStart(swiper) {
                 isTouched = true;
