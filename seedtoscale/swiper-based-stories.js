@@ -251,7 +251,7 @@
         cubeEffect: {
           shadow: false,
         },
-        observer: false,
+        observer: true,
         virtual: true,
         on: {
           transitionStart() {
@@ -353,7 +353,7 @@
             speed: 1,
             nested: true,
             allowTouchMove: false,
-            observer: false,
+            observer: true,
             virtual: true,
             on: {
               touchStart(swiper) {
