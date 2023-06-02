@@ -354,7 +354,7 @@
             nested: true,
             allowTouchMove: false,
             observer: true,
-            virtual: {addSlidesAfter: 0, enabled: true}
+            virtual: {addSlidesAfter: 0, enabled: true},
             on: {
               touchStart(swiper) {
                 isTouched = true;
