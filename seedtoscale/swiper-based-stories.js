@@ -288,7 +288,7 @@
             ? [EffectCube]
             : [],
         effect: !isMobileDevice ? "cube" : undefined,
-        speed: 500,
+        speed: isMobileDevice ? 500 : 500,
         threshold: 5,
         cubeEffect: {
           shadow: false,
@@ -391,7 +391,7 @@
       el.querySelectorAll(".swiper .swiper").forEach(
         (subSwiperEl, subSwiperIndex) => {
           const swiper = new Swiper(subSwiperEl, {
-            speed: isMobileDevice ? 500 : 1,
+            speed: 1,
             nested: true,
             allowTouchMove: false,
             observer: true,
@@ -503,3 +503,4 @@
 
   return createStoriesSlider;
 });
+
