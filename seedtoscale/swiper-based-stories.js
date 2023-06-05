@@ -13,14 +13,50 @@
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.createStoriesSlider = factory());
-})(this, (function () { 'use strict';
+  typeof exports === "object" && typeof module !== "undefined"
+    ? (module.exports = factory())
+    : typeof define === "function" && define.amd
+    ? define(factory)
+    : ((global =
+        typeof globalThis !== "undefined" ? globalThis : global || self),
+      (global.createStoriesSlider = factory()));
+})(this, function () {
+  "use strict";
 
   /* eslint-disable no-shadow */
   function createStoriesSlider(el, params = {}) {
-    const mainSwiperEl = el.querySelector('.swiper');
+    const isMobile = {
+      Android: function () {
+        return navigator.userAgent.match(/Android/i);
+      },
+      BlackBerry: function () {
+        return navigator.userAgent.match(/BlackBerry/i);
+      },
+      iOS: function () {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+      },
+      Opera: function () {
+        return navigator.userAgent.match(/Opera Mini/i);
+      },
+      Windows: function () {
+        return (
+          navigator.userAgent.match(/IEMobile/i) ||
+          navigator.userAgent.match(/WPDesktop/i)
+        );
+      },
+      any: function () {
+        return (
+          isMobile.Android() ||
+          isMobile.BlackBerry() ||
+          isMobile.iOS() ||
+          isMobile.Opera() ||
+          isMobile.Windows()
+        );
+      },
+    };
+    const isMobileDevice = isMobile.any();
+
+    const mainSwiperEl = el.querySelector(".swiper");
     const {
       autoplayDuration = 5000,
       Swiper,
@@ -29,6 +65,7 @@
       onAutoplayStart,
       onAutoplayStop,
     } = params;
+
     let { enabled = true } = params;
 
     let activeSubSwiperIndex = 0;
@@ -50,19 +87,19 @@
     const startAutoplay = (swiper, durationForce) => {
       const subSwiperIndex = subSwipers.indexOf(swiper);
       let duration =
-        typeof durationForce === 'undefined' ? autoplayDuration : durationForce;
+        typeof durationForce === "undefined" ? autoplayDuration : durationForce;
       let currentSlideDuration = parseInt(
-        swiper.slides[swiper.activeIndex].getAttribute('data-duration'),
-        10,
+        swiper.slides[swiper.activeIndex].getAttribute("data-duration"),
+        10
       );
-      const videoEl = swiper.slides[swiper.activeIndex].querySelector('video');
+      const videoEl = swiper.slides[swiper.activeIndex].querySelector("video");
       if (Number.isNaN(currentSlideDuration) && videoEl) {
         currentSlideDuration = videoEl.duration * 1000;
       }
       if (
         !Number.isNaN(currentSlideDuration) &&
         currentSlideDuration > 0 &&
-        typeof durationForce === 'undefined'
+        typeof durationForce === "undefined"
       ) {
         duration = currentSlideDuration;
       }
@@ -87,15 +124,15 @@
     const pauseAutoplay = (swiper) => {
       stopAutoplay(swiper);
       // find current video
-      const videoEl = swiper.slides[swiper.activeIndex].querySelector('video');
+      const videoEl = swiper.slides[swiper.activeIndex].querySelector("video");
       if (videoEl) {
         cancelAnimationFrame(videoRaf);
         videoEl.pause();
       }
       const duration = autoplayTimeLeft || autoplayDuration;
       let currentSlideDuration = parseInt(
-        swiper.slides[swiper.activeIndex].getAttribute('data-duration'),
-        10,
+        swiper.slides[swiper.activeIndex].getAttribute("data-duration"),
+        10
       );
       if (Number.isNaN(currentSlideDuration)) currentSlideDuration = undefined;
       if (!currentSlideDuration && videoEl) {
@@ -108,15 +145,15 @@
       const calcTranslate =
         1 - autoplayTimeLeft / (currentSlideDuration || autoplayDuration);
       const currentBullet = swiper.el.querySelector(
-        `.stories-slider-pagination-bullet:nth-child(${swiper.activeIndex + 1})`,
+        `.stories-slider-pagination-bullet:nth-child(${swiper.activeIndex + 1})`
       );
 
-      currentBullet.querySelector('span').remove();
+      currentBullet.querySelector("span").remove();
       currentBullet.insertAdjacentHTML(
-        'beforeend',
+        "beforeend",
         `<span style="transform:translateX(${
-        -100 + calcTranslate * 100
-      }%)"></span>`,
+          -100 + calcTranslate * 100
+        }%)"></span>`
       );
     };
     const resumeAutoPlay = (swiper) => {
@@ -125,7 +162,7 @@
 
       startAutoplay(swiper, autoplayTimeLeft);
       // find current video
-      const videoEl = swiper.slides[swiper.activeIndex].querySelector('video');
+      const videoEl = swiper.slides[swiper.activeIndex].querySelector("video");
       if (videoEl) {
         try {
           videoRaf = requestAnimationFrame(() => {
@@ -137,11 +174,11 @@
       }
       const bullet = swiper.el.querySelector(
         `.stories-slider-pagination-bullet:nth-child(${
-        swiper.activeIndex + 1
-      }) > span`,
+          swiper.activeIndex + 1
+        }) > span`
       );
 
-      bullet.style.transform = 'translateX(0%)';
+      bullet.style.transform = "translateX(0%)";
       bullet.style.transitionDuration = `${autoplayTimeLeft}ms`;
     };
 
@@ -151,17 +188,19 @@
       autoplayStartTime = new Date().getTime();
 
       const removeBullet = swiper.el.querySelector(
-        '.stories-slider-pagination-bullet-current',
+        ".stories-slider-pagination-bullet-current"
       );
       if (removeBullet) {
-        removeBullet.classList.remove('stories-slider-pagination-bullet-current');
+        removeBullet.classList.remove(
+          "stories-slider-pagination-bullet-current"
+        );
       }
 
       const currentBullet = swiper.el.querySelector(
-        `.stories-slider-pagination-bullet:nth-child(${swiper.activeIndex + 1})`,
+        `.stories-slider-pagination-bullet:nth-child(${swiper.activeIndex + 1})`
       );
       // find current video
-      const videoEl = swiper.slides[swiper.activeIndex].querySelector('video');
+      const videoEl = swiper.slides[swiper.activeIndex].querySelector("video");
       if (videoEl) {
         videoEl.currentTime = 0;
         try {
@@ -174,7 +213,7 @@
       }
       // find other videos
       swiper.slides.forEach((slideEl) => {
-        slideEl.querySelectorAll('video').forEach((vEl) => {
+        slideEl.querySelectorAll("video").forEach((vEl) => {
           if (vEl === videoEl) return;
           vEl.currentTime = 0;
           cancelAnimationFrame(videoRaf);
@@ -185,7 +224,7 @@
       subSwipers
         .filter((s, index) => index !== activeSubSwiperIndex)
         .forEach((s) => {
-          s.el.querySelectorAll('video').forEach((videoEl) => {
+          s.el.querySelectorAll("video").forEach((videoEl) => {
             cancelAnimationFrame(videoRaf);
 
             videoEl.pause();
@@ -193,39 +232,39 @@
         });
       const allBullets = [...currentBullet.parentElement.children];
       const prevBullets = [...allBullets].filter(
-        (el, index) => index < allBullets.indexOf(currentBullet),
+        (el, index) => index < allBullets.indexOf(currentBullet)
       );
       const nextBullets = [...allBullets].filter(
-        (el, index) => index > allBullets.indexOf(currentBullet),
+        (el, index) => index > allBullets.indexOf(currentBullet)
       );
       // prev bullets
       prevBullets.forEach((el) => {
-        el.classList.add('stories-slider-pagination-bullet-viewed');
-        el.querySelectorAll('span').forEach((e) => e.remove());
-        el.insertAdjacentHTML('beforeend', '<span></span>');
+        el.classList.add("stories-slider-pagination-bullet-viewed");
+        el.querySelectorAll("span").forEach((e) => e.remove());
+        el.insertAdjacentHTML("beforeend", "<span></span>");
       });
 
       // next bullets
       nextBullets.forEach((el) => {
         el.classList.remove(
-          'stories-slider-pagination-bullet-viewed',
-          'stories-slider-pagination-bullet-current',
+          "stories-slider-pagination-bullet-viewed",
+          "stories-slider-pagination-bullet-current"
         );
-        el.querySelectorAll('span').forEach((e) => e.remove());
-        el.insertAdjacentHTML('beforeend', '<span></span>');
+        el.querySelectorAll("span").forEach((e) => e.remove());
+        el.insertAdjacentHTML("beforeend", "<span></span>");
       });
 
       // current bullet
-      currentBullet.classList.remove('stories-slider-pagination-bullet-viewed');
-      currentBullet.classList.add('stories-slider-pagination-bullet-current');
+      currentBullet.classList.remove("stories-slider-pagination-bullet-viewed");
+      currentBullet.classList.add("stories-slider-pagination-bullet-current");
       [...currentBullet.children].forEach((el) => el.remove());
-      currentBullet.insertAdjacentHTML('beforeend', '<span></span>');
+      currentBullet.insertAdjacentHTML("beforeend", "<span></span>");
 
       // eslint-disable-next-line
       currentBullet.clientWidth;
-      currentBullet.querySelector('span').style.transform = 'translateX(0%)';
+      currentBullet.querySelector("span").style.transform = "translateX(0%)";
       currentBullet.querySelector(
-        'span',
+        "span"
       ).style.transitionDuration = `${autoplayTimeLeft}ms`;
 
       if (onSlidesIndexesChange) {
@@ -238,14 +277,17 @@
 
     const initMainSwiper = () => {
       const setPerspectiveFix = () => {
-        el.classList.add('stories-slider-perspective');
+        el.classList.add("stories-slider-perspective");
       };
       const removePerspectiveFix = () => {
-        el.classList.remove('stories-slider-perspective');
+        el.classList.remove("stories-slider-perspective");
       };
       mainSwiper = new Swiper(mainSwiperEl, {
-        modules: typeof EffectCube !== 'undefined' ? [EffectCube] : [],
-        effect: 'cube',
+        modules:
+          typeof EffectCube !== "undefined" && isMobileDevice
+            ? [EffectCube]
+            : [],
+        effect: !isMobileDevice ? "cube" : undefined,
         speed: 500,
         threshold: 5,
         cubeEffect: {
@@ -279,14 +321,14 @@
     };
 
     const initSubSwiperPagination = (subSwiperEl) => {
-      const slides = subSwiperEl.querySelectorAll('.swiper-slide');
-      const paginationContainerEl = document.createElement('div');
-      paginationContainerEl.classList.add('stories-slider-pagination');
+      const slides = subSwiperEl.querySelectorAll(".swiper-slide");
+      const paginationContainerEl = document.createElement("div");
+      paginationContainerEl.classList.add("stories-slider-pagination");
 
       for (let i = 0; i < slides.length; i += 1) {
-        const paginationBulletEl = document.createElement('div');
-        paginationBulletEl.classList.add('stories-slider-pagination-bullet');
-        paginationBulletEl.appendChild(document.createElement('span'));
+        const paginationBulletEl = document.createElement("div");
+        paginationBulletEl.classList.add("stories-slider-pagination-bullet");
+        paginationBulletEl.appendChild(document.createElement("span"));
         paginationContainerEl.appendChild(paginationBulletEl);
       }
 
@@ -295,24 +337,24 @@
     const destroySubSwiperPagination = (swiper) => {
       swiper.el
         .querySelectorAll(
-          '.stories-slider-pagination, .stories-slider-pagination-bullet',
+          ".stories-slider-pagination, .stories-slider-pagination-bullet"
         )
         .forEach((el) => el.remove());
     };
     const initSubSwiperNavigation = (subSwiperEl, swiper) => {
-      const slides = subSwiperEl.querySelectorAll('.swiper-slide');
+      const slides = subSwiperEl.querySelectorAll(".swiper-slide");
 
       slides.forEach((slideEl) => {
-        const navLeftEl = document.createElement('div');
-        const navRightEl = document.createElement('div');
+        const navLeftEl = document.createElement("div");
+        const navRightEl = document.createElement("div");
 
         navLeftEl.classList.add(
-          'stories-slider-button',
-          'stories-slider-button-prev',
+          "stories-slider-button",
+          "stories-slider-button-prev"
         );
         navRightEl.classList.add(
-          'stories-slider-button',
-          'stories-slider-button-next',
+          "stories-slider-button",
+          "stories-slider-button-next"
         );
 
         slideEl.appendChild(navLeftEl);
@@ -335,21 +377,21 @@
           swiper.slideNext();
         };
 
-        navLeftEl.addEventListener('click', onNavLeftClick);
-        navRightEl.addEventListener('click', onNavRightClick);
+        navLeftEl.addEventListener("click", onNavLeftClick);
+        navRightEl.addEventListener("click", onNavRightClick);
       });
     };
 
     const destroySubSwiperNavigation = (swiper) => {
       swiper.el
-        .querySelectorAll('.stories-slider-button')
+        .querySelectorAll(".stories-slider-button")
         .forEach((el) => el.remove());
     };
     const initSubSwipers = () => {
-      el.querySelectorAll('.swiper .swiper').forEach(
+      el.querySelectorAll(".swiper .swiper").forEach(
         (subSwiperEl, subSwiperIndex) => {
           const swiper = new Swiper(subSwiperEl, {
-            speed: 1,
+            speed: isMobileDevice ? 500 : 1,
             nested: true,
             allowTouchMove: false,
             observer: true,
@@ -395,7 +437,7 @@
           initSubSwiperNavigation(subSwiperEl, swiper);
 
           subSwipers.push(swiper);
-        },
+        }
       );
     };
 
@@ -418,7 +460,7 @@
     const disable = () => {
       enabled = false;
       subSwipers.forEach((subSwiper, subSwiperIndex) => {
-        subSwiper.el.querySelectorAll('video').forEach((videoEl) => {
+        subSwiper.el.querySelectorAll("video").forEach((videoEl) => {
           cancelAnimationFrame(videoRaf);
           videoEl.pause();
         });
@@ -444,7 +486,7 @@
       if (mainSwiper && mainSwiper.slideTo && !mainSwiper.destroyed) {
         mainSwiper.slideTo(mainIndex, 0);
       }
-      if (typeof subIndex !== 'undefined') {
+      if (typeof subIndex !== "undefined") {
         const subSwiper = subSwipers[mainIndex];
         if (subSwiper.slideTo && !subSwiper.destroyed) {
           if (subSwiper.activeIndex === subIndex) {
@@ -460,6 +502,4 @@
   }
 
   return createStoriesSlider;
-
-}));
-//# sourceMappingURL=stories-slider.js.map
+});
