@@ -5,7 +5,7 @@ function main() {
   storiesSliderEl.style.display = "flex";
   const storiesSlider = createStoriesSlider(storiesSliderEl, {
     Swiper,
-    autoplayDuration: 5000,
+    autoplayDuration: 500000,
     enabled: false,
     // onSlidesIndexesChange(mainIndex, subIndex) {
     //   console.log({ mainIndex, subIndex });
