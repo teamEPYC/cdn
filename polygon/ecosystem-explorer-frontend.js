@@ -1,178 +1,12 @@
-"use strict";
-(() => {
-  // bin/live-reload.js
-  new EventSource(`${"http://localhost:3000"}/esbuild`).addEventListener("change", () => location.reload());
-
-  // src/constants.ts
-  var BASE_URL = "https://explorer-backend-1.onrender.com";
-  var CHAINS = {
-    zkevm: "Polygon zkEVM",
-    pos: "Polygon POS",
-    cdk: "Polygon CDK",
-    id: "Polygon ID",
-    miden: "Polygon Miden"
-  };
-  var TYPES = {
-    dapps: "dApps",
-    solution_providers: "Solution Providers",
-    ecosystem_enablers: "Ecosystem Enablers",
-    enterprises: "Enterprises",
-    chains: "Chains"
-  };
-  var SORTS = { ascending: "ascending", descending: "descending" };
-  var TABS = {
-    public_chains: "Public Chains",
-    app_specific_chains: "App Specific Chains",
-    decentralized_identity: "Decentralized Identity"
-  };
-  var FILTERS_CONTAINER_IDENTIFIER = "#filter-wrapper";
-  var LIST_CONTAINER_IDENTIFIER = "#list-wrapper";
-  var LIST_NEWS_CONTAINER_IDENTIFIER = "#list-news-wrapper";
-  var CHAIN_TYPE_OPTIONS = {
-    "Polygon zkEVM": [
-      TYPES.dapps,
-      TYPES.solution_providers,
-      TYPES.ecosystem_enablers,
-      TYPES.enterprises
-    ],
-    "Polygon POS": [
-      TYPES.dapps,
-      TYPES.solution_providers,
-      TYPES.ecosystem_enablers,
-      TYPES.enterprises
-    ],
-    "Polygon CDK": [TYPES.chains, TYPES.solution_providers],
-    "Polygon ID": [TYPES.dapps, TYPES.solution_providers]
-  };
-
-  // src/state.ts
-  function store(data = {}, name = "store") {
-    let changeCount = 0;
-    function emit(type, detail) {
-      const event = new CustomEvent(type, {
-        bubbles: true,
-        cancelable: true,
-        detail
-      });
-      if (changeCount > 0) {
-        document.dispatchEvent(event);
-        changeCount = 0;
-      }
-    }
-    function handler(name2, data2) {
-      return {
-        get: function(obj, prop) {
-          if (prop === "_isProxy")
-            return true;
-          if (["object", "array"].includes(
-            Object.prototype.toString.call(obj[prop]).slice(8, -1).toLowerCase()
-          ) && !obj[prop]._isProxy) {
-            obj[prop] = new Proxy(obj[prop], handler(name2, data2));
-          }
-          return obj[prop];
-        },
-        set: function(obj, prop, value) {
-          if (obj[prop] === value)
-            return true;
-          obj[prop] = value;
-          changeCount += 1;
-          return true;
-        },
-        deleteProperty: function(obj, prop) {
-          delete obj[prop];
-          changeCount += 1;
-          return true;
-        }
-      };
-    }
-    const setState2 = (newData) => {
-      console.log("ran setState");
-      for (const prop in newData) {
-        if (newData.hasOwnProperty(prop)) {
-          data[prop] = newData[prop];
-        }
-      }
-      changeCount += 1;
-      emit(name, data);
-    };
-    return { state: new Proxy(data, handler(name, data)), setState: setState2 };
-  }
-  var { state, setState } = store(
-    {
-      tab: TABS.public_chains,
-      chain: CHAINS.zkevm,
-      type: TYPES.dapps,
-      categories: [],
-      sort: "ascending",
-      query: "",
-      after: 0,
-      limit: 9
-    },
-    "filters"
-  );
-
-  // src/utils/logger.ts
-  var logger = {
-    log: (data) => {
-      console.log(data);
-    },
-    deep: (data) => {
-      console.dir(data);
-    },
-    info: (data) => {
-      console.info(data);
-    },
-    warn: (data) => {
-      console.warn(data);
-    },
-    error: (data) => {
-      console.error(data);
-    }
-  };
-
-  // src/utils/data.ts
-  var buildQueryString = (params) => {
-    return Object.entries(params).map(([key, value]) => {
-      if (Array.isArray(value)) {
-        return value.map((element) => `${encodeURIComponent(key)}=${encodeURIComponent(element)}`).join("&");
-      }
-      return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-    }).join("&");
-  };
-  var fetchData = async (url, method, body) => {
-    const options = {
-      method,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    };
-    if (body) {
-      options.body = body;
-    }
-    const response = await fetch(`${BASE_URL}/${url}`, options);
-    const responseJSON = await response.json();
-    logger.deep(responseJSON);
-    return responseJSON;
-  };
-  var getCompanies = async (params) => {
-    logger.deep(params);
-    const queryString = buildQueryString(params);
-    return fetchData(`companies?${queryString}`, "GET");
-  };
-
-  // src/utils/template.ts
-  var generateFiltersHTML = (total) => {
-    const categories = state["categories"];
-    const innerHTML = `
+"use strict";(()=>{var E="https://explorer-backend-1.onrender.com",l={zkevm:"Polygon zkEVM",pos:"Polygon POS",cdk:"Polygon CDK",id:"Polygon ID",miden:"Polygon Miden"},r={dapps:"dApps",solution_providers:"Solution Providers",ecosystem_enablers:"Ecosystem Enablers",enterprises:"Enterprises",chains:"Chains"},x={ascending:"ascending",descending:"descending"},m={public_chains:"Public Chains",app_specific_chains:"App Specific Chains",decentralized_identity:"Decentralized Identity"},_="#filter-wrapper",b="#list-wrapper",N="#list-news-wrapper",q={"Polygon zkEVM":[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises],"Polygon POS":[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises],"Polygon CDK":[r.chains,r.solution_providers],"Polygon ID":[r.dapps,r.solution_providers]};function Z(e={},i="store"){let t=0;function s(p,d){let c=new CustomEvent(p,{bubbles:!0,cancelable:!0,detail:d});t>0&&(document.dispatchEvent(c),t=0)}function o(p,d){return{get:function(c,g){return g==="_isProxy"?!0:(["object","array"].includes(Object.prototype.toString.call(c[g]).slice(8,-1).toLowerCase())&&!c[g]._isProxy&&(c[g]=new Proxy(c[g],o(p,d))),c[g])},set:function(c,g,f){return c[g]===f||(c[g]=f,t+=1),!0},deleteProperty:function(c,g){return delete c[g],t+=1,!0}}}let a=p=>{console.log("ran setState");for(let d in p)p.hasOwnProperty(d)&&(e[d]=p[d]);t+=1,s(i,e)};return{state:new Proxy(e,o(i,e)),setState:a}}var{state:n,setState:h}=Z({tab:m.public_chains,chain:l.zkevm,type:r.dapps,categories:[],sort:"ascending",query:"",after:0,limit:9},"filters");var u={log:e=>{console.log(e)},deep:e=>{console.dir(e)},info:e=>{console.info(e)},warn:e=>{console.warn(e)},error:e=>{console.error(e)}};var W=e=>Object.entries(e).map(([i,t])=>Array.isArray(t)?t.map(s=>`${encodeURIComponent(i)}=${encodeURIComponent(s)}`).join("&"):`${encodeURIComponent(i)}=${encodeURIComponent(t)}`).join("&"),Q=async(e,i,t)=>{let s={method:i,headers:{"Content-Type":"application/json"}};t&&(s.body=t);let a=await(await fetch(`${E}/${e}`,s)).json();return u.deep(a),a},M=async e=>{u.deep(e);let i=W(e);return Q(`companies?${i}`,"GET")};var P=e=>{let i=n.categories;return`
   <div class="filtered-projects-container">
   <div class="text-size-med text-gray6">
-    <span class="filter-number-text">${total} projects</span> 
-  ${categories && categories.length > 0 ? "filtered by" : ""}
+    <span class="filter-number-text">${e} projects</span> 
+  ${i&&i.length>0?"filtered by":""}
   </div>
-  ${categories && categories.length > 0 ? categories.map(
-      (category) => `<div class="filtered-projects-tags-container">
+  ${i&&i.length>0?i.map(s=>`<div class="filtered-projects-tags-container">
     <div class="filtered-projects-tag">
-      <div class="filtered-label">${category}</div>
+      <div class="filtered-label">${s}</div>
       <div class="filter-close-icon w-embed">
         <svg
           width="14"
@@ -189,43 +23,12 @@
           ></path>
         </svg>
       </div>
-    </div>`
-    ).join("") : ""}
+    </div>`).join(""):""}
     </div>
   </div>
 </div>
-`;
-    return innerHTML;
-  };
-  var generateListHTML = (data) => {
-    const elements = data.map((item) => {
-      return generateListItemHTML(item);
-    });
-    const innerHTML = `
-  <div fs-cmsnest-element="list-2" role="list" class="items-cl w-dyn-items">${elements.join(
-      ""
-    )}</div>`;
-    return innerHTML;
-  };
-  var generateListItemHTML = (item) => {
-    const {
-      id,
-      name,
-      description,
-      icon,
-      cardBackground,
-      twitterHandle,
-      githubRepo,
-      category,
-      subCategories,
-      discordServer,
-      telegramChannel,
-      coingeckoLink,
-      websiteLink,
-      linkedinLink,
-      spnProfile
-    } = item;
-    return `<div role="listitem" class="items-ci w-dyn-item">
+`},z=e=>`
+  <div fs-cmsnest-element="list-2" role="list" class="items-cl w-dyn-items">${e.map(s=>J(s)).join("")}</div>`,J=e=>{let{id:i,name:t,description:s,icon:o,cardBackground:a,twitterHandle:p,githubRepo:d,category:c,subCategories:g,discordServer:f,telegramChannel:v,coingeckoLink:w,websiteLink:y,linkedinLink:me,spnProfile:$}=e;return`<div role="listitem" class="items-ci w-dyn-item">
   <div
     class="items-ci-wrapper"
     style="
@@ -240,23 +43,19 @@
           width="112"
           loading="lazy"
           alt=""
-          src="${icon}"
+          src="${o}"
           class="item-icon-img"
         />
         <div class="item-name-tags">
-          <h3 class="text-h3">${name}</h3>
-        ${category ? `<div class= "item-tags">${category.map((cat) => {
-      return `<div class="items-tag is-primary" > ${cat} </div >`;
-    }).join("")} </div>` : ""}
-        ${subCategories ? `<div class="item-tags"> ${subCategories.map((sub) => {
-      return `<div class="items-tag">${sub}</div>`;
-    }).join("")}</div >` : ""}
+          <h3 class="text-h3">${t}</h3>
+        ${c?`<div class= "item-tags">${c.map(S=>`<div class="items-tag is-primary" > ${S} </div >`).join("")} </div>`:""}
+        ${g?`<div class="item-tags"> ${g.map(S=>`<div class="items-tag">${S}</div>`).join("")}</div >`:""}
         </div>
       </div>
     </div>
     <div
       style="
-        background-image: url('${cardBackground}');
+        background-image: url('${a}');
         transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg)
           rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
         transform-style: preserve-3d;
@@ -265,9 +64,9 @@
       class="items-card-hover-content"
     >
       <div class="item-card-link">
-        <h3 class="text-h3">${name}</h3>
+        <h3 class="text-h3">${t}</h3>
         <p class="text-size-med is-item-card-desc">
-          ${description}
+          ${s}
         </p>
         <div class="item-read-more-container">
           <div class="text-semibold is-item-read-more">Read&nbsp;More</div>
@@ -287,15 +86,15 @@
               </svg>
             </div>
             <div class="item-read-more-tooltip-text">
-              ${description}
+              ${s}
             </div>
           </div>
         </div>
       </div>
       <div class="items-links-wrapper">
         <div class="items-social-links-wrapper">
-          ${websiteLink ? `<a
-            href="${websiteLink}"
+          ${y?`<a
+            href="${y}"
             class="featured-social-link w-inline-block "
             ><div class="featured-items-social-icon w-embed">
               <svg
@@ -313,9 +112,9 @@
                   stroke-linejoin="round"
                 ></path>
               </svg></div></a
-          >` : ""}
-          ${twitterHandle ? `<a
-            href="${twitterHandle}"
+          >`:""}
+          ${p?`<a
+            href="${p}"
             class="featured-social-link w-inline-block"
             ><div class="items-social-icon w-embed">
               <svg
@@ -330,8 +129,8 @@
                   fill="currentcolor"
                 ></path>
               </svg></div></a
-          >` : ""}${githubRepo ? `<a
-            href="${githubRepo}"
+          >`:""}${d?`<a
+            href="${d}"
             class="featured-social-link w-inline-block"
             ><div class="featured-items-social-icon w-embed">
               <svg
@@ -348,9 +147,9 @@
                   fill="currentcolor"
                 ></path>
               </svg></div
-          ></a>` : ""}
+          ></a>`:""}
         </div>
-        ${spnProfile ? `<a href="${spnProfile}" class="featured-item-link w-inline-block"
+        ${$?`<a href="${$}" class="featured-item-link w-inline-block"
           ><div>Connect with SP</div>
           <div class="featured-item-link-arrow w-embed">
             <svg
@@ -368,43 +167,16 @@
                 stroke-linejoin="round"
               ></path>
             </svg></div
-        ></a>` : ""}
+        ></a>`:""}
       </div>
     </div>
   </div>
 </div>
 
-`;
-  };
-  var generatePaginationHTML = (total, hasMore) => {
-    const after = state["after"];
-    const limit = state["limit"];
-    const maxPagesToShow = 3;
-    const pages = [];
-    const currentPageIndex = parseInt(after / limit) + 1;
-    const totalPages = parseInt(total / limit) + 1;
-    pages.push(1);
-    if (currentPageIndex > 3) {
-      pages.push("...");
-    }
-    let startPage = Math.max(currentPageIndex - Math.floor(maxPagesToShow / 2), 2);
-    const endPage = Math.min(startPage + maxPagesToShow - 1, totalPages - 1);
-    if (endPage - startPage < maxPagesToShow - 2) {
-      startPage = Math.max(endPage - maxPagesToShow + 2, 2);
-    }
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-    if (endPage < totalPages - 1) {
-      pages.push("...");
-    }
-    if (totalPages > 1) {
-      pages.push(totalPages);
-    }
-    const innerHTML = `
+`},A=(e,i)=>{let t=n.after,s=n.limit,o=3,a=[],p=parseInt(t/s)+1,d=parseInt(e/s)+1;a.push(1),p>3&&a.push("...");let c=Math.max(p-Math.floor(o/2),2),g=Math.min(c+o-1,d-1);g-c<o-2&&(c=Math.max(g-o+2,2));for(let v=c;v<=g;v++)a.push(v);return g<d-1&&a.push("..."),d>1&&a.push(d),`
         <div class="pagination-wrapper">
   <button
-    class="pagination-btn is-previous w-inline-block ${!after ? "is-disabled" : ""}"
+    class="pagination-btn is-previous w-inline-block ${t?"":"is-disabled"}"
   >
     <div class="pagination-icon w-embed">
       <svg
@@ -427,11 +199,9 @@
     </div>
   </button>
 
-  ${pages.map((page) => {
-      return `<button class="pagination-link ${page === currentPageIndex ? "w--current" : ""}"> ${page}</button>`;
-    }).join("")}
+  ${a.map(v=>`<button class="pagination-link ${v===p?"w--current":""}"> ${v}</button>`).join("")}
   <button
-    class="pagination-btn is-next w-inline-block ${hasMore ? "" : "is-disabled"}"
+    class="pagination-btn is-next w-inline-block ${i?"":"is-disabled"}"
   >
     <div class="pagination-icon w-embed">
       <svg
@@ -454,12 +224,7 @@
     </div>
   </button>
 </div>
-    `;
-    return innerHTML;
-  };
-  var generateEmptyState = () => {
-    const search = state["query"];
-    return `<div class="no-results-wrapper">
+    `},H=()=>{let e=n.query;return`<div class="no-results-wrapper">
   <div class="no-results-abs-overlay">
     <img
       src="https://assets-global.website-files.com/652772322237331bccec35f0/655dc0be222b8fc5ca76f1fa_no-results-icon.svg"
@@ -468,9 +233,9 @@
       class="no-results-icon"
     />
     <div class="spacer-1"></div>
-    ${search ? `<div class="text-size-large">
-          No results for \u201C<span id="no-results-search-text">${search}</span>\u201D
-        </div>` : ""}
+    ${e?`<div class="text-size-large">
+          No results for \u201C<span id="no-results-search-text">${e}</span>\u201D
+        </div>`:""}
     <div class="spacer-p5"></div>
     <div class="text-size-small text-gray6">
       Sorry, we couldn't find anything with this criteria. Please try refining
@@ -702,373 +467,4 @@
     </div>
   </div>
 </div>
-`;
-  };
-
-  // src/utils/ui.ts
-  var updateDOM = (identifier, innerHTML) => {
-    const element = document.querySelector(identifier);
-    if (element) {
-      element.innerHTML = innerHTML;
-    } else {
-      logger.warn(`Unable to find the DOM element with identifier ${identifier}`);
-    }
-  };
-  var renderExplorer = async (items, total, hasMore) => {
-    let generatedHTML = "";
-    if (items.length > 0) {
-      const listHTML = generateListHTML(items);
-      const paginationHTML = generatePaginationHTML(total, hasMore);
-      generatedHTML = listHTML + paginationHTML;
-    } else {
-      generatedHTML = generateEmptyState();
-    }
-    const filtersHTML = generateFiltersHTML(total);
-    updateDOM("#filter-count", filtersHTML);
-    updateDOM(LIST_CONTAINER_IDENTIFIER, generatedHTML);
-    const prevButton = document.querySelector(LIST_CONTAINER_IDENTIFIER)?.querySelector(".is-previous");
-    const nextButton = document.querySelector(LIST_CONTAINER_IDENTIFIER)?.querySelector(".is-next");
-    const pageButtons = document.querySelector(LIST_CONTAINER_IDENTIFIER)?.querySelectorAll(".pagination-link");
-    const after = state["after"];
-    prevButton?.addEventListener("click", () => updatePagination("prev", after, hasMore, 0));
-    nextButton?.addEventListener("click", () => updatePagination("next", after, hasMore, 0));
-    pageButtons?.forEach((page) => {
-      const pageNumber = parseInt(page.textContent);
-      page.addEventListener("click", () => updatePagination("goto", after, hasMore, pageNumber));
-    });
-    removeFilter();
-    showCategoriesBasedOnChain();
-  };
-  var toggleExplorerVisibility = (visible) => {
-    const filters = document.querySelector(FILTERS_CONTAINER_IDENTIFIER);
-    const list = document.querySelector(LIST_NEWS_CONTAINER_IDENTIFIER);
-    if (filters && list) {
-      if (visible) {
-        filters.style.display = "block";
-        list.style.display = "flex";
-      } else {
-        filters.style.display = "none";
-        list.style.display = "none";
-      }
-    }
-  };
-  var toggleTypeFiltersVisibility = () => {
-    const typeNames = [
-      TYPES.dapps,
-      TYPES.solution_providers,
-      TYPES.ecosystem_enablers,
-      TYPES.enterprises,
-      TYPES.chains
-    ];
-    const typeOptions = typeNames.map((tabName) => {
-      return document.querySelector(`[data-type-filter="${tabName}"]`);
-    });
-    const currentChain = state["chain"];
-    const visibleTypes = CHAIN_TYPE_OPTIONS[currentChain];
-    typeOptions.forEach((typeElement) => {
-      const typeValue = typeElement.getAttribute("data-type-filter");
-      if (visibleTypes.includes(typeValue)) {
-        typeElement.style.display = "block";
-      } else {
-        typeElement.style.display = "none";
-      }
-    });
-  };
-  var highlightActiveTypeFilter = () => {
-    const currentType = state["type"];
-    const typeNames = [
-      TYPES.dapps,
-      TYPES.solution_providers,
-      TYPES.ecosystem_enablers,
-      TYPES.enterprises,
-      TYPES.chains
-    ];
-    const typeOptions = typeNames.map((tabName) => {
-      return document.querySelector(`[data-type-filter="${tabName}"]`);
-    });
-    typeOptions.forEach((typeElement) => {
-      typeElement?.querySelector(".w-radio-input")?.classList.remove(...["w--redirected-checked", "w--redirected-focus"]);
-      typeElement?.querySelector(".filter-radio-label")?.classList.remove(...["is-active"]);
-      const typeValue = typeElement.getAttribute("data-type-filter");
-      if (currentType === typeValue) {
-        typeElement?.querySelector(".w-radio-input")?.classList.add("w--redirected-checked");
-        typeElement?.querySelector(".filter-radio-label")?.classList.add(...["is-active"]);
-      }
-    });
-  };
-  var updateFilters = async () => {
-    logger.log("Updating Filters");
-    toggleTypeFiltersVisibility();
-    highlightActiveTypeFilter();
-  };
-  var updateList = async () => {
-    logger.log("Updating List");
-    const params = {
-      chain: state["chain"],
-      type: state["type"],
-      categories: state["categories"],
-      query: state["query"],
-      sort: state["sort"],
-      after: state["after"],
-      limit: state["limit"]
-    };
-    const response = await getCompanies(params);
-    const { success, status, data, error } = response;
-    if (success) {
-      const { total, records, has_more } = data;
-      renderExplorer(records, total, has_more);
-    } else {
-      logger.warn(error);
-    }
-  };
-  var updatePagination = (operation, after, hasMore, page) => {
-    logger.log(operation);
-    if (operation === "next" && hasMore) {
-      setState({ after: state.after + state.limit });
-    } else if (operation === "prev" && after > 0) {
-      setState({ after: state.after - state.limit });
-    } else if (operation === "goto" && !isNaN(page)) {
-      setState({ after: (page - 1) * state["limit"] });
-    }
-  };
-  var removeFilter = () => {
-    const filterTags = document.querySelectorAll(".filtered-projects-tag");
-    console.log(filterTags);
-    filterTags.forEach((filterTag) => {
-      console.log(filterTag);
-      const label = filterTag.querySelector(".filtered-label");
-      const closeButton = filterTag.querySelector(".filter-close-icon");
-      const mirroredButton = document.querySelector(
-        `[data-categories-option="${label?.textContent}"]`
-      );
-      console.log(filterTag, closeButton, mirroredButton);
-      filterTag.addEventListener("click", (event) => {
-        console.log("removing filter");
-        mirroredButton?.click();
-      });
-    });
-  };
-  function showCategoriesBasedOnChain() {
-    const idCategories = document.getElementById("id-categories");
-    const posZkevmCategories = document.getElementById("pos-zkevm-categories");
-    const chain = state["chain"];
-    const type = state["type"];
-    posZkevmCategories.style.display = "none";
-    idCategories.style.display = "none";
-    console.log(idCategories, posZkevmCategories, chain, type);
-    if (chain === CHAINS.id && type === TYPES.solution_providers) {
-      idCategories.style.display = "block";
-      posZkevmCategories.style.display = "none";
-    } else if ((chain === CHAINS.pos || chain === CHAINS.zkevm) && type === TYPES.solution_providers) {
-      idCategories.style.display = "none";
-      posZkevmCategories.style.display = "block";
-    }
-  }
-  var resetCategoryUI = () => {
-    const searchFields = document.querySelectorAll(".filter-search-field.is-in-dd");
-    searchFields.forEach((searchField) => {
-      console.log(searchField);
-      searchField.value = "";
-    });
-    const checkboxes = document.querySelectorAll(" .filter-checkbox");
-    checkboxes.forEach((checkbox) => {
-      checkbox.classList.remove("w--redirected-checked");
-    });
-  };
-
-  // src/utils/listeners.ts
-  var initializeListeners = (selector, property, callback) => {
-    const elements = document.querySelectorAll(selector);
-    elements.forEach((element) => {
-      element.addEventListener("click", callback);
-    });
-  };
-  var handleTabClick = (event) => {
-    const tabName = event.currentTarget.getAttribute("data-tab-name");
-    setState({ tab: tabName, after: 0, categories: [] });
-    switch (tabName) {
-      case TABS.public_chains:
-        setState({ type: TYPES.dapps });
-        document.querySelector(`[data-chain-name="${CHAINS.zkevm}"]`)?.click();
-        break;
-      case TABS.app_specific_chains:
-        setState({ type: TYPES.chains });
-        document.querySelector(`[data-chain-name="${CHAINS.cdk}"]`)?.click();
-        break;
-      case TABS.decentralized_identity:
-        setState({ type: TYPES.dapps });
-        document.querySelector(`[data-chain-name="${CHAINS.id}"]`)?.click();
-        break;
-    }
-    resetCategoryUI();
-    logger.log(`Tab selected: ${state.tab}`);
-  };
-  var handleChainClick = (event) => {
-    const chainName = event.currentTarget.getAttribute("data-chain-name");
-    setState({ chain: chainName, after: 0, categories: [] });
-    switch (chainName) {
-      case CHAINS.zkevm:
-      case CHAINS.pos:
-        setState({ type: TYPES.dapps });
-        break;
-      case CHAINS.cdk:
-        setState({ type: TYPES.chains });
-        break;
-      case CHAINS.id:
-        setState({ type: TYPES.dapps });
-        break;
-    }
-    logger.log(`Chain selected: ${state.chain}`);
-    const supportedChains = [CHAINS.cdk, CHAINS.id, CHAINS.pos, CHAINS.zkevm];
-    toggleExplorerVisibility(supportedChains.includes(chainName));
-    resetCategoryUI();
-  };
-  var handleTypeClick = (event) => {
-    const typeOption = event.currentTarget.getAttribute("data-type-filter");
-    setState({ type: typeOption, after: 0, categories: [] });
-    logger.log(`Type selected: ${state.type}`);
-    resetCategoryUI();
-  };
-  var handleSortClick = (event) => {
-    const sortOption = event.currentTarget.getAttribute("data-sort-filter");
-    setState({ sort: sortOption, after: 0 });
-    logger.log(`Sort selected: ${state.sort}`);
-  };
-  var handleSearchInput = (event) => {
-    const search = debounce((event2) => {
-      console.log(event2);
-      const query = event2.target.value;
-      setState({ query, after: 0 });
-      logger.log(`Query: ${state.query}`);
-    }, 500);
-    console.log(event);
-    search(event);
-  };
-  var initializeTabsListeners = () => {
-    const tabNames = [TABS.public_chains, TABS.app_specific_chains, TABS.decentralized_identity];
-    const selector = tabNames.map((tabName) => `[data-tab-name="${tabName}"]`).join(",");
-    initializeListeners(selector, "tab", handleTabClick);
-  };
-  var initializeChainsListeners = () => {
-    const chainTabNames = [CHAINS.zkevm, CHAINS.pos, CHAINS.id, CHAINS.cdk, CHAINS.miden];
-    const selector = chainTabNames.map((chainName) => `[data-chain-name="${chainName}"]`).join(",");
-    initializeListeners(selector, "chain", handleChainClick);
-  };
-  var initializeTypeListeners = () => {
-    const typeNames = [
-      TYPES.dapps,
-      TYPES.solution_providers,
-      TYPES.ecosystem_enablers,
-      TYPES.enterprises,
-      TYPES.chains
-    ];
-    const selector = typeNames.map((typeName) => `[data-type-filter="${typeName}"]`).join(",");
-    initializeListeners(selector, "type", handleTypeClick);
-  };
-  var initializeSortListeners = () => {
-    const sortNames = [SORTS.ascending, SORTS.descending];
-    const selector = sortNames.map((sortName) => `[data-sort-filter="${sortName}"]`).join(",");
-    initializeListeners(selector, "sort", handleSortClick);
-  };
-  function debounce(func, timeout = 300) {
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        func.apply(this, args);
-      }, timeout);
-    };
-  }
-  var initializeSearchListeners = () => {
-    const selector = "#filter-search";
-    const element = document.querySelector(selector);
-    element.addEventListener("input", handleSearchInput);
-  };
-  var filterElements = (query, elements) => {
-    elements.forEach((element) => {
-      const textContent = element.textContent?.toLowerCase() || "";
-      const shouldShow = textContent.includes(query.toLowerCase());
-      element.style.display = shouldShow ? "flex" : "none";
-    });
-  };
-  var handlePosZkevmCategorySearchInput = (event) => {
-    const query = event.currentTarget.value;
-    const elementsToFilter = document.querySelector("#pos-zkevm-categories")?.querySelectorAll(".filter-checkbox-container");
-    console.log(query, elementsToFilter);
-    filterElements(query, elementsToFilter);
-    logger.log(`Query: ${query}`);
-  };
-  var handleIdCategorySearchInput = (event) => {
-    const query = event.currentTarget.value;
-    const elementsToFilter = document.querySelector("#id-categories")?.querySelectorAll(".filter-checkbox-container");
-    console.log(query, elementsToFilter);
-    filterElements(query, elementsToFilter);
-    logger.log(`Query: ${query}`);
-  };
-  var handleCheckboxClick = (event) => {
-    event.preventDefault();
-    const categoryOption = event.currentTarget.getAttribute(
-      `data-categories-option`
-    );
-    let cat = [...state.categories];
-    console.log(cat);
-    if (cat.includes(categoryOption)) {
-      cat = cat.filter((c) => c !== categoryOption);
-    } else {
-      cat.push(categoryOption);
-    }
-    setState({ categories: cat, after: 0 });
-    const element = event.currentTarget.querySelector(".w-checkbox-input");
-    if (!state.categories.includes(categoryOption)) {
-      element?.classList.remove("w--redirected-checked");
-    } else {
-      element?.classList.add("w--redirected-checked");
-    }
-    logger.log(`Categories selected: ${state.categories}`);
-  };
-  var initializeCategoriesListeners = () => {
-    const posZkevmSearchSelector = "#PoS-zkEVM-Categories-Search";
-    const posZkevmSearch = document.querySelector(posZkevmSearchSelector);
-    posZkevmSearch?.addEventListener("input", handlePosZkevmCategorySearchInput);
-    const idSearchSelector = "#ID-Categories-Search";
-    const idSearch = document.querySelector(idSearchSelector);
-    idSearch?.addEventListener("input", handleIdCategorySearchInput);
-    const checkboxSelector = ".filter-checkbox-container";
-    initializeListeners(checkboxSelector, "click", handleCheckboxClick);
-  };
-
-  // src/index.ts
-  var setupEventListeners = () => {
-    document.addEventListener("filters", function(event) {
-      console.log("Event triggered", event);
-      updateFilters();
-      updateList();
-    });
-  };
-  var initializeUIListeners = () => {
-    initializeTabsListeners();
-    initializeChainsListeners();
-    initializeTypeListeners();
-    initializeSortListeners();
-    initializeSearchListeners();
-    initializeCategoriesListeners();
-  };
-  var initializeDefaultSelections = () => {
-    const defaultTab = document.querySelector(`[data-tab-name="${TABS.public_chains}"]`);
-    const defaultChain = document.querySelector(`[data-tab-name="${CHAINS.zkevm}"]`);
-    const defaultSort = document.querySelector(`[data-sort-filter="${SORTS.ascending}"]`);
-    defaultSort?.querySelector(".filter-radiobox")?.classList.add("w--redirected-checked");
-  };
-  var initializeWebflow = () => {
-    window.Webflow ||= [];
-    window.Webflow.push(async () => {
-      setupEventListeners();
-      initializeUIListeners();
-      initializeDefaultSelections();
-      updateFilters();
-      updateList();
-    });
-  };
-  initializeWebflow();
-})();
-//# sourceMappingURL=index.js.map
+`};var O=(e,i)=>{let t=document.querySelector(e);t?t.innerHTML=i:u.warn(`Unable to find the DOM element with identifier ${e}`)},K=async(e,i,t)=>{var g,f,v;let s="";if(e.length>0){let w=z(e),y=A(i,t);s=w+y}else s=H();let o=P(i);O("#filter-count",o),O(b,s);let a=(g=document.querySelector(b))==null?void 0:g.querySelector(".is-previous"),p=(f=document.querySelector(b))==null?void 0:f.querySelector(".is-next"),d=(v=document.querySelector(b))==null?void 0:v.querySelectorAll(".pagination-link"),c=n.after;a==null||a.addEventListener("click",()=>L("prev",c,t,0)),p==null||p.addEventListener("click",()=>L("next",c,t,0)),d==null||d.forEach(w=>{let y=parseInt(w.textContent);w.addEventListener("click",()=>L("goto",c,t,y))}),ee(),te()},R=e=>{let i=document.querySelector(_),t=document.querySelector(N);i&&t&&(e?(i.style.display="block",t.style.display="flex"):(i.style.display="none",t.style.display="none"))},X=()=>{let i=[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(o=>document.querySelector(`[data-type-filter="${o}"]`)),t=n.chain,s=q[t];i.forEach(o=>{let a=o.getAttribute("data-type-filter");s.includes(a)?o.style.display="block":o.style.display="none"})},G=()=>{let e=n.type;[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(s=>document.querySelector(`[data-type-filter="${s}"]`)).forEach(s=>{var a,p,d,c;(a=s==null?void 0:s.querySelector(".w-radio-input"))==null||a.classList.remove("w--redirected-checked","w--redirected-focus"),(p=s==null?void 0:s.querySelector(".filter-radio-label"))==null||p.classList.remove("is-active");let o=s.getAttribute("data-type-filter");e===o&&((d=s==null?void 0:s.querySelector(".w-radio-input"))==null||d.classList.add("w--redirected-checked"),(c=s==null?void 0:s.querySelector(".filter-radio-label"))==null||c.classList.add("is-active"))})},T=async()=>{u.log("Updating Filters"),X(),G()},I=async()=>{u.log("Updating List");let e={chain:n.chain,type:n.type,categories:n.categories,query:n.query,sort:n.sort,after:n.after,limit:n.limit},i=await M(e),{success:t,status:s,data:o,error:a}=i;if(t){let{total:p,records:d,has_more:c}=o;K(d,p,c)}else u.warn(a)},L=(e,i,t,s)=>{u.log(e),e==="next"&&t?h({after:n.after+n.limit}):e==="prev"&&i>0?h({after:n.after-n.limit}):e==="goto"&&!isNaN(s)&&h({after:(s-1)*n.limit})},ee=()=>{let e=document.querySelectorAll(".filtered-projects-tag");console.log(e),e.forEach(i=>{console.log(i);let t=i.querySelector(".filtered-label"),s=i.querySelector(".filter-close-icon"),o=document.querySelector(`[data-categories-option="${t==null?void 0:t.textContent}"]`);console.log(i,s,o),i.addEventListener("click",a=>{console.log("removing filter"),o==null||o.click()})})};function te(){let e=document.getElementById("id-categories"),i=document.getElementById("pos-zkevm-categories"),t=n.chain,s=n.type;i.style.display="none",e.style.display="none",console.log(e,i,t,s),t===l.id&&s===r.solution_providers?(e.style.display="block",i.style.display="none"):(t===l.pos||t===l.zkevm)&&s===r.solution_providers&&(e.style.display="none",i.style.display="block")}var k=()=>{document.querySelectorAll(".filter-search-field.is-in-dd").forEach(t=>{console.log(t),t.value=""}),document.querySelectorAll(" .filter-checkbox").forEach(t=>{t.classList.remove("w--redirected-checked")})};var C=(e,i,t)=>{document.querySelectorAll(e).forEach(o=>{o.addEventListener("click",t)})},ie=e=>{var t,s,o;let i=e.currentTarget.getAttribute("data-tab-name");switch(h({tab:i,after:0,categories:[]}),i){case m.public_chains:h({type:r.dapps}),(t=document.querySelector(`[data-chain-name="${l.zkevm}"]`))==null||t.click();break;case m.app_specific_chains:h({type:r.chains}),(s=document.querySelector(`[data-chain-name="${l.cdk}"]`))==null||s.click();break;case m.decentralized_identity:h({type:r.dapps}),(o=document.querySelector(`[data-chain-name="${l.id}"]`))==null||o.click();break}k(),u.log(`Tab selected: ${n.tab}`)},se=e=>{let i=e.currentTarget.getAttribute("data-chain-name");switch(h({chain:i,after:0,categories:[]}),i){case l.zkevm:case l.pos:h({type:r.dapps});break;case l.cdk:h({type:r.chains});break;case l.id:h({type:r.dapps});break}u.log(`Chain selected: ${n.chain}`);let t=[l.cdk,l.id,l.pos,l.zkevm];R(t.includes(i)),k()},re=e=>{let i=e.currentTarget.getAttribute("data-type-filter");h({type:i,after:0,categories:[]}),u.log(`Type selected: ${n.type}`),k()},oe=e=>{let i=e.currentTarget.getAttribute("data-sort-filter");h({sort:i,after:0}),u.log(`Sort selected: ${n.sort}`)},ne=e=>{let i=ce(t=>{console.log(t);let s=t.target.value;h({query:s,after:0}),u.log(`Query: ${n.query}`)},500);console.log(e),i(e)},F=()=>{let i=[m.public_chains,m.app_specific_chains,m.decentralized_identity].map(t=>`[data-tab-name="${t}"]`).join(",");C(i,"tab",ie)},j=()=>{let i=[l.zkevm,l.pos,l.id,l.cdk,l.miden].map(t=>`[data-chain-name="${t}"]`).join(",");C(i,"chain",se)},B=()=>{let i=[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(t=>`[data-type-filter="${t}"]`).join(",");C(i,"type",re)},D=()=>{let i=[x.ascending,x.descending].map(t=>`[data-sort-filter="${t}"]`).join(",");C(i,"sort",oe)};function ce(e,i=300){let t;return(...s)=>{clearTimeout(t),t=setTimeout(()=>{e.apply(this,s)},i)}}var U=()=>{let e="#filter-search";document.querySelector(e).addEventListener("input",ne)},V=(e,i)=>{i.forEach(t=>{var a;let o=(((a=t.textContent)==null?void 0:a.toLowerCase())||"").includes(e.toLowerCase());t.style.display=o?"flex":"none"})},ae=e=>{var s;let i=e.currentTarget.value,t=(s=document.querySelector("#pos-zkevm-categories"))==null?void 0:s.querySelectorAll(".filter-checkbox-container");console.log(i,t),V(i,t),u.log(`Query: ${i}`)},le=e=>{var s;let i=e.currentTarget.value,t=(s=document.querySelector("#id-categories"))==null?void 0:s.querySelectorAll(".filter-checkbox-container");console.log(i,t),V(i,t),u.log(`Query: ${i}`)},de=e=>{e.preventDefault();let i=e.currentTarget.getAttribute("data-categories-option"),t=[...n.categories];console.log(t),t.includes(i)?t=t.filter(o=>o!==i):t.push(i),h({categories:t,after:0});let s=e.currentTarget.querySelector(".w-checkbox-input");n.categories.includes(i)?s==null||s.classList.add("w--redirected-checked"):s==null||s.classList.remove("w--redirected-checked"),u.log(`Categories selected: ${n.categories}`)},Y=()=>{let e="#PoS-zkEVM-Categories-Search",i=document.querySelector(e);i==null||i.addEventListener("input",ae);let t="#ID-Categories-Search",s=document.querySelector(t);s==null||s.addEventListener("input",le),C(".filter-checkbox-container","click",de)};var pe=()=>{document.addEventListener("filters",function(e){console.log("Event triggered",e),T(),I()})},ge=()=>{F(),j(),B(),D(),U(),Y()},ue=()=>{var s;let e=document.querySelector(`[data-tab-name="${m.public_chains}"]`),i=document.querySelector(`[data-tab-name="${l.zkevm}"]`),t=document.querySelector(`[data-sort-filter="${x.ascending}"]`);(s=t==null?void 0:t.querySelector(".filter-radiobox"))==null||s.classList.add("w--redirected-checked"),e==null||e.click()},he=()=>{window.Webflow||(window.Webflow=[]),window.Webflow.push(async()=>{pe(),ge(),ue(),T(),I()})};he();})();
