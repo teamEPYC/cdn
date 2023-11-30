@@ -1,12 +1,12 @@
-"use strict";(()=>{var E="https://explorer-backend-1.onrender.com",l={zkevm:"Polygon zkEVM",pos:"Polygon POS",cdk:"Polygon CDK",id:"Polygon ID",miden:"Polygon Miden"},r={dapps:"dApps",solution_providers:"Solution Providers",ecosystem_enablers:"Ecosystem Enablers",enterprises:"Enterprises",chains:"Chains"},x={ascending:"ascending",descending:"descending"},m={public_chains:"Public Chains",app_specific_chains:"App Specific Chains",decentralized_identity:"Decentralized Identity"},_="#filter-wrapper",b="#list-wrapper",N="#list-news-wrapper",q={"Polygon zkEVM":[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises],"Polygon POS":[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises],"Polygon CDK":[r.chains,r.solution_providers],"Polygon ID":[r.dapps,r.solution_providers]};function Z(e={},i="store"){let t=0;function s(p,d){let c=new CustomEvent(p,{bubbles:!0,cancelable:!0,detail:d});t>0&&(document.dispatchEvent(c),t=0)}function o(p,d){return{get:function(c,g){return g==="_isProxy"?!0:(["object","array"].includes(Object.prototype.toString.call(c[g]).slice(8,-1).toLowerCase())&&!c[g]._isProxy&&(c[g]=new Proxy(c[g],o(p,d))),c[g])},set:function(c,g,f){return c[g]===f||(c[g]=f,t+=1),!0},deleteProperty:function(c,g){return delete c[g],t+=1,!0}}}let a=p=>{console.log("ran setState");for(let d in p)p.hasOwnProperty(d)&&(e[d]=p[d]);t+=1,s(i,e)};return{state:new Proxy(e,o(i,e)),setState:a}}var{state:n,setState:h}=Z({tab:m.public_chains,chain:l.zkevm,type:r.dapps,categories:[],sort:"ascending",query:"",after:0,limit:9},"filters");var u={log:e=>{console.log(e)},deep:e=>{console.dir(e)},info:e=>{console.info(e)},warn:e=>{console.warn(e)},error:e=>{console.error(e)}};var W=e=>Object.entries(e).map(([i,t])=>Array.isArray(t)?t.map(s=>`${encodeURIComponent(i)}=${encodeURIComponent(s)}`).join("&"):`${encodeURIComponent(i)}=${encodeURIComponent(t)}`).join("&"),Q=async(e,i,t)=>{let s={method:i,headers:{"Content-Type":"application/json"}};t&&(s.body=t);let a=await(await fetch(`${E}/${e}`,s)).json();return u.deep(a),a},M=async e=>{u.deep(e);let i=W(e);return Q(`companies?${i}`,"GET")};var P=e=>{let i=n.categories;return`
+"use strict";(()=>{var _="https://explorer-backend-1.onrender.com",g={zkevm:"Polygon zkEVM",pos:"Polygon POS",cdk:"Polygon CDK",id:"Polygon ID",miden:"Polygon Miden"},r={dapps:"dApps",solution_providers:"Solution Providers",ecosystem_enablers:"Ecosystem Enablers",enterprises:"Enterprises",chains:"Chains"},b={ascending:"ascending",descending:"descending"},v={public_chains:"Public Chains",app_specific_chains:"App Specific Chains",decentralized_identity:"Decentralized Identity"},N="#filter-wrapper",x="#list-wrapper",M="#list-news-wrapper",z={"Polygon zkEVM":[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises],"Polygon POS":[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises],"Polygon CDK":[r.chains,r.solution_providers],"Polygon ID":[r.dapps,r.solution_providers]};var n={log:(...t)=>{console.log(...t)},deep:(...t)=>{window.location.hostname.includes("webflow.io")&&console.dir(...t)},info:(...t)=>{window.location.hostname.includes("webflow.io")&&console.info(...t)},warn:(...t)=>{window.location.hostname.includes("webflow.io")&&console.warn(...t)},error:(...t)=>{window.location.hostname.includes("webflow.io")&&console.error(...t)}};var X=t=>Object.entries(t).map(([o,e])=>Array.isArray(e)?e.map(i=>`${encodeURIComponent(o)}=${encodeURIComponent(i)}`).join("&"):`${encodeURIComponent(o)}=${encodeURIComponent(e)}`).join("&"),ee=async(t,o,e)=>{let i={method:o,headers:{"Content-Type":"application/json"}};e&&(i.body=e);let c=await(await fetch(`${_}/${t}`,i)).json();return n.deep(c),c},A=async t=>{n.deep(t);let o=X(t);return ee(`companies?${o}`,"GET")};function te(t={},o="store"){let e=0;function i(p,d){let l=new CustomEvent(p,{bubbles:!0,cancelable:!0,detail:d});e>0&&(document.dispatchEvent(l),e=0)}function s(p,d){return{get:function(l,u){return u==="_isProxy"?!0:(["object","array"].includes(Object.prototype.toString.call(l[u]).slice(8,-1).toLowerCase())&&!l[u]._isProxy&&(l[u]=new Proxy(l[u],s(p,d))),l[u])},set:function(l,u,y){return l[u]===y||(l[u]=y,e+=1),!0},deleteProperty:function(l,u){return delete l[u],e+=1,!0}}}let c=p=>{n.log("ran setState");for(let d in p)p.hasOwnProperty(d)&&(t[d]=p[d]);e+=1,i(o,t)};return{state:new Proxy(t,s(o,t)),setState:c}}var{state:a,setState:h}=te({tab:v.public_chains,chain:g.zkevm,type:r.dapps,categories:[],sort:"ascending",query:"",after:0,limit:9},"filters");var P=t=>{let o=a.categories;return`
   <div class="filtered-projects-container">
   <div class="text-size-med text-gray6">
-    <span class="filter-number-text">${e} projects</span> 
-  ${i&&i.length>0?"filtered by":""}
+    <span class="filter-number-text">${t} projects</span> 
+  ${o&&o.length>0?"filtered by":""}
   </div>
-  ${i&&i.length>0?i.map(s=>`<div class="filtered-projects-tags-container">
+  ${o&&o.length>0?o.map(i=>`<div class="filtered-projects-tags-container">
     <div class="filtered-projects-tag">
-      <div class="filtered-label">${s}</div>
+      <div class="filtered-label" data-value="${i}">${i.split("_")[1]||i}</div>
       <div class="filter-close-icon w-embed">
         <svg
           width="14"
@@ -27,8 +27,8 @@
     </div>
   </div>
 </div>
-`},z=e=>`
-  <div fs-cmsnest-element="list-2" role="list" class="items-cl w-dyn-items">${e.map(s=>J(s)).join("")}</div>`,J=e=>{let{id:i,name:t,description:s,icon:o,cardBackground:a,twitterHandle:p,githubRepo:d,category:c,subCategories:g,discordServer:f,telegramChannel:v,coingeckoLink:w,websiteLink:y,linkedinLink:me,spnProfile:$}=e;return`<div role="listitem" class="items-ci w-dyn-item">
+`},O=t=>`
+  <div fs-cmsnest-element="list-2" role="list" class="items-cl w-dyn-items">${t.map(i=>oe(i)).join("")}</div>`,oe=t=>{let{id:o,name:e,description:i,icon:s,cardBackground:c,twitterHandle:p,githubRepo:d,category:l,subCategories:u,discordServer:y,telegramChannel:m,coingeckoLink:w,websiteLink:f,linkedinLink:Te,spnProfile:q}=t;return`<div role="listitem" class="items-ci w-dyn-item">
   <div
     class="items-ci-wrapper"
     style="
@@ -43,19 +43,19 @@
           width="112"
           loading="lazy"
           alt=""
-          src="${o}"
+          src="${s}"
           class="item-icon-img"
         />
         <div class="item-name-tags">
-          <h3 class="text-h3">${t}</h3>
-        ${c?`<div class= "item-tags">${c.map(S=>`<div class="items-tag is-primary" > ${S} </div >`).join("")} </div>`:""}
-        ${g?`<div class="item-tags"> ${g.map(S=>`<div class="items-tag">${S}</div>`).join("")}</div >`:""}
+          <h3 class="text-h3">${e}</h3>
+        ${l?`<div class= "item-tags">${l.map(k=>`<div class="items-tag is-primary" > ${k} </div >`).join("")} </div>`:""}
+        ${u?`<div class="item-tags"> ${u.map(k=>`<div class="items-tag">${k}</div>`).join("")}</div >`:""}
         </div>
       </div>
     </div>
     <div
       style="
-        background-image: url('${a}');
+        background-image: url('${c}');
         transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg)
           rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
         transform-style: preserve-3d;
@@ -64,9 +64,9 @@
       class="items-card-hover-content"
     >
       <div class="item-card-link">
-        <h3 class="text-h3">${t}</h3>
+        <h3 class="text-h3">${e}</h3>
         <p class="text-size-med is-item-card-desc">
-          ${s}
+          ${i}
         </p>
         <div class="item-read-more-container">
           <div class="text-semibold is-item-read-more">Read&nbsp;More</div>
@@ -86,15 +86,15 @@
               </svg>
             </div>
             <div class="item-read-more-tooltip-text">
-              ${s}
+              ${i}
             </div>
           </div>
         </div>
       </div>
       <div class="items-links-wrapper">
         <div class="items-social-links-wrapper">
-          ${y?`<a
-            href="${y}"
+          ${f?`<a
+            href="${f}"
             class="featured-social-link w-inline-block "
             ><div class="featured-items-social-icon w-embed">
               <svg
@@ -149,7 +149,7 @@
               </svg></div
           ></a>`:""}
         </div>
-        ${$?`<a href="${$}" class="featured-item-link w-inline-block"
+        ${q?`<a href="${q}" class="featured-item-link w-inline-block"
           ><div>Connect with SP</div>
           <div class="featured-item-link-arrow w-embed">
             <svg
@@ -173,10 +173,10 @@
   </div>
 </div>
 
-`},A=(e,i)=>{let t=n.after,s=n.limit,o=3,a=[],p=parseInt(t/s)+1,d=parseInt(e/s)+1;a.push(1),p>3&&a.push("...");let c=Math.max(p-Math.floor(o/2),2),g=Math.min(c+o-1,d-1);g-c<o-2&&(c=Math.max(g-o+2,2));for(let v=c;v<=g;v++)a.push(v);return g<d-1&&a.push("..."),d>1&&a.push(d),`
+`},H=(t,o)=>{let e=a.after,i=a.limit,s=3,c=[],p=parseInt(e/i)+1,d=parseInt((t-1)/i)+1;c.push(1),p>3&&c.push("...");let l=Math.max(p-Math.floor(s/2),2),u=Math.min(l+s-1,d-1);u-l<s-2&&(l=Math.max(u-s+2,2));for(let m=l;m<=u;m++)c.push(m);return u<d-1&&c.push("..."),d>1&&c.push(d),`
         <div class="pagination-wrapper">
   <button
-    class="pagination-btn is-previous w-inline-block ${t?"":"is-disabled"}"
+    class="pagination-btn is-previous w-inline-block ${e?"":"is-disabled"}"
   >
     <div class="pagination-icon w-embed">
       <svg
@@ -199,9 +199,9 @@
     </div>
   </button>
 
-  ${a.map(v=>`<button class="pagination-link ${v===p?"w--current":""}"> ${v}</button>`).join("")}
+  ${c.map(m=>`<button class="pagination-link ${m===p?"w--current":""}"> ${m}</button>`).join("")}
   <button
-    class="pagination-btn is-next w-inline-block ${i?"":"is-disabled"}"
+    class="pagination-btn is-next w-inline-block ${o?"":"is-disabled"}"
   >
     <div class="pagination-icon w-embed">
       <svg
@@ -224,7 +224,7 @@
     </div>
   </button>
 </div>
-    `},H=()=>{let e=n.query;return`<div class="no-results-wrapper">
+    `},R=()=>{let t=a.query;return`<div class="no-results-wrapper">
   <div class="no-results-abs-overlay">
     <img
       src="https://assets-global.website-files.com/652772322237331bccec35f0/655dc0be222b8fc5ca76f1fa_no-results-icon.svg"
@@ -233,8 +233,8 @@
       class="no-results-icon"
     />
     <div class="spacer-1"></div>
-    ${e?`<div class="text-size-large">
-          No results for \u201C<span id="no-results-search-text">${e}</span>\u201D
+    ${t?`<div class="text-size-large">
+          No results for \u201C<span id="no-results-search-text">${t}</span>\u201D
         </div>`:""}
     <div class="spacer-p5"></div>
     <div class="text-size-small text-gray6">
@@ -467,4 +467,4 @@
     </div>
   </div>
 </div>
-`};var O=(e,i)=>{let t=document.querySelector(e);t?t.innerHTML=i:u.warn(`Unable to find the DOM element with identifier ${e}`)},K=async(e,i,t)=>{var g,f,v;let s="";if(e.length>0){let w=z(e),y=A(i,t);s=w+y}else s=H();let o=P(i);O("#filter-count",o),O(b,s);let a=(g=document.querySelector(b))==null?void 0:g.querySelector(".is-previous"),p=(f=document.querySelector(b))==null?void 0:f.querySelector(".is-next"),d=(v=document.querySelector(b))==null?void 0:v.querySelectorAll(".pagination-link"),c=n.after;a==null||a.addEventListener("click",()=>L("prev",c,t,0)),p==null||p.addEventListener("click",()=>L("next",c,t,0)),d==null||d.forEach(w=>{let y=parseInt(w.textContent);w.addEventListener("click",()=>L("goto",c,t,y))}),ee(),te()},R=e=>{let i=document.querySelector(_),t=document.querySelector(N);i&&t&&(e?(i.style.display="block",t.style.display="flex"):(i.style.display="none",t.style.display="none"))},X=()=>{let i=[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(o=>document.querySelector(`[data-type-filter="${o}"]`)),t=n.chain,s=q[t];i.forEach(o=>{let a=o.getAttribute("data-type-filter");s.includes(a)?o.style.display="block":o.style.display="none"})},G=()=>{let e=n.type;[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(s=>document.querySelector(`[data-type-filter="${s}"]`)).forEach(s=>{var a,p,d,c;(a=s==null?void 0:s.querySelector(".w-radio-input"))==null||a.classList.remove("w--redirected-checked","w--redirected-focus"),(p=s==null?void 0:s.querySelector(".filter-radio-label"))==null||p.classList.remove("is-active");let o=s.getAttribute("data-type-filter");e===o&&((d=s==null?void 0:s.querySelector(".w-radio-input"))==null||d.classList.add("w--redirected-checked"),(c=s==null?void 0:s.querySelector(".filter-radio-label"))==null||c.classList.add("is-active"))})},T=async()=>{u.log("Updating Filters"),X(),G()},I=async()=>{u.log("Updating List");let e={chain:n.chain,type:n.type,categories:n.categories,query:n.query,sort:n.sort,after:n.after,limit:n.limit},i=await M(e),{success:t,status:s,data:o,error:a}=i;if(t){let{total:p,records:d,has_more:c}=o;K(d,p,c)}else u.warn(a)},L=(e,i,t,s)=>{u.log(e),e==="next"&&t?h({after:n.after+n.limit}):e==="prev"&&i>0?h({after:n.after-n.limit}):e==="goto"&&!isNaN(s)&&h({after:(s-1)*n.limit})},ee=()=>{let e=document.querySelectorAll(".filtered-projects-tag");console.log(e),e.forEach(i=>{console.log(i);let t=i.querySelector(".filtered-label"),s=i.querySelector(".filter-close-icon"),o=document.querySelector(`[data-categories-option="${t==null?void 0:t.textContent}"]`);console.log(i,s,o),i.addEventListener("click",a=>{console.log("removing filter"),o==null||o.click()})})};function te(){let e=document.getElementById("id-categories"),i=document.getElementById("pos-zkevm-categories"),t=n.chain,s=n.type;i.style.display="none",e.style.display="none",console.log(e,i,t,s),t===l.id&&s===r.solution_providers?(e.style.display="block",i.style.display="none"):(t===l.pos||t===l.zkevm)&&s===r.solution_providers&&(e.style.display="none",i.style.display="block")}var k=()=>{document.querySelectorAll(".filter-search-field.is-in-dd").forEach(t=>{console.log(t),t.value=""}),document.querySelectorAll(" .filter-checkbox").forEach(t=>{t.classList.remove("w--redirected-checked")})};var C=(e,i,t)=>{document.querySelectorAll(e).forEach(o=>{o.addEventListener("click",t)})},ie=e=>{var t,s,o;let i=e.currentTarget.getAttribute("data-tab-name");switch(h({tab:i,after:0,categories:[]}),i){case m.public_chains:h({type:r.dapps}),(t=document.querySelector(`[data-chain-name="${l.zkevm}"]`))==null||t.click();break;case m.app_specific_chains:h({type:r.chains}),(s=document.querySelector(`[data-chain-name="${l.cdk}"]`))==null||s.click();break;case m.decentralized_identity:h({type:r.dapps}),(o=document.querySelector(`[data-chain-name="${l.id}"]`))==null||o.click();break}k(),u.log(`Tab selected: ${n.tab}`)},se=e=>{let i=e.currentTarget.getAttribute("data-chain-name");switch(h({chain:i,after:0,categories:[]}),i){case l.zkevm:case l.pos:h({type:r.dapps});break;case l.cdk:h({type:r.chains});break;case l.id:h({type:r.dapps});break}u.log(`Chain selected: ${n.chain}`);let t=[l.cdk,l.id,l.pos,l.zkevm];R(t.includes(i)),k()},re=e=>{let i=e.currentTarget.getAttribute("data-type-filter");h({type:i,after:0,categories:[]}),u.log(`Type selected: ${n.type}`),k()},oe=e=>{let i=e.currentTarget.getAttribute("data-sort-filter");h({sort:i,after:0}),u.log(`Sort selected: ${n.sort}`)},ne=e=>{let i=ce(t=>{console.log(t);let s=t.target.value;h({query:s,after:0}),u.log(`Query: ${n.query}`)},500);console.log(e),i(e)},F=()=>{let i=[m.public_chains,m.app_specific_chains,m.decentralized_identity].map(t=>`[data-tab-name="${t}"]`).join(",");C(i,"tab",ie)},j=()=>{let i=[l.zkevm,l.pos,l.id,l.cdk,l.miden].map(t=>`[data-chain-name="${t}"]`).join(",");C(i,"chain",se)},B=()=>{let i=[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(t=>`[data-type-filter="${t}"]`).join(",");C(i,"type",re)},D=()=>{let i=[x.ascending,x.descending].map(t=>`[data-sort-filter="${t}"]`).join(",");C(i,"sort",oe)};function ce(e,i=300){let t;return(...s)=>{clearTimeout(t),t=setTimeout(()=>{e.apply(this,s)},i)}}var U=()=>{let e="#filter-search";document.querySelector(e).addEventListener("input",ne)},V=(e,i)=>{i.forEach(t=>{var a;let o=(((a=t.textContent)==null?void 0:a.toLowerCase())||"").includes(e.toLowerCase());t.style.display=o?"flex":"none"})},ae=e=>{var s;let i=e.currentTarget.value,t=(s=document.querySelector("#pos-zkevm-categories"))==null?void 0:s.querySelectorAll(".filter-checkbox-container");console.log(i,t),V(i,t),u.log(`Query: ${i}`)},le=e=>{var s;let i=e.currentTarget.value,t=(s=document.querySelector("#id-categories"))==null?void 0:s.querySelectorAll(".filter-checkbox-container");console.log(i,t),V(i,t),u.log(`Query: ${i}`)},de=e=>{e.preventDefault();let i=e.currentTarget.getAttribute("data-categories-option"),t=[...n.categories];console.log(t),t.includes(i)?t=t.filter(o=>o!==i):t.push(i),h({categories:t,after:0});let s=e.currentTarget.querySelector(".w-checkbox-input");n.categories.includes(i)?s==null||s.classList.add("w--redirected-checked"):s==null||s.classList.remove("w--redirected-checked"),u.log(`Categories selected: ${n.categories}`)},Y=()=>{let e="#PoS-zkEVM-Categories-Search",i=document.querySelector(e);i==null||i.addEventListener("input",ae);let t="#ID-Categories-Search",s=document.querySelector(t);s==null||s.addEventListener("input",le),C(".filter-checkbox-container","click",de)};var pe=()=>{document.addEventListener("filters",function(e){console.log("Event triggered",e),T(),I()})},ge=()=>{F(),j(),B(),D(),U(),Y()},ue=()=>{var s;let e=document.querySelector(`[data-tab-name="${m.public_chains}"]`),i=document.querySelector(`[data-tab-name="${l.zkevm}"]`),t=document.querySelector(`[data-sort-filter="${x.ascending}"]`);(s=t==null?void 0:t.querySelector(".filter-radiobox"))==null||s.classList.add("w--redirected-checked"),e==null||e.click()},he=()=>{window.Webflow||(window.Webflow=[]),window.Webflow.push(async()=>{pe(),ge(),ue(),T(),I()})};he();})();
+`};var F=(t,o)=>{let e=document.querySelector(t);e?e.innerHTML=o:n.warn(`Unable to find the DOM element with identifier ${t}`)},se=async(t,o,e)=>{var u,y,m;let i="";if(t&&t.length>0){let w=O(t),f=H(o,e);i=w+f}else i=R();let s=P(o);F("#filter-count",s),F(x,i);let c=(u=document.querySelector(x))==null?void 0:u.querySelector(".is-previous"),p=(y=document.querySelector(x))==null?void 0:y.querySelector(".is-next"),d=(m=document.querySelector(x))==null?void 0:m.querySelectorAll(".pagination-link"),l=a.after;c==null||c.addEventListener("click",()=>L("prev",l,e,0)),p==null||p.addEventListener("click",()=>L("next",l,e,0)),d==null||d.forEach(w=>{let f=parseInt(w.textContent);w.addEventListener("click",()=>L("goto",l,e,f))}),ce(),ae()},j=t=>{let o=document.querySelector(N),e=document.querySelector(M);o&&e&&(t?(o.style.display="block",e.style.display="flex"):(o.style.display="none",e.style.display="none"))},re=()=>{let o=[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(s=>document.querySelector(`[data-type-filter="${s}"]`)),e=a.chain,i=z[e];o.forEach(s=>{let c=s.getAttribute("data-type-filter");i.includes(c)?s.style.display="block":s.style.display="none"})},ne=()=>{let t=a.type;[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(i=>document.querySelector(`[data-type-filter="${i}"]`)).forEach(i=>{var c,p,d,l;(c=i==null?void 0:i.querySelector(".w-radio-input"))==null||c.classList.remove("w--redirected-checked","w--redirected-focus"),(p=i==null?void 0:i.querySelector(".filter-radio-label"))==null||p.classList.remove("is-active");let s=i.getAttribute("data-type-filter");t===s&&((d=i==null?void 0:i.querySelector(".w-radio-input"))==null||d.classList.add("w--redirected-checked"),(l=i==null?void 0:i.querySelector(".filter-radio-label"))==null||l.classList.add("is-active"))})},T=async()=>{n.log("Updating Filters"),re(),ne()},I=async()=>{n.log("Updating List");let t={chain:a.chain,type:a.type,categories:a.categories,query:a.query,sort:a.sort,after:a.after,limit:a.limit},o=await A(t),{success:e,status:i,data:s,error:c}=o;if(e){let{total:p,records:d,has_more:l}=s;se(d,p,l)}else n.warn(c)},L=(t,o,e,i)=>{n.log(t),t==="next"&&e?h({after:a.after+a.limit}):t==="prev"&&o>0?h({after:a.after-a.limit}):t==="goto"&&!isNaN(i)&&h({after:(i-1)*a.limit})},ce=()=>{document.querySelectorAll(".filtered-projects-tag").forEach(o=>{let e=o.querySelector(".filtered-label"),i=o.querySelector(".filter-close-icon"),s=document.querySelector(`[data-categories-option="${e==null?void 0:e.getAttribute("data-value")}"]`);s||(s=document.querySelector(`[data-subcategories-option="${e==null?void 0:e.getAttribute("data-value")}"]`)),n.log(o,i,s),o.addEventListener("click",c=>{s==null||s.click()})})};function ae(){let t=document.getElementById("id-categories"),o=document.getElementById("pos-zkevm-categories"),e=document.getElementById("dapps-categories"),i=a.chain,s=a.type;o.style.display="none",t.style.display="none",e.style.display="none",i===g.id&&s===r.solution_providers?(t.style.display="block",o.style.display="none",e.style.display="none"):(i===g.pos||i===g.zkevm)&&s===r.solution_providers?(t.style.display="none",o.style.display="block",e.style.display="none"):(i===g.pos||i===g.zkevm)&&s===r.dapps&&(t.style.display="none",o.style.display="none",e.style.display="block")}var S=()=>{document.querySelectorAll(".filter-search-field.is-in-dd").forEach(e=>{e.value=""}),document.querySelectorAll(" .w-checkbox-input").forEach(e=>{e.classList.remove("w--redirected-checked")})};var C=(t,o,e)=>{document.querySelectorAll(t).forEach(s=>{s.addEventListener("click",e)})},le=t=>{var e,i,s;let o=t.currentTarget.getAttribute("data-tab-name");switch(o){case v.public_chains:h({tab:o,after:0,categories:[],type:r.dapps,chain:g.zkevm}),(e=document.querySelector(`[data-chain-name="${g.zkevm}"]`))==null||e.click();break;case v.app_specific_chains:h({tab:o,after:0,categories:[],type:r.chains,chain:g.cdk}),(i=document.querySelector(`[data-chain-name="${g.cdk}"]`))==null||i.click();break;case v.decentralized_identity:h({tab:o,after:0,categories:[],type:r.dapps,chain:g.id}),(s=document.querySelector(`[data-chain-name="${g.id}"]`))==null||s.click();break}S(),n.log(`Tab selected: ${a.tab}`)},de=t=>{let o=t.currentTarget.getAttribute("data-chain-name");switch(o){case g.zkevm:case g.pos:h({chain:o,after:0,categories:[],type:r.dapps});break;case g.cdk:h({chain:o,after:0,categories:[],type:r.chains});break;case g.id:h({chain:o,after:0,categories:[],type:r.dapps});break}n.log(`Chain selected: ${a.chain}`);let e=[g.cdk,g.id,g.pos,g.zkevm];j(e.includes(o)),S()},ge=t=>{let o=t.currentTarget.getAttribute("data-type-filter");h({type:o,after:0,categories:[]}),n.log(`Type selected: ${a.type}`),S()},pe=t=>{let o=t.currentTarget.getAttribute("data-sort-filter");h({sort:o,after:0}),n.log(`Sort selected: ${a.sort}`)},ue=t=>{he(e=>{n.log(e);let i=e.target.value;h({query:i,after:0}),n.log(`Query: ${a.query}`)},500)(t)},D=()=>{let o=[v.public_chains,v.app_specific_chains,v.decentralized_identity].map(e=>`[data-tab-name="${e}"]`).join(",");C(o,"tab",le)},U=()=>{let o=[g.zkevm,g.pos,g.id,g.cdk,g.miden].map(e=>`[data-chain-name="${e}"]`).join(",");C(o,"chain",de)},V=()=>{let o=[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(e=>`[data-type-filter="${e}"]`).join(",");C(o,"type",ge)},Y=()=>{let o=[b.ascending,b.descending].map(e=>`[data-sort-filter="${e}"]`).join(",");C(o,"sort",pe)};function he(t,o=300){let e;return(...i)=>{clearTimeout(e),e=setTimeout(()=>{t.apply(this,i)},o)}}var Z=()=>{let t="#filter-search";document.querySelector(t).addEventListener("input",ue)},E=(t,o)=>{o.forEach(e=>{var c;let s=(((c=e.textContent)==null?void 0:c.toLowerCase())||"").includes(t.toLowerCase());e.style.display=s?"flex":"none"})},me=t=>{var i;let o=t.currentTarget.value,e=(i=document.querySelector("#pos-zkevm-categories"))==null?void 0:i.querySelectorAll(".filter-checkbox-container");E(o,e),n.log(`Query: ${o}`)},fe=t=>{var i;let o=t.currentTarget.value,e=(i=document.querySelector("#id-categories"))==null?void 0:i.querySelectorAll(".filter-checkbox-container");E(o,e),n.log(`Query: ${o}`)},ve=t=>{var i;let o=t.currentTarget.value,e=(i=document.querySelector("#dapps-categories"))==null?void 0:i.querySelectorAll(".filter-checkbox-container");n.log(o,e),E(o,e),n.log(`Query: ${o}`)},B=t=>{t.preventDefault();let o=t.currentTarget.getAttribute("data-categories-option"),e=[...a.categories];n.log(e),e.includes(o)?e=e.filter(s=>s!==o):e.push(o),h({categories:e,after:0});let i=t.currentTarget.querySelector(".w-checkbox-input");a.categories.includes(o)?i==null||i.classList.add("w--redirected-checked"):i==null||i.classList.remove("w--redirected-checked"),n.log(`Categories selected: ${a.categories}`)},ye=t=>{t.preventDefault();let o=t.currentTarget.getAttribute("data-subcategories-option");o||(o=t.currentTarget.getAttribute("data-categories-option"));let e=[...a.categories];n.log(e),e.includes(o)?e=e.filter(s=>s!==o):e.push(o),h({categories:e,after:0});let i=t.currentTarget.querySelector(".w-checkbox-input");a.categories.includes(o)?i==null||i.classList.add("w--redirected-checked"):i==null||i.classList.remove("w--redirected-checked"),n.log(`Categories selected: ${a.categories}`)},Q=()=>{var y,m,w;let t="#PoS-zkEVM-Categories-Search",o=document.querySelector(t);o==null||o.addEventListener("input",me);let e="#ID-Categories-Search",i=document.querySelector(e);i==null||i.addEventListener("input",fe);let s="#dApps-Categories-Search",c=document.querySelector(s);c==null||c.addEventListener("input",ve);let p=".filter-checkbox-container",d=(y=document.querySelector("#dapps-categories"))==null?void 0:y.querySelectorAll(p);d==null||d.forEach(f=>{f.addEventListener("click",ye)});let l=(m=document.querySelector("#pos-zkevm-categories"))==null?void 0:m.querySelectorAll(p);l==null||l.forEach(f=>{f.addEventListener("click",B)});let u=(w=document.querySelector("#id-categories"))==null?void 0:w.querySelectorAll(p);u==null||u.forEach(f=>{f.addEventListener("click",B)})};var G="https://ecosystem-staging-api.polygon.technology",J="https://ecosystem-staging.polygon.technology",we=t=>{n.log("logging in"),window.location.href=`${J}/login/?redirect=${encodeURIComponent(t)}&operation=login`},be=t=>{n.log("logging out"),window.location.href=`${J}/login/?redirect=${encodeURIComponent(t)}&operation=logout`};var W=async()=>{try{let o=await(await fetch(`${G}/auth/sessionRefresh`,{credentials:"include"})).json();n.log("session refreshed: ",o)}catch(t){n.log(t)}},xe=async(t,o,e)=>{try{let i=await fetch(`${G}/auth/sessionCheck`,{credentials:"include"}),s=await i.json();if(n.log(i,s),s.success){n.log("session validated"),t(),await W();let c=localStorage.getItem("sessionRefreshIntervalId");c&&(clearInterval(Number(c)),localStorage.removeItem("sessionRefreshIntervalId"));let p=setInterval(W,60*30*1e3);localStorage.setItem("sessionRefreshIntervalId",JSON.stringify(p)),window.addEventListener("beforeunload",()=>{let d=localStorage.getItem("sessionRefreshIntervalId");d&&(clearInterval(Number(d)),localStorage.removeItem("sessionRefreshIntervalId"))})}else o()}catch(i){n.log(i),e()}},K=()=>{let t=()=>{n.log("Showing authenticatedView");let e=document.querySelector("#user-logged-in"),i=document.querySelector("#user-not-logged-in");$(i).hide(),$(e).show()},o=()=>{n.log("Showing unauthenticatedView");let e=document.querySelector("#user-logged-in"),i=document.querySelector("#user-not-logged-in");$(e).hide(),$(i).show()};$("#log-in-btn").click(()=>{let e=window.location.href;we(e)}),$("#log-out-btn").click(()=>{let e=window.location.href;be(e)}),xe(t,o,o)};var Se=()=>{document.addEventListener("filters",function(t){n.log("Event triggered",t),T(),I()})};var Ce=()=>{D(),U(),V(),Y(),Z(),Q()},ke=()=>{var i;let t=document.querySelector(`[data-tab-name="${v.public_chains}"]`),o=document.querySelector(`[data-tab-name="${g.zkevm}"]`),e=document.querySelector(`[data-sort-filter="${b.ascending}"]`);(i=e==null?void 0:e.querySelector(".filter-radiobox"))==null||i.classList.add("w--redirected-checked"),t==null||t.click()},Le=()=>{window.Webflow||(window.Webflow=[]),window.Webflow.push(async()=>{localStorage.getItem("DEBUG_MODE")!=="true"&&(K(),Se(),Ce(),ke(),T(),I())})};Le();})();
