@@ -1,12 +1,12 @@
-"use strict";(()=>{var E="https://explorer-backend-1.onrender.com",l={zkevm:"Polygon zkEVM",pos:"Polygon POS",cdk:"Polygon CDK",id:"Polygon ID",miden:"Polygon Miden"},r={dapps:"dApps",solution_providers:"Solution Providers",ecosystem_enablers:"Ecosystem Enablers",enterprises:"Enterprises",chains:"Chains"},x={ascending:"ascending",descending:"descending"},m={public_chains:"Public Chains",app_specific_chains:"App Specific Chains",decentralized_identity:"Decentralized Identity"},_="#filter-wrapper",b="#list-wrapper",N="#list-news-wrapper",q={"Polygon zkEVM":[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises],"Polygon POS":[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises],"Polygon CDK":[r.chains,r.solution_providers],"Polygon ID":[r.dapps,r.solution_providers]};function Z(e={},i="store"){let t=0;function s(p,d){let c=new CustomEvent(p,{bubbles:!0,cancelable:!0,detail:d});t>0&&(document.dispatchEvent(c),t=0)}function o(p,d){return{get:function(c,g){return g==="_isProxy"?!0:(["object","array"].includes(Object.prototype.toString.call(c[g]).slice(8,-1).toLowerCase())&&!c[g]._isProxy&&(c[g]=new Proxy(c[g],o(p,d))),c[g])},set:function(c,g,f){return c[g]===f||(c[g]=f,t+=1),!0},deleteProperty:function(c,g){return delete c[g],t+=1,!0}}}let a=p=>{console.log("ran setState");for(let d in p)p.hasOwnProperty(d)&&(e[d]=p[d]);t+=1,s(i,e)};return{state:new Proxy(e,o(i,e)),setState:a}}var{state:n,setState:h}=Z({tab:m.public_chains,chain:l.zkevm,type:r.dapps,categories:[],sort:"ascending",query:"",after:0,limit:9},"filters");var u={log:e=>{console.log(e)},deep:e=>{console.dir(e)},info:e=>{console.info(e)},warn:e=>{console.warn(e)},error:e=>{console.error(e)}};var W=e=>Object.entries(e).map(([i,t])=>Array.isArray(t)?t.map(s=>`${encodeURIComponent(i)}=${encodeURIComponent(s)}`).join("&"):`${encodeURIComponent(i)}=${encodeURIComponent(t)}`).join("&"),Q=async(e,i,t)=>{let s={method:i,headers:{"Content-Type":"application/json"}};t&&(s.body=t);let a=await(await fetch(`${E}/${e}`,s)).json();return u.deep(a),a},M=async e=>{u.deep(e);let i=W(e);return Q(`companies?${i}`,"GET")};var P=e=>{let i=n.categories;return`
+"use strict";(()=>{var q="https://explorer-backend-1.onrender.com",l={zkevm:"Polygon zkEVM",pos:"Polygon POS",cdk:"Polygon CDK",id:"Polygon ID",miden:"Polygon Miden"},o={dapps:"dApps",solution_providers:"Solution Providers",ecosystem_enablers:"Ecosystem Enablers",enterprises:"Enterprises",chains:"Chains"},b={ascending:"ascending",descending:"descending"},v={public_chains:"Public Chains",app_specific_chains:"App Specific Chains",decentralized_identity:"Decentralized Identity"},_="#filter-wrapper",x="#list-wrapper",M="#list-news-wrapper",N={"Polygon zkEVM":[o.dapps,o.solution_providers,o.ecosystem_enablers,o.enterprises],"Polygon POS":[o.dapps,o.solution_providers,o.ecosystem_enablers,o.enterprises],"Polygon CDK":[o.chains,o.solution_providers],"Polygon ID":[o.dapps,o.solution_providers]};var d={log:(...t)=>{window.location.hostname.includes("webflow.io")&&console.log(...t)},deep:(...t)=>{window.location.hostname.includes("webflow.io")&&console.dir(...t)},info:(...t)=>{window.location.hostname.includes("webflow.io")&&console.info(...t)},warn:(...t)=>{window.location.hostname.includes("webflow.io")&&console.warn(...t)},error:(...t)=>{window.location.hostname.includes("webflow.io")&&console.error(...t)}};var Q=t=>Object.entries(t).map(([i,e])=>Array.isArray(e)?e.map(r=>`${encodeURIComponent(i)}=${encodeURIComponent(r)}`).join("&"):`${encodeURIComponent(i)}=${encodeURIComponent(e)}`).join("&"),W=async(t,i,e)=>{let r={method:i,headers:{"Content-Type":"application/json"}};e&&(r.body=e);let a=await(await fetch(`${q}/${t}`,r)).json();return d.deep(a),a},z=async t=>{d.deep(t);let i=Q(t);return W(`companies?${i}`,"GET")};function G(t={},i="store"){let e=0;function r(u,p){let c=new CustomEvent(u,{bubbles:!0,cancelable:!0,detail:p});e>0&&(document.dispatchEvent(c),e=0)}function s(u,p){return{get:function(c,g){return g==="_isProxy"?!0:(["object","array"].includes(Object.prototype.toString.call(c[g]).slice(8,-1).toLowerCase())&&!c[g]._isProxy&&(c[g]=new Proxy(c[g],s(u,p))),c[g])},set:function(c,g,y){return c[g]===y||(c[g]=y,e+=1),!0},deleteProperty:function(c,g){return delete c[g],e+=1,!0}}}let a=u=>{d.log("ran setState");for(let p in u)u.hasOwnProperty(p)&&(t[p]=u[p]);e+=1,r(i,t)};return{state:new Proxy(t,s(i,t)),setState:a}}var{state:n,setState:h}=G({tab:v.public_chains,chain:l.zkevm,type:o.dapps,categories:[],sort:"ascending",query:"",after:0,limit:9},"filters");var A=t=>{let i=n.categories;return`
   <div class="filtered-projects-container">
   <div class="text-size-med text-gray6">
-    <span class="filter-number-text">${e} projects</span> 
+    <span class="filter-number-text">${t} projects</span> 
   ${i&&i.length>0?"filtered by":""}
   </div>
-  ${i&&i.length>0?i.map(s=>`<div class="filtered-projects-tags-container">
+  ${i&&i.length>0?i.map(r=>`<div class="filtered-projects-tags-container">
     <div class="filtered-projects-tag">
-      <div class="filtered-label">${s}</div>
+      <div class="filtered-label" data-value="${r}">${r.split("_")[1]||r}</div>
       <div class="filter-close-icon w-embed">
         <svg
           width="14"
@@ -27,8 +27,8 @@
     </div>
   </div>
 </div>
-`},z=e=>`
-  <div fs-cmsnest-element="list-2" role="list" class="items-cl w-dyn-items">${e.map(s=>J(s)).join("")}</div>`,J=e=>{let{id:i,name:t,description:s,icon:o,cardBackground:a,twitterHandle:p,githubRepo:d,category:c,subCategories:g,discordServer:f,telegramChannel:v,coingeckoLink:w,websiteLink:y,linkedinLink:me,spnProfile:$}=e;return`<div role="listitem" class="items-ci w-dyn-item">
+`},P=t=>`
+  <div fs-cmsnest-element="list-2" role="list" class="items-cl w-dyn-items">${t.map(r=>J(r)).join("")}</div>`,J=t=>{let{id:i,name:e,description:r,icon:s,cardBackground:a,twitterHandle:u,githubRepo:p,category:c,subCategories:g,discordServer:y,telegramChannel:m,coingeckoLink:w,websiteLink:f,linkedinLink:ye,spnProfile:I}=t;return`<div role="listitem" class="items-ci w-dyn-item">
   <div
     class="items-ci-wrapper"
     style="
@@ -43,13 +43,13 @@
           width="112"
           loading="lazy"
           alt=""
-          src="${o}"
+          src="${s}"
           class="item-icon-img"
         />
         <div class="item-name-tags">
-          <h3 class="text-h3">${t}</h3>
-        ${c?`<div class= "item-tags">${c.map(S=>`<div class="items-tag is-primary" > ${S} </div >`).join("")} </div>`:""}
-        ${g?`<div class="item-tags"> ${g.map(S=>`<div class="items-tag">${S}</div>`).join("")}</div >`:""}
+          <h3 class="text-h3">${e}</h3>
+        ${c?`<div class= "item-tags">${c.map(k=>`<div class="items-tag is-primary" > ${k} </div >`).join("")} </div>`:""}
+        ${g?`<div class="item-tags"> ${g.map(k=>`<div class="items-tag">${k}</div>`).join("")}</div >`:""}
         </div>
       </div>
     </div>
@@ -64,9 +64,9 @@
       class="items-card-hover-content"
     >
       <div class="item-card-link">
-        <h3 class="text-h3">${t}</h3>
+        <h3 class="text-h3">${e}</h3>
         <p class="text-size-med is-item-card-desc">
-          ${s}
+          ${r}
         </p>
         <div class="item-read-more-container">
           <div class="text-semibold is-item-read-more">Read&nbsp;More</div>
@@ -86,15 +86,15 @@
               </svg>
             </div>
             <div class="item-read-more-tooltip-text">
-              ${s}
+              ${r}
             </div>
           </div>
         </div>
       </div>
       <div class="items-links-wrapper">
         <div class="items-social-links-wrapper">
-          ${y?`<a
-            href="${y}"
+          ${f?`<a
+            href="${f}"
             class="featured-social-link w-inline-block "
             ><div class="featured-items-social-icon w-embed">
               <svg
@@ -113,8 +113,8 @@
                 ></path>
               </svg></div></a
           >`:""}
-          ${p?`<a
-            href="${p}"
+          ${u?`<a
+            href="${u}"
             class="featured-social-link w-inline-block"
             ><div class="items-social-icon w-embed">
               <svg
@@ -129,8 +129,8 @@
                   fill="currentcolor"
                 ></path>
               </svg></div></a
-          >`:""}${d?`<a
-            href="${d}"
+          >`:""}${p?`<a
+            href="${p}"
             class="featured-social-link w-inline-block"
             ><div class="featured-items-social-icon w-embed">
               <svg
@@ -149,7 +149,7 @@
               </svg></div
           ></a>`:""}
         </div>
-        ${$?`<a href="${$}" class="featured-item-link w-inline-block"
+        ${I?`<a href="${I}" class="featured-item-link w-inline-block"
           ><div>Connect with SP</div>
           <div class="featured-item-link-arrow w-embed">
             <svg
@@ -173,10 +173,10 @@
   </div>
 </div>
 
-`},A=(e,i)=>{let t=n.after,s=n.limit,o=3,a=[],p=parseInt(t/s)+1,d=parseInt(e/s)+1;a.push(1),p>3&&a.push("...");let c=Math.max(p-Math.floor(o/2),2),g=Math.min(c+o-1,d-1);g-c<o-2&&(c=Math.max(g-o+2,2));for(let v=c;v<=g;v++)a.push(v);return g<d-1&&a.push("..."),d>1&&a.push(d),`
+`},H=(t,i)=>{let e=n.after,r=n.limit,s=3,a=[],u=parseInt(e/r)+1,p=parseInt((t-1)/r)+1;a.push(1),u>3&&a.push("...");let c=Math.max(u-Math.floor(s/2),2),g=Math.min(c+s-1,p-1);g-c<s-2&&(c=Math.max(g-s+2,2));for(let m=c;m<=g;m++)a.push(m);return g<p-1&&a.push("..."),p>1&&a.push(p),`
         <div class="pagination-wrapper">
   <button
-    class="pagination-btn is-previous w-inline-block ${t?"":"is-disabled"}"
+    class="pagination-btn is-previous w-inline-block ${e?"":"is-disabled"}"
   >
     <div class="pagination-icon w-embed">
       <svg
@@ -199,7 +199,7 @@
     </div>
   </button>
 
-  ${a.map(v=>`<button class="pagination-link ${v===p?"w--current":""}"> ${v}</button>`).join("")}
+  ${a.map(m=>`<button class="pagination-link ${m===u?"w--current":""}"> ${m}</button>`).join("")}
   <button
     class="pagination-btn is-next w-inline-block ${i?"":"is-disabled"}"
   >
@@ -224,7 +224,7 @@
     </div>
   </button>
 </div>
-    `},H=()=>{let e=n.query;return`<div class="no-results-wrapper">
+    `},O=()=>{let t=n.query;return`<div class="no-results-wrapper">
   <div class="no-results-abs-overlay">
     <img
       src="https://assets-global.website-files.com/652772322237331bccec35f0/655dc0be222b8fc5ca76f1fa_no-results-icon.svg"
@@ -233,8 +233,8 @@
       class="no-results-icon"
     />
     <div class="spacer-1"></div>
-    ${e?`<div class="text-size-large">
-          No results for \u201C<span id="no-results-search-text">${e}</span>\u201D
+    ${t?`<div class="text-size-large">
+          No results for \u201C<span id="no-results-search-text">${t}</span>\u201D
         </div>`:""}
     <div class="spacer-p5"></div>
     <div class="text-size-small text-gray6">
@@ -467,4 +467,4 @@
     </div>
   </div>
 </div>
-`};var O=(e,i)=>{let t=document.querySelector(e);t?t.innerHTML=i:u.warn(`Unable to find the DOM element with identifier ${e}`)},K=async(e,i,t)=>{var g,f,v;let s="";if(e.length>0){let w=z(e),y=A(i,t);s=w+y}else s=H();let o=P(i);O("#filter-count",o),O(b,s);let a=(g=document.querySelector(b))==null?void 0:g.querySelector(".is-previous"),p=(f=document.querySelector(b))==null?void 0:f.querySelector(".is-next"),d=(v=document.querySelector(b))==null?void 0:v.querySelectorAll(".pagination-link"),c=n.after;a==null||a.addEventListener("click",()=>L("prev",c,t,0)),p==null||p.addEventListener("click",()=>L("next",c,t,0)),d==null||d.forEach(w=>{let y=parseInt(w.textContent);w.addEventListener("click",()=>L("goto",c,t,y))}),ee(),te()},R=e=>{let i=document.querySelector(_),t=document.querySelector(N);i&&t&&(e?(i.style.display="block",t.style.display="flex"):(i.style.display="none",t.style.display="none"))},X=()=>{let i=[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(o=>document.querySelector(`[data-type-filter="${o}"]`)),t=n.chain,s=q[t];i.forEach(o=>{let a=o.getAttribute("data-type-filter");s.includes(a)?o.style.display="block":o.style.display="none"})},G=()=>{let e=n.type;[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(s=>document.querySelector(`[data-type-filter="${s}"]`)).forEach(s=>{var a,p,d,c;(a=s==null?void 0:s.querySelector(".w-radio-input"))==null||a.classList.remove("w--redirected-checked","w--redirected-focus"),(p=s==null?void 0:s.querySelector(".filter-radio-label"))==null||p.classList.remove("is-active");let o=s.getAttribute("data-type-filter");e===o&&((d=s==null?void 0:s.querySelector(".w-radio-input"))==null||d.classList.add("w--redirected-checked"),(c=s==null?void 0:s.querySelector(".filter-radio-label"))==null||c.classList.add("is-active"))})},T=async()=>{u.log("Updating Filters"),X(),G()},I=async()=>{u.log("Updating List");let e={chain:n.chain,type:n.type,categories:n.categories,query:n.query,sort:n.sort,after:n.after,limit:n.limit},i=await M(e),{success:t,status:s,data:o,error:a}=i;if(t){let{total:p,records:d,has_more:c}=o;K(d,p,c)}else u.warn(a)},L=(e,i,t,s)=>{u.log(e),e==="next"&&t?h({after:n.after+n.limit}):e==="prev"&&i>0?h({after:n.after-n.limit}):e==="goto"&&!isNaN(s)&&h({after:(s-1)*n.limit})},ee=()=>{let e=document.querySelectorAll(".filtered-projects-tag");console.log(e),e.forEach(i=>{console.log(i);let t=i.querySelector(".filtered-label"),s=i.querySelector(".filter-close-icon"),o=document.querySelector(`[data-categories-option="${t==null?void 0:t.textContent}"]`);console.log(i,s,o),i.addEventListener("click",a=>{console.log("removing filter"),o==null||o.click()})})};function te(){let e=document.getElementById("id-categories"),i=document.getElementById("pos-zkevm-categories"),t=n.chain,s=n.type;i.style.display="none",e.style.display="none",console.log(e,i,t,s),t===l.id&&s===r.solution_providers?(e.style.display="block",i.style.display="none"):(t===l.pos||t===l.zkevm)&&s===r.solution_providers&&(e.style.display="none",i.style.display="block")}var k=()=>{document.querySelectorAll(".filter-search-field.is-in-dd").forEach(t=>{console.log(t),t.value=""}),document.querySelectorAll(" .filter-checkbox").forEach(t=>{t.classList.remove("w--redirected-checked")})};var C=(e,i,t)=>{document.querySelectorAll(e).forEach(o=>{o.addEventListener("click",t)})},ie=e=>{var t,s,o;let i=e.currentTarget.getAttribute("data-tab-name");switch(h({tab:i,after:0,categories:[]}),i){case m.public_chains:h({type:r.dapps}),(t=document.querySelector(`[data-chain-name="${l.zkevm}"]`))==null||t.click();break;case m.app_specific_chains:h({type:r.chains}),(s=document.querySelector(`[data-chain-name="${l.cdk}"]`))==null||s.click();break;case m.decentralized_identity:h({type:r.dapps}),(o=document.querySelector(`[data-chain-name="${l.id}"]`))==null||o.click();break}k(),u.log(`Tab selected: ${n.tab}`)},se=e=>{let i=e.currentTarget.getAttribute("data-chain-name");switch(h({chain:i,after:0,categories:[]}),i){case l.zkevm:case l.pos:h({type:r.dapps});break;case l.cdk:h({type:r.chains});break;case l.id:h({type:r.dapps});break}u.log(`Chain selected: ${n.chain}`);let t=[l.cdk,l.id,l.pos,l.zkevm];R(t.includes(i)),k()},re=e=>{let i=e.currentTarget.getAttribute("data-type-filter");h({type:i,after:0,categories:[]}),u.log(`Type selected: ${n.type}`),k()},oe=e=>{let i=e.currentTarget.getAttribute("data-sort-filter");h({sort:i,after:0}),u.log(`Sort selected: ${n.sort}`)},ne=e=>{let i=ce(t=>{console.log(t);let s=t.target.value;h({query:s,after:0}),u.log(`Query: ${n.query}`)},500);console.log(e),i(e)},F=()=>{let i=[m.public_chains,m.app_specific_chains,m.decentralized_identity].map(t=>`[data-tab-name="${t}"]`).join(",");C(i,"tab",ie)},j=()=>{let i=[l.zkevm,l.pos,l.id,l.cdk,l.miden].map(t=>`[data-chain-name="${t}"]`).join(",");C(i,"chain",se)},B=()=>{let i=[r.dapps,r.solution_providers,r.ecosystem_enablers,r.enterprises,r.chains].map(t=>`[data-type-filter="${t}"]`).join(",");C(i,"type",re)},D=()=>{let i=[x.ascending,x.descending].map(t=>`[data-sort-filter="${t}"]`).join(",");C(i,"sort",oe)};function ce(e,i=300){let t;return(...s)=>{clearTimeout(t),t=setTimeout(()=>{e.apply(this,s)},i)}}var U=()=>{let e="#filter-search";document.querySelector(e).addEventListener("input",ne)},V=(e,i)=>{i.forEach(t=>{var a;let o=(((a=t.textContent)==null?void 0:a.toLowerCase())||"").includes(e.toLowerCase());t.style.display=o?"flex":"none"})},ae=e=>{var s;let i=e.currentTarget.value,t=(s=document.querySelector("#pos-zkevm-categories"))==null?void 0:s.querySelectorAll(".filter-checkbox-container");console.log(i,t),V(i,t),u.log(`Query: ${i}`)},le=e=>{var s;let i=e.currentTarget.value,t=(s=document.querySelector("#id-categories"))==null?void 0:s.querySelectorAll(".filter-checkbox-container");console.log(i,t),V(i,t),u.log(`Query: ${i}`)},de=e=>{e.preventDefault();let i=e.currentTarget.getAttribute("data-categories-option"),t=[...n.categories];console.log(t),t.includes(i)?t=t.filter(o=>o!==i):t.push(i),h({categories:t,after:0});let s=e.currentTarget.querySelector(".w-checkbox-input");n.categories.includes(i)?s==null||s.classList.add("w--redirected-checked"):s==null||s.classList.remove("w--redirected-checked"),u.log(`Categories selected: ${n.categories}`)},Y=()=>{let e="#PoS-zkEVM-Categories-Search",i=document.querySelector(e);i==null||i.addEventListener("input",ae);let t="#ID-Categories-Search",s=document.querySelector(t);s==null||s.addEventListener("input",le),C(".filter-checkbox-container","click",de)};var pe=()=>{document.addEventListener("filters",function(e){console.log("Event triggered",e),T(),I()})},ge=()=>{F(),j(),B(),D(),U(),Y()},ue=()=>{var s;let e=document.querySelector(`[data-tab-name="${m.public_chains}"]`),i=document.querySelector(`[data-tab-name="${l.zkevm}"]`),t=document.querySelector(`[data-sort-filter="${x.ascending}"]`);(s=t==null?void 0:t.querySelector(".filter-radiobox"))==null||s.classList.add("w--redirected-checked"),e==null||e.click()},he=()=>{window.Webflow||(window.Webflow=[]),window.Webflow.push(async()=>{pe(),ge(),ue(),T(),I()})};he();})();
+`};var F=(t,i)=>{let e=document.querySelector(t);e?e.innerHTML=i:d.warn(`Unable to find the DOM element with identifier ${t}`)},X=async(t,i,e)=>{var g,y,m;let r="";if(t&&t.length>0){let w=P(t),f=H(i,e);r=w+f}else r=O();let s=A(i);F("#filter-count",s),F(x,r);let a=(g=document.querySelector(x))==null?void 0:g.querySelector(".is-previous"),u=(y=document.querySelector(x))==null?void 0:y.querySelector(".is-next"),p=(m=document.querySelector(x))==null?void 0:m.querySelectorAll(".pagination-link"),c=n.after;a==null||a.addEventListener("click",()=>L("prev",c,e,0)),u==null||u.addEventListener("click",()=>L("next",c,e,0)),p==null||p.forEach(w=>{let f=parseInt(w.textContent);w.addEventListener("click",()=>L("goto",c,e,f))}),ie(),re()},R=t=>{let i=document.querySelector(_),e=document.querySelector(M);i&&e&&(t?(i.style.display="block",e.style.display="flex"):(i.style.display="none",e.style.display="none"))},ee=()=>{let i=[o.dapps,o.solution_providers,o.ecosystem_enablers,o.enterprises,o.chains].map(s=>document.querySelector(`[data-type-filter="${s}"]`)),e=n.chain,r=N[e];i.forEach(s=>{let a=s.getAttribute("data-type-filter");r.includes(a)?s.style.display="block":s.style.display="none"})},te=()=>{let t=n.type;[o.dapps,o.solution_providers,o.ecosystem_enablers,o.enterprises,o.chains].map(r=>document.querySelector(`[data-type-filter="${r}"]`)).forEach(r=>{var a,u,p,c;(a=r==null?void 0:r.querySelector(".w-radio-input"))==null||a.classList.remove("w--redirected-checked","w--redirected-focus"),(u=r==null?void 0:r.querySelector(".filter-radio-label"))==null||u.classList.remove("is-active");let s=r.getAttribute("data-type-filter");t===s&&((p=r==null?void 0:r.querySelector(".w-radio-input"))==null||p.classList.add("w--redirected-checked"),(c=r==null?void 0:r.querySelector(".filter-radio-label"))==null||c.classList.add("is-active"))})},T=async()=>{d.log("Updating Filters"),ee(),te()},E=async()=>{d.log("Updating List");let t={chain:n.chain,type:n.type,categories:n.categories,query:n.query,sort:n.sort,after:n.after,limit:n.limit},i=await z(t),{success:e,status:r,data:s,error:a}=i;if(e){let{total:u,records:p,has_more:c}=s;X(p,u,c)}else d.warn(a)},L=(t,i,e,r)=>{d.log(t),t==="next"&&e?h({after:n.after+n.limit}):t==="prev"&&i>0?h({after:n.after-n.limit}):t==="goto"&&!isNaN(r)&&h({after:(r-1)*n.limit})},ie=()=>{document.querySelectorAll(".filtered-projects-tag").forEach(i=>{let e=i.querySelector(".filtered-label"),r=i.querySelector(".filter-close-icon"),s=document.querySelector(`[data-categories-option="${e==null?void 0:e.getAttribute("data-value")}"]`);s||(s=document.querySelector(`[data-subcategories-option="${e==null?void 0:e.getAttribute("data-value")}"]`)),d.log(i,r,s),i.addEventListener("click",a=>{s==null||s.click()})})};function re(){let t=document.getElementById("id-categories"),i=document.getElementById("pos-zkevm-categories"),e=document.getElementById("dapps-categories"),r=n.chain,s=n.type;i.style.display="none",t.style.display="none",e.style.display="none",r===l.id&&s===o.solution_providers?(t.style.display="block",i.style.display="none",e.style.display="none"):(r===l.pos||r===l.zkevm)&&s===o.solution_providers?(t.style.display="none",i.style.display="block",e.style.display="none"):(r===l.pos||r===l.zkevm)&&s===o.dapps&&(t.style.display="none",i.style.display="none",e.style.display="block")}var C=()=>{document.querySelectorAll(".filter-search-field.is-in-dd").forEach(e=>{e.value=""}),document.querySelectorAll(" .w-checkbox-input").forEach(e=>{e.classList.remove("w--redirected-checked")})};var S=(t,i,e)=>{document.querySelectorAll(t).forEach(s=>{s.addEventListener("click",e)})},se=t=>{var e,r,s;let i=t.currentTarget.getAttribute("data-tab-name");switch(i){case v.public_chains:h({tab:i,after:0,categories:[],type:o.dapps,chain:l.zkevm}),(e=document.querySelector(`[data-chain-name="${l.zkevm}"]`))==null||e.click();break;case v.app_specific_chains:h({tab:i,after:0,categories:[],type:o.chains,chain:l.cdk}),(r=document.querySelector(`[data-chain-name="${l.cdk}"]`))==null||r.click();break;case v.decentralized_identity:h({tab:i,after:0,categories:[],type:o.dapps,chain:l.id}),(s=document.querySelector(`[data-chain-name="${l.id}"]`))==null||s.click();break}C(),d.log(`Tab selected: ${n.tab}`)},oe=t=>{let i=t.currentTarget.getAttribute("data-chain-name");switch(i){case l.zkevm:case l.pos:h({chain:i,after:0,categories:[],type:o.dapps});break;case l.cdk:h({chain:i,after:0,categories:[],type:o.chains});break;case l.id:h({chain:i,after:0,categories:[],type:o.dapps});break}d.log(`Chain selected: ${n.chain}`);let e=[l.cdk,l.id,l.pos,l.zkevm];R(e.includes(i)),C()},ne=t=>{let i=t.currentTarget.getAttribute("data-type-filter");h({type:i,after:0,categories:[]}),d.log(`Type selected: ${n.type}`),C()},ce=t=>{let i=t.currentTarget.getAttribute("data-sort-filter");h({sort:i,after:0}),d.log(`Sort selected: ${n.sort}`)},ae=t=>{le(e=>{d.log(e);let r=e.target.value;h({query:r,after:0}),d.log(`Query: ${n.query}`)},500)(t)},D=()=>{let i=[v.public_chains,v.app_specific_chains,v.decentralized_identity].map(e=>`[data-tab-name="${e}"]`).join(",");S(i,"tab",se)},j=()=>{let i=[l.zkevm,l.pos,l.id,l.cdk,l.miden].map(e=>`[data-chain-name="${e}"]`).join(",");S(i,"chain",oe)},U=()=>{let i=[o.dapps,o.solution_providers,o.ecosystem_enablers,o.enterprises,o.chains].map(e=>`[data-type-filter="${e}"]`).join(",");S(i,"type",ne)},V=()=>{let i=[b.ascending,b.descending].map(e=>`[data-sort-filter="${e}"]`).join(",");S(i,"sort",ce)};function le(t,i=300){let e;return(...r)=>{clearTimeout(e),e=setTimeout(()=>{t.apply(this,r)},i)}}var Y=()=>{let t="#filter-search";document.querySelector(t).addEventListener("input",ae)},$=(t,i)=>{i.forEach(e=>{var a;let s=(((a=e.textContent)==null?void 0:a.toLowerCase())||"").includes(t.toLowerCase());e.style.display=s?"flex":"none"})},de=t=>{var r;let i=t.currentTarget.value,e=(r=document.querySelector("#pos-zkevm-categories"))==null?void 0:r.querySelectorAll(".filter-checkbox-container");$(i,e),d.log(`Query: ${i}`)},pe=t=>{var r;let i=t.currentTarget.value,e=(r=document.querySelector("#id-categories"))==null?void 0:r.querySelectorAll(".filter-checkbox-container");$(i,e),d.log(`Query: ${i}`)},ue=t=>{var r;let i=t.currentTarget.value,e=(r=document.querySelector("#dapps-categories"))==null?void 0:r.querySelectorAll(".filter-checkbox-container");d.log(i,e),$(i,e),d.log(`Query: ${i}`)},B=t=>{t.preventDefault();let i=t.currentTarget.getAttribute("data-categories-option"),e=[...n.categories];d.log(e),e.includes(i)?e=e.filter(s=>s!==i):e.push(i),h({categories:e,after:0});let r=t.currentTarget.querySelector(".w-checkbox-input");n.categories.includes(i)?r==null||r.classList.add("w--redirected-checked"):r==null||r.classList.remove("w--redirected-checked"),d.log(`Categories selected: ${n.categories}`)},ge=t=>{t.preventDefault();let i=t.currentTarget.getAttribute("data-subcategories-option");i||(i=t.currentTarget.getAttribute("data-categories-option"));let e=[...n.categories];d.log(e),e.includes(i)?e=e.filter(s=>s!==i):e.push(i),h({categories:e,after:0});let r=t.currentTarget.querySelector(".w-checkbox-input");n.categories.includes(i)?r==null||r.classList.add("w--redirected-checked"):r==null||r.classList.remove("w--redirected-checked"),d.log(`Categories selected: ${n.categories}`)},Z=()=>{var y,m,w;let t="#PoS-zkEVM-Categories-Search",i=document.querySelector(t);i==null||i.addEventListener("input",de);let e="#ID-Categories-Search",r=document.querySelector(e);r==null||r.addEventListener("input",pe);let s="#dApps-Categories-Search",a=document.querySelector(s);a==null||a.addEventListener("input",ue);let u=".filter-checkbox-container",p=(y=document.querySelector("#dapps-categories"))==null?void 0:y.querySelectorAll(u);p==null||p.forEach(f=>{f.addEventListener("click",ge)});let c=(m=document.querySelector("#pos-zkevm-categories"))==null?void 0:m.querySelectorAll(u);c==null||c.forEach(f=>{f.addEventListener("click",B)});let g=(w=document.querySelector("#id-categories"))==null?void 0:w.querySelectorAll(u);g==null||g.forEach(f=>{f.addEventListener("click",B)})};var he=()=>{document.addEventListener("filters",function(t){d.log("Event triggered",t),T(),E()})};var me=()=>{D(),j(),U(),V(),Y(),Z()},fe=()=>{var r;let t=document.querySelector(`[data-tab-name="${v.public_chains}"]`),i=document.querySelector(`[data-tab-name="${l.zkevm}"]`),e=document.querySelector(`[data-sort-filter="${b.ascending}"]`);(r=e==null?void 0:e.querySelector(".filter-radiobox"))==null||r.classList.add("w--redirected-checked"),t==null||t.click()},ve=()=>{window.Webflow||(window.Webflow=[]),window.Webflow.push(async()=>{localStorage.getItem("DEBUG_MODE")!=="true"&&(he(),me(),fe(),T(),E())})};ve();})();
