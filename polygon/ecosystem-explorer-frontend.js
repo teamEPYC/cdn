@@ -54,7 +54,7 @@
         </p>
         <div class="item-read-more-container">
           <div class="text-semibold is-item-read-more">Read&nbsp;More</div>
-          <div class="item-read-more-tooltip" style="display: none; opacity: 0">
+          <div class="item-read-more-tooltip">
             <div class="item-read-more-tooltip-tip w-embed">
               <svg
                 width="20"
