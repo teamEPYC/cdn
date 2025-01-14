@@ -1721,7 +1721,7 @@
       const isAuthenticated = await auth0Client.isAuthenticated();
       const userProfile = await auth0Client.getUser();
       let user = null;
-      document.cookie = `isAuthenticated=${isAuthenticated}; Path=/; HttpOnly`;
+      document.cookie = `isAuthenticated=${isAuthenticated}; Path=/;`;
       if (userProfile) {
         const userId = userProfile.sub || "";
         const response = await fetch(
