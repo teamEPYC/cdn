@@ -1691,6 +1691,7 @@
   // src/auth/login.ts
   var initAuthModule = async (userLoaded) => {
     console.log("[+] AUTH MODULE INITIALIZED");
+    loginHandler(LocalAuth0Client, ".v2-sign-up-btn");
     loginHandler(LocalAuth0Client, '[data-action="login"]');
     logoutHandler(LocalAuth0Client, '[data-action="logout"]');
     await handleRedirectCallback(LocalAuth0Client);
@@ -1702,10 +1703,13 @@
         await auth0Client.handleRedirectCallback();
         const user = await getCurrentUser(auth0Client);
         const user_metadata = user.user_metadata;
+        console.log("user_metadata", user_metadata);
         if (user_metadata && user_metadata["isOnboardingComplete"]) {
-          window.history.replaceState({}, document.title, "/onboarding");
+          window.history.replaceState({}, document.title, RELATIVE_ROUTES.HOME);
+          window.location.assign(RELATIVE_ROUTES.HOME);
         } else {
-          window.history.replaceState({}, document.title, "/dashboard");
+          window.history.replaceState({}, document.title, RELATIVE_ROUTES.ONBOARDING);
+          window.location.assign(RELATIVE_ROUTES.ONBOARDING);
         }
       }
     } catch (error) {
@@ -1713,14 +1717,21 @@
       window.location.assign(RELATIVE_ROUTES.HOME + "?error=error_while_logging_in");
     }
   };
+  var setAuthenticatedCookie = function(status, log = "Not Set") {
+    console.log("[+] setAuthenticatedCookie LOG", log);
+    document.cookie = `isAuthenticated=${status}; Path=/;`;
+  };
   var getCurrentUser = async (auth0Client) => {
     try {
+      console.log("[+] HERE");
+      setAuthenticatedCookie(false, "default");
       const accessToken = await auth0Client.getTokenSilently();
       console.log("accessToken", accessToken);
       const isAuthenticated = await auth0Client.isAuthenticated();
       const userProfile = await auth0Client.getUser();
       let user = null;
-      document.cookie = `isAuthenticated=${isAuthenticated}; Path=/;`;
+      setAuthenticatedCookie(isAuthenticated, "USER IS AUTHENTICATED");
+      console.log("[+] isAuthenticated", isAuthenticated);
       if (userProfile) {
         const userId = userProfile.sub || "";
         const response = await fetch(
@@ -1734,6 +1745,7 @@
       }
       return user;
     } catch (error) {
+      setAuthenticatedCookie(false, "USER AUTH ERROR");
       return null;
     }
   };
@@ -1960,8 +1972,8 @@
     const updateUser = (user_metadata) => {
       user.updateUserMetadata(user_metadata);
     };
-    console.log("[+] form", form);
     if (form) {
+      console.log("[+] form", form);
       form.classList.add("hide");
       MSF = new MultiStepFormManager({
         formSelector,
