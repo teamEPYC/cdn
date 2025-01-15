@@ -1691,9 +1691,8 @@
   // src/auth/login.ts
   var initAuthModule = async (userLoaded) => {
     console.log("[+] AUTH MODULE INITIALIZED");
-    loginHandler(LocalAuth0Client, "#login-button");
     loginHandler(LocalAuth0Client, '[data-action="login"]');
-    loginHandler(LocalAuth0Client, ".v2-sign-up-btn");
+    logoutHandler(LocalAuth0Client, '[data-action="logout"]');
     await handleRedirectCallback(LocalAuth0Client);
     await checkAuthentication(LocalAuth0Client, userLoaded);
   };
@@ -1780,6 +1779,21 @@
       });
     } else {
       console.info("[-] Login Button Not Found");
+    }
+  };
+  var logoutHandler = (auth0Client, elementId = "#logout-button") => {
+    const elements = document.querySelectorAll(elementId);
+    if (elements && elements.length) {
+      elements.forEach((element) => {
+        element.addEventListener("click", (e2) => {
+          e2.preventDefault();
+          auth0Client.logout({
+            logoutParams: {
+              returnTo: ROUTES.HOME
+            }
+          });
+        });
+      });
     }
   };
 
