@@ -94,6 +94,11 @@
     }
   };
 
+  // src/utils/index.ts
+  var getFieldKeyName = (field) => {
+    return field.name || field.dataset.group || "";
+  };
+
   // src/form/FormIdentifierManager.ts
   var FORM_SELECTORS = {
     NEXT_BUTTON: '[data-form="next-btn"]',
@@ -104,6 +109,7 @@
   var FormIdentifierManager = class {
     constructor(formSelector = '[data-form="multistep"]') {
       __publicField(this, "form");
+      __publicField(this, "steps", []);
       this.form = document.querySelector(formSelector);
       if (!this.form) {
         throw new Error(`Form with selector "${formSelector}" not found.`);
@@ -114,7 +120,19 @@
       if (steps.length === 0) {
         throw new Error(`No steps found using selector "${stepSelector}".`);
       }
-      return Array.from(steps);
+      this.steps = Array.from(steps);
+      return this.steps;
+    }
+    getCurrentStep() {
+      const data = JSON.parse(localStorage.getItem("formState") || "{}");
+      let currentStepIndex = 0;
+      if (data.currentStep) {
+        currentStepIndex = data.currentStep;
+      }
+      return {
+        index: currentStepIndex,
+        step: this.steps[currentStepIndex]
+      };
     }
     detectButtons() {
       const nextButton = this.form.querySelector(FORM_SELECTORS.NEXT_BUTTON);
@@ -128,10 +146,15 @@
         submitButton
       };
     }
+    detectVisibleInputFields() {
+      const currentStep = this.getCurrentStep();
+      const inputFields = this.detectFieldsInStep(currentStep.index);
+      const fieldToValidate = this.detectFieldToValidateInStep(currentStep.index);
+    }
     isVisible(element) {
       if (!element) return false;
       const style = getComputedStyle(element);
-      return style.display !== "none" && style.visibility !== "hidden" && style.opacity !== "0" && element.offsetParent !== null && element.offsetWidth > 0 && element.offsetHeight > 0;
+      return style.display !== "none";
     }
     detectFieldsInStep(stepIndex) {
       const steps = this.detectSteps();
@@ -143,7 +166,7 @@
         "input, select, textarea"
       );
       const visibleElements = Array.from(fields).filter(this.isVisible);
-      return Array.from(visibleElements);
+      return Array.from(fields);
     }
     //
     detectFieldToValidateInStep(stepIndex) {
@@ -161,13 +184,17 @@
       const finalMap = {};
       visibleFields.forEach((field) => {
         const inputField = field;
-        finalMap[inputField.name] = inputField;
+        const fieldKeyName = getFieldKeyName(inputField);
+        finalMap[fieldKeyName] = inputField;
       });
       visibleRequriedFields.forEach((field) => {
         const inputField = field;
-        finalMap[inputField.name] = inputField;
+        const fieldKeyName = getFieldKeyName(inputField);
+        finalMap[fieldKeyName] = inputField;
       });
-      return Array.from([...Object.values(finalMap)]);
+      const results = Array.from([...Object.values(finalMap)]);
+      console.log("[+] VISIBLE FIELD FOR VALIDATION", results);
+      return results;
     }
     //
     getTotalSteps(stepSelector = '[data-form="step"]') {
@@ -301,8 +328,7 @@
         valid: true,
         message: ""
       };
-      let fieldName = field.name || "";
-      console.log("field.hasAttribute('required')", field.hasAttribute("required"));
+      let fieldName = getFieldKeyName(field);
       if (field.hasAttribute("required")) {
         rules = "required;" + rules;
       }
@@ -335,17 +361,23 @@
       } else {
         delete this.errors[fieldName];
       }
+      console.log("[+] FIELD VALIDATION RESULT", fieldName, result);
       return result;
     }
+    // clearAllErrors() {}
     validateStep(fields) {
       let isStepValid = true;
+      this.errors = {};
       fields.forEach((field) => {
+        console.log("[_] Validating Field:", field.name);
         const fieldStatus = this.validateField(field);
         if (!fieldStatus.valid) {
           isStepValid = false;
         }
       });
-      return { isStepValid, errors: this.errors };
+      const result = { isStepValid, errors: this.errors };
+      console.log("[+] STEP VALIDATION RESULT", result);
+      return result;
     }
     getErrors() {
       return this.errors;
@@ -354,9 +386,10 @@
       this.clearFieldError(field);
       const errorContainer = this.getErrorContainer(field);
       console.log("[+] SHOWING ERROR FIELD", field.name);
-      if (errorContainer && this.errors[field.name]) {
-        console.log("%c[+] SHOWING ERROR FIELD", "color:red", field.name);
-        errorContainer.textContent = this.errors[field.name];
+      const keyName = field.name || field.dataset.group || "";
+      if (errorContainer && this.errors[keyName]) {
+        console.log("%c[+] SHOWING ERROR FIELD", "color:red", keyName);
+        errorContainer.textContent = this.errors[keyName];
         errorContainer.style.display = "block";
       }
     }
@@ -393,8 +426,13 @@
       }
     }
     getErrorContainer(field) {
-      const parent = field.closest(".onb-form-field-comp");
-      return parent?.querySelector(this.errorSelector);
+      let element = null;
+      element = field.querySelector(this.errorSelector);
+      if (!element) {
+        const parent = field.closest(".onb-form-field-comp");
+        element = parent?.querySelector(this.errorSelector);
+      }
+      return element;
     }
   };
 
@@ -1800,7 +1838,7 @@
           }
         );
         user = await response.json();
-        console.log("user", user);
+        console.log("user->metadata", user.user_metadata);
       }
       return user;
     } catch (error) {
@@ -1920,19 +1958,13 @@
         console.log("[+] User - Metadata Updated", userId, user);
       });
       __publicField(this, "updateMetaDataInLocalStorage", async (user_metadata, replaceState = false) => {
+        console.log("[+] replaceState", replaceState);
         const data = localStorage.getItem("formState");
         if (!data) {
           return;
         }
         const state = JSON.parse(data);
         let newState = { ...state, formData: { ...state.formData, ...user_metadata } };
-        if (replaceState) {
-          let currentStep = state.currentStep;
-          if (Object.keys(user_metadata).length == 0) {
-            currentStep = 0;
-          }
-          newState = { ...state, currentStep, formData: { ...user_metadata } };
-        }
         localStorage.setItem("formState", JSON.stringify(newState));
       });
     }
