@@ -564,6 +564,7 @@
       style.textContent = `.${HIDDEN_CLASS} { display: none; }`;
       document.head.appendChild(style);
       this.initConditionalVisibility();
+      console.log("[+] afterSubmitRedrect, this.options", this.options);
     }
     initConditionalVisibility() {
       const conditionallyVisibleFields = this.form.querySelectorAll(
@@ -1973,7 +1974,6 @@
       if (elements.length == 0) {
         return;
       }
-      console.log("[+] Data User", elements);
       elements.forEach((element) => {
         const template = element.getAttribute("data-user") || "";
         let finalString = template;
@@ -1985,8 +1985,29 @@
             finalString = finalString.replace(new RegExp(part, "g"), user.user_metadata[key] || "");
           }
         });
-        console.log("finalString", finalString);
         element.innerHTML = finalString;
+      });
+      this.handleDataShow(user);
+    }
+    handleDataShow(user) {
+      const elements = document.querySelectorAll("[data-show-if]");
+      const metaData = user.user_metadata;
+      if (elements.length == 0 || !metaData) {
+        return;
+      }
+      elements.forEach((element) => {
+        const showIf = element.getAttribute("data-show-if") || "";
+        const condition = showIf.split(":");
+        if (!condition) {
+          return;
+        }
+        const key = condition[0];
+        const value = condition[1];
+        if (metaData[key].toString() == value) {
+          console.log("[+] ELEMENT ALREADY VISIBLE");
+        } else {
+          element.style.display = "none";
+        }
       });
     }
   };
@@ -2093,9 +2114,6 @@
       }
       dashboardButton?.classList.remove("hide");
     }
-    const updateUser = (user_metadata) => {
-      user.updateUserMetadata(user_metadata);
-    };
     if (form) {
       console.log("[+] form", form);
       form.classList.add("hide");
@@ -2109,7 +2127,7 @@
           console.log("onStepChange", state);
           const errors = Object.keys(state.errors);
           if (errors.length == 0) {
-            updateUser(state.formData);
+            user.updateUserMetadata(state.formData);
           }
         }
       });
