@@ -1801,6 +1801,7 @@
       if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
         await auth0Client.handleRedirectCallback();
         const user = await getCurrentUser(auth0Client);
+        console.log("[+] handleRedirectCallback-> user", user);
         const user_metadata = user.user_metadata;
         console.log("user_metadata", user_metadata);
         if (user_metadata && user_metadata["isOnboardingComplete"]) {
@@ -1813,16 +1814,25 @@
       }
     } catch (error) {
       console.log("[+] handleRedirectCallback", error);
-      window.location.assign(RELATIVE_ROUTES.HOME + "?error=error_while_logging_in");
     }
   };
   var setAuthenticatedCookie = function(status, log = "Not Set") {
     console.log("[+] setAuthenticatedCookie LOG", log);
     document.cookie = `isAuthenticated=${status}; Path=/;`;
   };
+  var isUserMetaIsMissingFields = (user_metadata) => {
+    const fields = ["First-Name", "Last-Name", "picture"];
+    let missingFields = false;
+    fields.forEach((field) => {
+      if (!user_metadata || !user_metadata[field]) {
+        missingFields = true;
+      }
+    });
+    return missingFields;
+  };
   var getCurrentUser = async (auth0Client) => {
     try {
-      console.log("[+] HERE");
+      console.log("[+] getCurrentUser [STARTS]");
       setAuthenticatedCookie(false, "default");
       const accessToken = await auth0Client.getTokenSilently();
       const isAuthenticated = await auth0Client.isAuthenticated();
@@ -1840,9 +1850,21 @@
         );
         user = await response.json();
         console.log("user->metadata", user.user_metadata);
+        if (isUserMetaIsMissingFields(user.user_metadata)) {
+          const firstName = userProfile.given_name || "";
+          const lastName = userProfile.family_name || "";
+          const picture = userProfile.picture || "";
+          const user_metadata = {
+            "First-Name": firstName,
+            "Last-Name": lastName,
+            picture
+          };
+          user.user_metadata = user_metadata;
+        }
       }
       return user;
     } catch (error) {
+      console.log(error);
       setAuthenticatedCookie(false, "USER AUTH ERROR");
       throw error;
     }
@@ -1985,7 +2007,11 @@
             finalString = finalString.replace(new RegExp(part, "g"), user.user_metadata[key] || "");
           }
         });
-        element.innerHTML = finalString;
+        if (element.tagName == "IMG") {
+          element.setAttribute("src", finalString);
+        } else {
+          element.innerHTML = finalString;
+        }
       });
       this.handleDataShow(user);
     }
