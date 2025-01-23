@@ -578,7 +578,9 @@
           return;
         }
         const condition = JSON.parse(conditionAttribute.replaceAll("'", '"'));
-        const conditionField = document.querySelector(`[name="${condition.field}"]`);
+        const conditionField = document.querySelector(
+          `[name="${condition.field}"]`
+        );
         if (!conditionField) {
           console.error(`Condition field "${condition.field}" not found.`);
           return;
@@ -592,11 +594,15 @@
     }
     evaluateCondition(field, condition) {
       console.log("evaluateCondition", field, condition);
-      const conditionElements = document.querySelectorAll(`[name="${condition.field}"]`);
+      const conditionElements = document.querySelectorAll(
+        `[name="${condition.field}"]`
+      );
       console.log("[+] conditionField", conditionElements);
       let conditionFieldValue = "";
       if (conditionElements[0]?.type === "radio") {
-        const selectedRadio = Array.from(conditionElements).find((radio) => radio.checked);
+        const selectedRadio = Array.from(conditionElements).find(
+          (radio) => radio.checked
+        );
         conditionFieldValue = selectedRadio ? selectedRadio.value : "";
       } else {
         conditionFieldValue = conditionElements[0]?.value || "";
@@ -716,9 +722,9 @@
       if (isStepValid) {
         if (this.isLastStep()) {
           if (this.options.afterSubmitRedrect) {
-            window.location.href = this.options.afterSubmitRedrect;
+            window.location.assign(this.options.afterSubmitRedrect);
           } else {
-            window.location.href = "/?submitted=true";
+            window.location.assign("/?submitted=true");
           }
         } else {
           this.incrementCurrentStep();
@@ -1820,16 +1826,6 @@
     console.log("[+] setAuthenticatedCookie LOG", log);
     document.cookie = `isAuthenticated=${status}; Path=/;`;
   };
-  var isUserMetaIsMissingFields = (user_metadata) => {
-    const fields = ["First-Name", "Last-Name", "picture"];
-    let missingFields = false;
-    fields.forEach((field) => {
-      if (!user_metadata || !user_metadata[field]) {
-        missingFields = true;
-      }
-    });
-    return missingFields;
-  };
   var getCurrentUser = async (auth0Client) => {
     try {
       console.log("[+] getCurrentUser [STARTS]");
@@ -1850,17 +1846,6 @@
         );
         user = await response.json();
         console.log("user->metadata", user.user_metadata);
-        if (isUserMetaIsMissingFields(user.user_metadata)) {
-          const firstName = userProfile.given_name || "";
-          const lastName = userProfile.family_name || "";
-          const picture = userProfile.picture || "";
-          const user_metadata = {
-            "First-Name": firstName,
-            "Last-Name": lastName,
-            picture
-          };
-          user.user_metadata = user_metadata;
-        }
       }
       return user;
     } catch (error) {
@@ -1996,6 +1981,7 @@
       if (elements.length == 0) {
         return;
       }
+      console.log("[+] Data User -> showUserDetailsOnScreen", user);
       elements.forEach((element) => {
         const template = element.getAttribute("data-user") || "";
         let finalString = template;
@@ -2004,9 +1990,12 @@
           const key = part.replace(/{|}/g, "");
           const metaData = user.user_metadata;
           if (metaData) {
+            const value = user.user_metadata[key];
+            console.log("[+] KEY VALUE", key, value);
             finalString = finalString.replace(new RegExp(part, "g"), user.user_metadata[key] || "");
           }
         });
+        console.log("finalString", template, "[+]", finalString);
         if (element.tagName == "IMG") {
           element.setAttribute("src", finalString);
         } else {
