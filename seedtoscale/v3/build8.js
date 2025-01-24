@@ -498,7 +498,430 @@
     }
   };
 
+  // node_modules/.pnpm/chalk@5.4.1/node_modules/chalk/source/vendor/ansi-styles/index.js
+  var ANSI_BACKGROUND_OFFSET = 10;
+  var wrapAnsi16 = (offset = 0) => (code) => `\x1B[${code + offset}m`;
+  var wrapAnsi256 = (offset = 0) => (code) => `\x1B[${38 + offset};5;${code}m`;
+  var wrapAnsi16m = (offset = 0) => (red, green, blue) => `\x1B[${38 + offset};2;${red};${green};${blue}m`;
+  var styles = {
+    modifier: {
+      reset: [0, 0],
+      // 21 isn't widely supported and 22 does the same thing
+      bold: [1, 22],
+      dim: [2, 22],
+      italic: [3, 23],
+      underline: [4, 24],
+      overline: [53, 55],
+      inverse: [7, 27],
+      hidden: [8, 28],
+      strikethrough: [9, 29]
+    },
+    color: {
+      black: [30, 39],
+      red: [31, 39],
+      green: [32, 39],
+      yellow: [33, 39],
+      blue: [34, 39],
+      magenta: [35, 39],
+      cyan: [36, 39],
+      white: [37, 39],
+      // Bright color
+      blackBright: [90, 39],
+      gray: [90, 39],
+      // Alias of `blackBright`
+      grey: [90, 39],
+      // Alias of `blackBright`
+      redBright: [91, 39],
+      greenBright: [92, 39],
+      yellowBright: [93, 39],
+      blueBright: [94, 39],
+      magentaBright: [95, 39],
+      cyanBright: [96, 39],
+      whiteBright: [97, 39]
+    },
+    bgColor: {
+      bgBlack: [40, 49],
+      bgRed: [41, 49],
+      bgGreen: [42, 49],
+      bgYellow: [43, 49],
+      bgBlue: [44, 49],
+      bgMagenta: [45, 49],
+      bgCyan: [46, 49],
+      bgWhite: [47, 49],
+      // Bright color
+      bgBlackBright: [100, 49],
+      bgGray: [100, 49],
+      // Alias of `bgBlackBright`
+      bgGrey: [100, 49],
+      // Alias of `bgBlackBright`
+      bgRedBright: [101, 49],
+      bgGreenBright: [102, 49],
+      bgYellowBright: [103, 49],
+      bgBlueBright: [104, 49],
+      bgMagentaBright: [105, 49],
+      bgCyanBright: [106, 49],
+      bgWhiteBright: [107, 49]
+    }
+  };
+  var modifierNames = Object.keys(styles.modifier);
+  var foregroundColorNames = Object.keys(styles.color);
+  var backgroundColorNames = Object.keys(styles.bgColor);
+  var colorNames = [...foregroundColorNames, ...backgroundColorNames];
+  function assembleStyles() {
+    const codes = /* @__PURE__ */ new Map();
+    for (const [groupName, group] of Object.entries(styles)) {
+      for (const [styleName, style] of Object.entries(group)) {
+        styles[styleName] = {
+          open: `\x1B[${style[0]}m`,
+          close: `\x1B[${style[1]}m`
+        };
+        group[styleName] = styles[styleName];
+        codes.set(style[0], style[1]);
+      }
+      Object.defineProperty(styles, groupName, {
+        value: group,
+        enumerable: false
+      });
+    }
+    Object.defineProperty(styles, "codes", {
+      value: codes,
+      enumerable: false
+    });
+    styles.color.close = "\x1B[39m";
+    styles.bgColor.close = "\x1B[49m";
+    styles.color.ansi = wrapAnsi16();
+    styles.color.ansi256 = wrapAnsi256();
+    styles.color.ansi16m = wrapAnsi16m();
+    styles.bgColor.ansi = wrapAnsi16(ANSI_BACKGROUND_OFFSET);
+    styles.bgColor.ansi256 = wrapAnsi256(ANSI_BACKGROUND_OFFSET);
+    styles.bgColor.ansi16m = wrapAnsi16m(ANSI_BACKGROUND_OFFSET);
+    Object.defineProperties(styles, {
+      rgbToAnsi256: {
+        value(red, green, blue) {
+          if (red === green && green === blue) {
+            if (red < 8) {
+              return 16;
+            }
+            if (red > 248) {
+              return 231;
+            }
+            return Math.round((red - 8) / 247 * 24) + 232;
+          }
+          return 16 + 36 * Math.round(red / 255 * 5) + 6 * Math.round(green / 255 * 5) + Math.round(blue / 255 * 5);
+        },
+        enumerable: false
+      },
+      hexToRgb: {
+        value(hex) {
+          const matches = /[a-f\d]{6}|[a-f\d]{3}/i.exec(hex.toString(16));
+          if (!matches) {
+            return [0, 0, 0];
+          }
+          let [colorString] = matches;
+          if (colorString.length === 3) {
+            colorString = [...colorString].map((character) => character + character).join("");
+          }
+          const integer = Number.parseInt(colorString, 16);
+          return [
+            /* eslint-disable no-bitwise */
+            integer >> 16 & 255,
+            integer >> 8 & 255,
+            integer & 255
+            /* eslint-enable no-bitwise */
+          ];
+        },
+        enumerable: false
+      },
+      hexToAnsi256: {
+        value: (hex) => styles.rgbToAnsi256(...styles.hexToRgb(hex)),
+        enumerable: false
+      },
+      ansi256ToAnsi: {
+        value(code) {
+          if (code < 8) {
+            return 30 + code;
+          }
+          if (code < 16) {
+            return 90 + (code - 8);
+          }
+          let red;
+          let green;
+          let blue;
+          if (code >= 232) {
+            red = ((code - 232) * 10 + 8) / 255;
+            green = red;
+            blue = red;
+          } else {
+            code -= 16;
+            const remainder = code % 36;
+            red = Math.floor(code / 36) / 5;
+            green = Math.floor(remainder / 6) / 5;
+            blue = remainder % 6 / 5;
+          }
+          const value = Math.max(red, green, blue) * 2;
+          if (value === 0) {
+            return 30;
+          }
+          let result = 30 + (Math.round(blue) << 2 | Math.round(green) << 1 | Math.round(red));
+          if (value === 2) {
+            result += 60;
+          }
+          return result;
+        },
+        enumerable: false
+      },
+      rgbToAnsi: {
+        value: (red, green, blue) => styles.ansi256ToAnsi(styles.rgbToAnsi256(red, green, blue)),
+        enumerable: false
+      },
+      hexToAnsi: {
+        value: (hex) => styles.ansi256ToAnsi(styles.hexToAnsi256(hex)),
+        enumerable: false
+      }
+    });
+    return styles;
+  }
+  var ansiStyles = assembleStyles();
+  var ansi_styles_default = ansiStyles;
+
+  // node_modules/.pnpm/chalk@5.4.1/node_modules/chalk/source/vendor/supports-color/browser.js
+  var level = (() => {
+    if (!("navigator" in globalThis)) {
+      return 0;
+    }
+    if (globalThis.navigator.userAgentData) {
+      const brand = navigator.userAgentData.brands.find(({ brand: brand2 }) => brand2 === "Chromium");
+      if (brand && brand.version > 93) {
+        return 3;
+      }
+    }
+    if (/\b(Chrome|Chromium)\//.test(globalThis.navigator.userAgent)) {
+      return 1;
+    }
+    return 0;
+  })();
+  var colorSupport = level !== 0 && {
+    level,
+    hasBasic: true,
+    has256: level >= 2,
+    has16m: level >= 3
+  };
+  var supportsColor = {
+    stdout: colorSupport,
+    stderr: colorSupport
+  };
+  var browser_default = supportsColor;
+
+  // node_modules/.pnpm/chalk@5.4.1/node_modules/chalk/source/utilities.js
+  function stringReplaceAll(string, substring, replacer) {
+    let index = string.indexOf(substring);
+    if (index === -1) {
+      return string;
+    }
+    const substringLength = substring.length;
+    let endIndex = 0;
+    let returnValue = "";
+    do {
+      returnValue += string.slice(endIndex, index) + substring + replacer;
+      endIndex = index + substringLength;
+      index = string.indexOf(substring, endIndex);
+    } while (index !== -1);
+    returnValue += string.slice(endIndex);
+    return returnValue;
+  }
+  function stringEncaseCRLFWithFirstIndex(string, prefix, postfix, index) {
+    let endIndex = 0;
+    let returnValue = "";
+    do {
+      const gotCR = string[index - 1] === "\r";
+      returnValue += string.slice(endIndex, gotCR ? index - 1 : index) + prefix + (gotCR ? "\r\n" : "\n") + postfix;
+      endIndex = index + 1;
+      index = string.indexOf("\n", endIndex);
+    } while (index !== -1);
+    returnValue += string.slice(endIndex);
+    return returnValue;
+  }
+
+  // node_modules/.pnpm/chalk@5.4.1/node_modules/chalk/source/index.js
+  var { stdout: stdoutColor, stderr: stderrColor } = browser_default;
+  var GENERATOR = Symbol("GENERATOR");
+  var STYLER = Symbol("STYLER");
+  var IS_EMPTY = Symbol("IS_EMPTY");
+  var levelMapping = [
+    "ansi",
+    "ansi",
+    "ansi256",
+    "ansi16m"
+  ];
+  var styles2 = /* @__PURE__ */ Object.create(null);
+  var applyOptions = (object, options = {}) => {
+    if (options.level && !(Number.isInteger(options.level) && options.level >= 0 && options.level <= 3)) {
+      throw new Error("The `level` option should be an integer from 0 to 3");
+    }
+    const colorLevel = stdoutColor ? stdoutColor.level : 0;
+    object.level = options.level === void 0 ? colorLevel : options.level;
+  };
+  var chalkFactory = (options) => {
+    const chalk2 = (...strings) => strings.join(" ");
+    applyOptions(chalk2, options);
+    Object.setPrototypeOf(chalk2, createChalk.prototype);
+    return chalk2;
+  };
+  function createChalk(options) {
+    return chalkFactory(options);
+  }
+  Object.setPrototypeOf(createChalk.prototype, Function.prototype);
+  for (const [styleName, style] of Object.entries(ansi_styles_default)) {
+    styles2[styleName] = {
+      get() {
+        const builder = createBuilder(this, createStyler(style.open, style.close, this[STYLER]), this[IS_EMPTY]);
+        Object.defineProperty(this, styleName, { value: builder });
+        return builder;
+      }
+    };
+  }
+  styles2.visible = {
+    get() {
+      const builder = createBuilder(this, this[STYLER], true);
+      Object.defineProperty(this, "visible", { value: builder });
+      return builder;
+    }
+  };
+  var getModelAnsi = (model, level2, type, ...arguments_) => {
+    if (model === "rgb") {
+      if (level2 === "ansi16m") {
+        return ansi_styles_default[type].ansi16m(...arguments_);
+      }
+      if (level2 === "ansi256") {
+        return ansi_styles_default[type].ansi256(ansi_styles_default.rgbToAnsi256(...arguments_));
+      }
+      return ansi_styles_default[type].ansi(ansi_styles_default.rgbToAnsi(...arguments_));
+    }
+    if (model === "hex") {
+      return getModelAnsi("rgb", level2, type, ...ansi_styles_default.hexToRgb(...arguments_));
+    }
+    return ansi_styles_default[type][model](...arguments_);
+  };
+  var usedModels = ["rgb", "hex", "ansi256"];
+  for (const model of usedModels) {
+    styles2[model] = {
+      get() {
+        const { level: level2 } = this;
+        return function(...arguments_) {
+          const styler = createStyler(getModelAnsi(model, levelMapping[level2], "color", ...arguments_), ansi_styles_default.color.close, this[STYLER]);
+          return createBuilder(this, styler, this[IS_EMPTY]);
+        };
+      }
+    };
+    const bgModel = "bg" + model[0].toUpperCase() + model.slice(1);
+    styles2[bgModel] = {
+      get() {
+        const { level: level2 } = this;
+        return function(...arguments_) {
+          const styler = createStyler(getModelAnsi(model, levelMapping[level2], "bgColor", ...arguments_), ansi_styles_default.bgColor.close, this[STYLER]);
+          return createBuilder(this, styler, this[IS_EMPTY]);
+        };
+      }
+    };
+  }
+  var proto = Object.defineProperties(() => {
+  }, {
+    ...styles2,
+    level: {
+      enumerable: true,
+      get() {
+        return this[GENERATOR].level;
+      },
+      set(level2) {
+        this[GENERATOR].level = level2;
+      }
+    }
+  });
+  var createStyler = (open, close, parent) => {
+    let openAll;
+    let closeAll;
+    if (parent === void 0) {
+      openAll = open;
+      closeAll = close;
+    } else {
+      openAll = parent.openAll + open;
+      closeAll = close + parent.closeAll;
+    }
+    return {
+      open,
+      close,
+      openAll,
+      closeAll,
+      parent
+    };
+  };
+  var createBuilder = (self2, _styler, _isEmpty) => {
+    const builder = (...arguments_) => applyStyle(builder, arguments_.length === 1 ? "" + arguments_[0] : arguments_.join(" "));
+    Object.setPrototypeOf(builder, proto);
+    builder[GENERATOR] = self2;
+    builder[STYLER] = _styler;
+    builder[IS_EMPTY] = _isEmpty;
+    return builder;
+  };
+  var applyStyle = (self2, string) => {
+    if (self2.level <= 0 || !string) {
+      return self2[IS_EMPTY] ? "" : string;
+    }
+    let styler = self2[STYLER];
+    if (styler === void 0) {
+      return string;
+    }
+    const { openAll, closeAll } = styler;
+    if (string.includes("\x1B")) {
+      while (styler !== void 0) {
+        string = stringReplaceAll(string, styler.close, styler.open);
+        styler = styler.parent;
+      }
+    }
+    const lfIndex = string.indexOf("\n");
+    if (lfIndex !== -1) {
+      string = stringEncaseCRLFWithFirstIndex(string, closeAll, openAll, lfIndex);
+    }
+    return openAll + string + closeAll;
+  };
+  Object.defineProperties(createChalk.prototype, styles2);
+  var chalk = createChalk();
+  var chalkStderr = createChalk({ level: stderrColor ? stderrColor.level : 0 });
+  var source_default = chalk;
+
+  // src/utils/logger.ts
+  var colors = ["cyan", "green", "yellow", "magenta", "blue"];
+  function pickColorIndex(label) {
+    let hash = 0;
+    for (let i3 = 0; i3 < label.length; i3++) {
+      hash = (hash << 5) - hash + label.charCodeAt(i3);
+      hash |= 0;
+    }
+    return Math.abs(hash) % colors.length;
+  }
+  function createLogger(filename) {
+    const label = filename;
+    const colorIndex = pickColorIndex(label);
+    const colorFn = source_default[colors[colorIndex]];
+    return {
+      log: (...args) => {
+        console.log(colorFn(`[${label}]`), ...args);
+      },
+      // If you like, add log variants like info, warn, error below
+      info: (...args) => {
+        console.info(colorFn(`[${label} INFO]`), ...args);
+      },
+      warn: (...args) => {
+        console.warn(colorFn(`[${label} WARN]`), ...args);
+      },
+      error: (...args) => {
+        console.error(colorFn(`[${label} ERROR]`), ...args);
+      }
+    };
+  }
+
   // src/auth/multi-step-form-manager.ts
+  var logger = createLogger("MSForm");
   var defaultCallback = (state) => {
   };
   var HIDDEN_CLASS = "hide";
@@ -559,12 +982,12 @@
       this.validationManager.clearStepErrors();
       this.attachEventListeners();
       this.form.classList.remove("hide");
-      console.log("[+] INITIAL STATE", JSON.stringify(this.state, null, 2));
+      logger.log("[+] INITIAL STATE", JSON.stringify(this.state, null, 2));
       const style = document.createElement("style");
       style.textContent = `.${HIDDEN_CLASS} { display: none; }`;
       document.head.appendChild(style);
       this.initConditionalVisibility();
-      console.log("[+] afterSubmitRedrect, this.options", this.options);
+      logger.log("[+] afterSubmitRedrect, this.options", this.options);
     }
     initConditionalVisibility() {
       const conditionallyVisibleFields = this.form.querySelectorAll(
@@ -572,9 +995,9 @@
       );
       conditionallyVisibleFields.forEach((field) => {
         const conditionAttribute = field.getAttribute("data-condition");
-        console.log("[+] conditionAttribute", conditionAttribute);
+        logger.log("[+] conditionAttribute", conditionAttribute);
         if (!conditionAttribute) {
-          console.error("Condition attribute not found on field:", field);
+          logger.error("Condition attribute not found on field:", field);
           return;
         }
         const condition = JSON.parse(conditionAttribute.replaceAll("'", '"'));
@@ -582,7 +1005,7 @@
           `[name="${condition.field}"]`
         );
         if (!conditionField) {
-          console.error(`Condition field "${condition.field}" not found.`);
+          logger.error(`Condition field "${condition.field}" not found.`);
           return;
         }
         const eventType = conditionField.type === "radio" ? "change" : "input";
@@ -593,11 +1016,11 @@
       });
     }
     evaluateCondition(field, condition) {
-      console.log("evaluateCondition", field, condition);
+      logger.log("evaluateCondition", field, condition);
       const conditionElements = document.querySelectorAll(
         `[name="${condition.field}"]`
       );
-      console.log("[+] conditionField", conditionElements);
+      logger.log("[+] conditionField", conditionElements);
       let conditionFieldValue = "";
       if (conditionElements[0]?.type === "radio") {
         const selectedRadio = Array.from(conditionElements).find(
@@ -608,10 +1031,10 @@
         conditionFieldValue = conditionElements[0]?.value || "";
       }
       if (String(conditionFieldValue) === String(condition.value)) {
-        console.log("[+] Condition Met:", conditionFieldValue, condition.value);
+        logger.log("[+] Condition Met:", conditionFieldValue, condition.value);
         field.classList.remove(HIDDEN_CLASS);
       } else {
-        console.log("[+] Condition NOT Met:", conditionFieldValue, condition.value);
+        logger.log("[+] Condition NOT Met:", conditionFieldValue, condition.value);
         field.classList.add(HIDDEN_CLASS);
       }
     }
@@ -648,11 +1071,11 @@
     //     ...this.state.formData,
     //     ...partialData,
     //   };
-    //   console.log('[+] Updating Form Data:', updatedState);
+    //   logger.log('[+] Updating Form Data:', updatedState);
     //   this.state.formData = { ...updatedState };
     // }
     // private updateErrorsInState(errors: Record<string, string>) {
-    //   console.log('[+] ERRORS:', errors);
+    //   logger.log('[+] ERRORS:', errors);
     //   this.state.errors = { ...errors };
     // }
     incrementCurrentStep() {
@@ -665,7 +1088,7 @@
       }
     }
     decrementCurrentStep(step) {
-      console.log("] decrementCurrentStep", step);
+      logger.log("] decrementCurrentStep", step);
       if (this.state.currentStep > 0) {
         const state = this.getState();
         const currentStep = state.currentStep - 1;
@@ -699,8 +1122,8 @@
       const fieldsToValidate = this.formManager.detectFieldToValidateInStep(this.state.currentStep);
       const { isStepValid, errors } = this.validationManager.validateStep(fieldsToValidate);
       const data = this.dataManager.gatherStepData(thisStepFields);
-      console.log(" THIS STEP DATA", data);
-      console.log("[+] THIS STEP ERRORS", Object.keys(errors).length, errors);
+      logger.log(" THIS STEP DATA", data);
+      logger.log("[+] THIS STEP ERRORS", Object.keys(errors).length, errors);
       const state = this.getState();
       let isOnboardingComplete = state.formData.isOnboardingComplete || false;
       if (!isOnboardingComplete && isStepValid && this.isLastStep()) {
@@ -718,7 +1141,7 @@
     action_next() {
       this.state.direction = "NEXT";
       const isStepValid = this.action_updateDataAndError();
-      console.log("[+] isStepValid", isStepValid);
+      logger.log("[+] isStepValid", isStepValid);
       if (isStepValid) {
         if (this.isLastStep()) {
           if (this.options.afterSubmitRedrect) {
@@ -729,7 +1152,7 @@
         } else {
           this.incrementCurrentStep();
           const state = this.getState();
-          console.log("[+] NEXT STATE:", JSON.stringify(state, null, 2));
+          logger.log("[+] NEXT STATE:", JSON.stringify(state, null, 2));
           const currentStep = state.currentStep;
           this.uiManager.showStep(currentStep);
           this.validationManager.clearStepErrors();
@@ -739,14 +1162,14 @@
       }
     }
     submit(event) {
-      console.log("[+] Submitting Form", event);
+      logger.log("[+] Submitting Form", event);
       event.preventDefault();
       this.action_next();
     }
     action_previous() {
       this.state.direction = "PREVIOUS";
       const state = this.getState();
-      console.log("[+] PREVIOUS STATE:", state);
+      logger.log("[+] PREVIOUS STATE:", state);
       const PREVIOUS_STEP = state.currentStep - 1;
       this.uiManager.showStep(PREVIOUS_STEP);
       this.decrementCurrentStep(this.state.currentStep);
@@ -1741,6 +2164,7 @@
   };
 
   // src/env.ts
+  var logger2 = createLogger("ENV");
   var HOST = window.location.host;
   var PROTECTED_PAGES = ["/onboarding", "/profile", "/dashboard", "/profile"];
   var IS_PRODUCTION = HOST == "www.seedtoscale.com";
@@ -1763,7 +2187,7 @@
   function getKey(keyName) {
     const env = IS_PRODUCTION ? "production" : "development";
     const value = ENV_KEYS[env][keyName];
-    console.log("[+] USING KEY", keyName, value);
+    logger2.log("[+] USING KEY", keyName, value);
     return value;
   }
   var ENV = {
@@ -1773,7 +2197,7 @@
     isProduction: IS_PRODUCTION,
     isLocalHost: HOST.includes("localhost")
   };
-  console.log("[+] ENVIRONMENT", ENV.isProduction ? "Production" : "Development");
+  logger2.log("[+] ENVIRONMENT", ENV.isProduction ? "Production" : "Development");
   var RELATIVE_ROUTES = {
     HOME: "/home-new",
     LOGIN: "/home-new",
@@ -6139,8 +6563,9 @@
   };
 
   // src/auth/login.ts
+  var logger3 = createLogger("LOGIN");
   var initAuthModule = async (userLoaded) => {
-    console.log("[+] AUTH MODULE INITIALIZED");
+    logger3.log("[+] AUTH MODULE INITIALIZED");
     loginHandler(LocalAuth0Client, ".v2-sign-up-btn");
     loginHandler(LocalAuth0Client, '[data-action="login"]');
     logoutHandler(LocalAuth0Client, '[data-action="logout"]');
@@ -6152,9 +6577,9 @@
       if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
         await auth0Client.handleRedirectCallback();
         const user = await getCurrentUser(auth0Client);
-        console.log("[+] handleRedirectCallback-> user", user);
+        logger3.log("[+] handleRedirectCallback-> user", user);
         const user_metadata = user.user_metadata;
-        console.log("user_metadata", user_metadata);
+        logger3.log("user_metadata", user_metadata);
         if (user_metadata && user_metadata["isOnboardingComplete"]) {
           window.history.replaceState({}, document.title, RELATIVE_ROUTES.HOME);
           window.location.assign(RELATIVE_ROUTES.HOME);
@@ -6164,23 +6589,23 @@
         }
       }
     } catch (error) {
-      console.log("[+] handleRedirectCallback", error);
+      logger3.log("[+] handleRedirectCallback", error);
     }
   };
-  var setAuthenticatedCookie = function(status, log2 = "Not Set") {
-    console.log("[+] setAuthenticatedCookie LOG", log2);
+  var setAuthenticatedCookie = function(status, logMessage = "Not Set") {
+    logger3.log("[+] setAuthenticatedCookie LOG", logMessage);
     document.cookie = `isAuthenticated=${status}; Path=/;`;
   };
   var getCurrentUser = async (auth0Client) => {
     try {
-      console.log("[+] getCurrentUser [STARTS]");
+      logger3.log("[+] getCurrentUser [STARTS]");
       setAuthenticatedCookie(false, "default");
       const accessToken = await auth0Client.getTokenSilently();
       const isAuthenticated = await auth0Client.isAuthenticated();
       const userProfile = await auth0Client.getUser();
       let user = null;
       setAuthenticatedCookie(isAuthenticated, "USER IS AUTHENTICATED");
-      console.log("[+] isAuthenticated", isAuthenticated);
+      logger3.log("[+] isAuthenticated", isAuthenticated);
       if (userProfile) {
         const userId = userProfile.sub || "";
         const response = await fetch(
@@ -6190,11 +6615,11 @@
           }
         );
         user = await response.json();
-        console.log("user->metadata", user.user_metadata);
+        logger3.log("user->metadata", user.user_metadata);
       }
       return user;
     } catch (error) {
-      console.log(error);
+      logger3.log("getCurrentUser-> ERROR", error);
       setAuthenticatedCookie(false, "USER AUTH ERROR");
       throw error;
     }
@@ -6202,30 +6627,30 @@
   var redirectAnonUserFromProtectedRoute = async (auth0Client) => {
     try {
       const isAuthenticated = await auth0Client.isAuthenticated();
-      console.log(
+      logger3.log(
         "[+] !isAuthenticated && isUserOrProtectedRoute()",
         !isAuthenticated,
         isUserOrProtectedRoute()
       );
       if (!isAuthenticated && isUserOrProtectedRoute()) {
-        console.log("[+] Redirecting User to Login Page");
+        logger3.log("[+] Redirecting User to Login Page");
         await auth0Client.loginWithRedirect({
           appState: { targetUrl: window.location.pathname }
         });
       }
     } catch (error) {
-      console.error("redirectAnonUserFromProtectedRoute", error);
+      logger3.error("redirectAnonUserFromProtectedRoute", error);
     }
   };
   var checkAuthentication = async (auth0Client, userLoaded) => {
-    console.log("[+] checkAuthentication - Method");
+    logger3.log("[+] checkAuthentication - Method");
     try {
-      console.log("[+] checkAuthentication - Method - 1");
+      logger3.log("[+] checkAuthentication - Method - 1");
       const user = await getCurrentUser(auth0Client);
-      console.log("[+] checkAuthentication - Method - 2");
+      logger3.log("[+] checkAuthentication - Method - 2");
       userLoaded(user);
     } catch (error) {
-      console.log("checkAuthentication", error);
+      logger3.log("checkAuthentication", error);
       userLoaded(null);
       redirectAnonUserFromProtectedRoute(auth0Client);
     }
@@ -6240,7 +6665,7 @@
         });
       });
     } else {
-      console.info("[-] Login Button Not Found");
+      logger3.info("[-] Login Button Not Found");
     }
   };
   var logoutHandler = (auth0Client, elementId = "#logout-button") => {
@@ -6262,6 +6687,7 @@
   };
 
   // src/auth/user.ts
+  var logger4 = createLogger("USER");
   var User = class {
     //   private accessToken: string;
     //   private authOClient: Auth0Client;
@@ -6272,7 +6698,7 @@
       });
       __publicField(this, "getUser", async () => {
         const userProfile = await LocalAuth0Client.getUser();
-        console.log("userProfile", userProfile);
+        logger4.log("userProfile", userProfile);
         return userProfile;
       });
       __publicField(this, "getUserId", async () => {
@@ -6289,7 +6715,7 @@
           }
         });
         const userObject = await response.json();
-        console.log("[+] User -> User Object", userObject);
+        logger4.log("[+] User -> User Object", userObject);
         return userObject;
       });
       __publicField(this, "getUserFromLocalStorage", () => {
@@ -6309,10 +6735,10 @@
           })
         });
         const user = await response.json();
-        console.log("[+] User - Metadata Updated", userId, user);
+        logger4.log("[+] User - Metadata Updated", userId, user);
       });
       __publicField(this, "updateMetaDataInLocalStorage", async (user_metadata, replaceState = false) => {
-        console.log("[+] replaceState", replaceState);
+        logger4.log("[+] replaceState", replaceState);
         const data = localStorage.getItem("formState");
         if (!data) {
           return;
@@ -6327,7 +6753,7 @@
       if (elements.length == 0) {
         return;
       }
-      console.log("[+] Data User -> showUserDetailsOnScreen", user);
+      logger4.log("[+] Data User -> showUserDetailsOnScreen", user);
       elements.forEach((element) => {
         const template = element.getAttribute("data-user") || "";
         let finalString = template;
@@ -6337,11 +6763,11 @@
           const metaData = user.user_metadata;
           if (metaData) {
             const value = user.user_metadata[key];
-            console.log("[+] KEY VALUE", key, value);
+            logger4.log("[+] KEY VALUE", key, value);
             finalString = finalString.replace(new RegExp(part, "g"), user.user_metadata[key] || "");
           }
         });
-        console.log("finalString", template, "[+]", finalString);
+        logger4.log("finalString", template, "[+]", finalString);
         if (element.tagName == "IMG") {
           element.setAttribute("src", finalString);
         } else {
@@ -6365,7 +6791,7 @@
         const key = condition[0];
         const value = condition[1];
         if (metaData[key].toString() == value) {
-          console.log("[+] ELEMENT ALREADY VISIBLE");
+          logger4.log("[+] ELEMENT ALREADY VISIBLE");
         } else {
           element.style.display = "none";
         }
@@ -6439,6 +6865,7 @@
   var recentArticle_default = '\n<div class="swiper-slide dash-recently-viewed-slide">\n  <a\n    id="w-node-_13467009-6ae5-90ec-9f65-7c6ea88a7318-bc066943"\n    href="{{url}}"\n    class="dash_card-wrapper is-recently-viewed w-inline-block"\n    ><div class="dash_card-img-wrapper">\n      <img\n        src="{{featuredImage}}"\n        loading="lazy"\n        alt=""\n        class="dash_card-img"\n      />\n    </div>\n    <div\n      id="w-node-_13467009-6ae5-90ec-9f65-7c6ea88a731b-bc066943"\n      class="dash_card-content is-recently-viewed"\n    >\n      <div class="dash_card-topic">{{contentType}}</div>\n      <h2 class="dash_card-title text-style-2lines">\n        {{title}}\n      </h2>\n    </div></a\n  >\n</div>\n\n';
 
   // src/content/recent-articles.ts
+  var logger5 = createLogger("RECENT ARTICLES");
   var MAX_ARTICLE_COUNT = window.MAX_ARTICLE_COUNT || 10;
   var CONSTANT = {
     ARTICLE_LIST: "RECENT_ARTICLE_LIST"
@@ -6456,11 +6883,8 @@
     title: isBlog ? selectorsMap.blogTitle : isPodcast ? selectorsMap.podcastTitle : "",
     image: isBlog ? selectorsMap.blogImage : isPodcast ? selectorsMap.podcastImage : ""
   };
-  function log(message, arg) {
-    console.log(`[+] RECENT ARTICLE MANAGER -> ${message}`, arg);
-  }
   function addArticle(article) {
-    log("Adding Article", article);
+    logger5.log("Adding Article", article);
     const allArticlesString = localStorage.getItem(CONSTANT.ARTICLE_LIST) || "[]";
     const allArticles = JSON.parse(allArticlesString);
     const newArticleList = allArticles.filter((a3) => a3.url !== article.url);
@@ -6468,7 +6892,7 @@
     if (newArticleList.length > MAX_ARTICLE_COUNT) {
       newArticleList.pop();
     }
-    log("New Article List", newArticleList);
+    logger5.log("New Article List", newArticleList);
     localStorage.setItem(CONSTANT.ARTICLE_LIST, JSON.stringify(newArticleList));
   }
   function getArticleFromWebpage() {
@@ -6477,28 +6901,14 @@
     const url = window.location.href;
     const type = url.split("/")[3];
     const description = "";
-    log("Article", { title, description, image, url, type });
+    logger5.log("Article", { title, description, image, url, type });
     if (title && image) {
       addArticle({ title, description, image, url, type });
     }
   }
-  function run() {
-    const articlesToTrack = ["/blog/", "/podcast/", "/video/"];
-    const pathname = window.location.pathname;
-    const toAddArticle = articlesToTrack.some((article) => pathname.startsWith(article));
-    log("toAddArticle", toAddArticle);
-    if (toAddArticle) {
-      getArticleFromWebpage();
-    }
-    renderArticlesOnScreen();
-  }
-  function getRecentArticles() {
-    const allArticlesString = localStorage.getItem(CONSTANT.ARTICLE_LIST) || "[]";
-    return JSON.parse(allArticlesString);
-  }
-  function renderArticlesOnScreen(container = ".dash-recently-viewed-wrapper") {
+  function renderArticlesOnScreen(container = '[data-content="recent-articles"]') {
     const articles = getRecentArticles();
-    log("Articles", articles);
+    logger5.log("Articles", articles);
     const articleContainer = document.querySelector(container);
     const articleListHtml = [];
     if (articleContainer) {
@@ -6512,7 +6922,7 @@
     }
   }
   function initializeSwiper() {
-    const swiper = new Swiper(".dash-recently-viewed-swiper", {
+    const swiper = new Swiper('[data-content="recent-articles"]', {
       slidesPerView: "auto",
       spaceBetween: 54,
       // Gap between slides (in px)
@@ -6525,7 +6935,21 @@
       loop: false
       // Optional: Enable infinite loop
     });
-    log("Swiper Initialized", swiper);
+  }
+  function run() {
+    logger5.log("[+] RECENT ARTICLE MANAGER -> Running");
+    const articlesToTrack = ["/blog/", "/podcast/", "/video/"];
+    const pathname = window.location.pathname;
+    const toAddArticle = articlesToTrack.some((article) => pathname.startsWith(article));
+    logger5.log("toAddArticle", toAddArticle);
+    if (toAddArticle) {
+      getArticleFromWebpage();
+    }
+    renderArticlesOnScreen();
+  }
+  function getRecentArticles() {
+    const allArticlesString = localStorage.getItem(CONSTANT.ARTICLE_LIST) || "[]";
+    return JSON.parse(allArticlesString);
   }
   var RecentArticleManager = {
     run,
@@ -6534,6 +6958,7 @@
   };
 
   // src/index.ts
+  var logger6 = createLogger("INDEX");
   window.Webflow || (window.Webflow = []);
   window.Webflow.push(() => {
     const loader = document.querySelector(".onb-preloader");
@@ -6545,7 +6970,7 @@
     const user = new User();
     let MSF;
     function userLoaded(userObject) {
-      console.log("[+] UserLoaded", userObject);
+      logger6.log("[+] UserLoaded", userObject);
       if (userObject) {
         const replaceState = true;
         user.updateMetaDataInLocalStorage(userObject.user_metadata, replaceState);
@@ -6575,7 +7000,7 @@
       dashboardButton?.classList.remove("hide");
     }
     if (form) {
-      console.log("[+] Form", form);
+      logger6.log("[+] Form", form);
       form.classList.add("hide");
       MSF = new MultiStepFormManager({
         formSelector,
@@ -6584,7 +7009,7 @@
           afterSubmitRedrect: document.querySelector(formSelector)?.getAttribute("data-redirect") || RELATIVE_ROUTES.HOME
         },
         onStepChange: (state) => {
-          console.log("onStepChange", state);
+          logger6.log("onStepChange", state);
           const errors = Object.keys(state.errors);
           if (errors.length == 0) {
             user.updateUserMetadata(state.formData);
