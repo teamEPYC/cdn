@@ -1,7 +1,34 @@
 "use strict";
 (() => {
+  var __create = Object.create;
   var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getProtoOf = Object.getPrototypeOf;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __require = /* @__PURE__ */ ((x3) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x3, {
+    get: (a3, b3) => (typeof require !== "undefined" ? require : a3)[b3]
+  }) : x3)(function(x3) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x3 + '" is not supported');
+  });
+  var __copyProps = (to2, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to2, key) && key !== except)
+          __defProp(to2, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to2;
+  };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+    // If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+    mod
+  ));
   var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
   // src/form/DataGatheringManager.ts
@@ -299,7 +326,7 @@
           message: "Enter a valid email address."
         }),
         phone: () => ({
-          valid: iti.isValidNumber(),
+          valid: window.iti.isValidNumber(),
           message: "Enter a valid phone number."
         }),
         "checkbox-group": (value) => {
@@ -433,68 +460,6 @@
         element = parent?.querySelector(this.errorSelector);
       }
       return element;
-    }
-  };
-
-  // src/form/UIManager.ts
-  var UIManager = class {
-    constructor(form, steps, buttons, customProgressBar) {
-      __publicField(this, "form");
-      __publicField(this, "steps", []);
-      __publicField(this, "customProgressBar");
-      __publicField(this, "buttons", {
-        nextButton: null,
-        previousButton: null,
-        resetButton: null,
-        submitButton: null
-      });
-      this.form = form;
-      this.steps = steps;
-      this.buttons = buttons;
-      this.customProgressBar = customProgressBar;
-    }
-    showStep(stepIndex) {
-      this.steps.forEach((step, index) => {
-        step.style.display = index === stepIndex ? "block" : "none";
-      });
-      this.handleCustomProgressBar(stepIndex);
-    }
-    handleCustomProgressBar(stepIndex) {
-      this.customProgressBar?.forEach((progressBar, index) => {
-        if (progressBar) {
-          const progressBarSteps = progressBar.querySelectorAll(" :scope > *");
-          if (progressBarSteps.length == this.steps.length) {
-            progressBarSteps.forEach((step, index2) => {
-              if (index2 === stepIndex) {
-                step.classList.add("current");
-              } else {
-                step.classList.remove("current");
-              }
-            });
-          }
-        }
-      });
-    }
-    hideSteps() {
-    }
-    disableButtons() {
-      console.log("[+] Disabling Buttons");
-      Object.values(this.buttons).forEach((button) => {
-        if (button) button.setAttribute("disabled", "true");
-      });
-    }
-    enableButtons() {
-      Object.values(this.buttons).forEach((button) => {
-        if (button) button.removeAttribute("disabled");
-      });
-    }
-    resetUI() {
-      console.log("[+] Resetting UI");
-      this.hideSteps();
-      this.enableButtons();
-      if (this.steps.length > 0) {
-        this.showStep(0);
-      }
     }
   };
 
@@ -920,8 +885,108 @@
     };
   }
 
+  // src/form/UIManager.ts
+  var logger = createLogger("UIManager");
+  var UIManager = class {
+    constructor(form, steps, buttons, customProgressBar) {
+      __publicField(this, "form");
+      __publicField(this, "steps", []);
+      __publicField(this, "customProgressBar");
+      __publicField(this, "buttons", {
+        nextButton: null,
+        previousButton: null,
+        resetButton: null,
+        submitButton: null
+      });
+      __publicField(this, "isProfilePage", false);
+      this.form = form;
+      this.steps = steps;
+      this.buttons = buttons;
+      this.customProgressBar = customProgressBar;
+      const pathname = window.location.pathname;
+      this.isProfilePage = pathname.includes("/profile/edit");
+    }
+    initiliaze() {
+      if (this.isProfilePage) {
+        this.steps.forEach((step, index) => {
+          step.style.display = "block";
+        });
+        const backButtons = this.form.querySelectorAll(
+          '[data-form="back-btn"]'
+        );
+        const nextButtons = this.form.querySelectorAll(
+          '[data-form="next-btn"]'
+        );
+        const submitButtons = this.form.querySelectorAll(
+          '[data-form="submit-btn"]'
+        );
+        this.removeBackButtons(Array.from(backButtons));
+        this.updateNextButtonText(Array.from(nextButtons), "Save");
+      }
+    }
+    removeBackButtons(buttons) {
+      buttons.forEach((button) => {
+        button.style.display = "none";
+      });
+    }
+    updateNextButtonText(buttons, text) {
+      buttons.forEach((button, index) => {
+        button.setAttribute("stepIndex", index.toString());
+        const div = button.querySelector("div");
+        if (div) {
+          div.textContent = text;
+        }
+      });
+    }
+    showStep(stepIndex) {
+      this.steps.forEach((step, index) => {
+        if (this.isProfilePage) {
+          step.style.display = "block";
+        } else {
+          step.style.display = index === stepIndex ? "block" : "none";
+        }
+      });
+      this.handleCustomProgressBar(stepIndex);
+    }
+    handleCustomProgressBar(stepIndex) {
+      this.customProgressBar?.forEach((progressBar, index) => {
+        if (progressBar) {
+          const progressBarSteps = progressBar.querySelectorAll(" :scope > *");
+          if (progressBarSteps.length == this.steps.length) {
+            progressBarSteps.forEach((step, index2) => {
+              if (index2 === stepIndex) {
+                step.classList.add("current");
+              } else {
+                step.classList.remove("current");
+              }
+            });
+          }
+        }
+      });
+    }
+    disableButtons() {
+      logger.log("[+] Disabling Buttons");
+      Object.values(this.buttons).forEach((button) => {
+        if (button) button.setAttribute("disabled", "true");
+      });
+    }
+    enableButtons() {
+      Object.values(this.buttons).forEach((button) => {
+        if (button) button.removeAttribute("disabled");
+      });
+    }
+    resetUI() {
+      logger.log("[+] Resetting UI");
+      this.hideSteps();
+      this.enableButtons();
+      if (this.steps.length > 0) {
+        this.showStep(0);
+      }
+    }
+  };
+
   // src/auth/multi-step-form-manager.ts
-  var logger = createLogger("MSForm");
+  var logger2 = createLogger("MSForm");
   var defaultCallback = (state) => {
   };
   var HIDDEN_CLASS = "hide";
@@ -953,6 +1018,7 @@
         onStepChange: defaultCallback
       });
       __publicField(this, "options", {});
+      __publicField(this, "isProfilePage", false);
       this.form = document.querySelector(formSelector);
       if (!this.form) {
         throw new Error(`Form with selector "${formSelector}" not found.`);
@@ -968,6 +1034,8 @@
       this.dataManager = new DataGatheringManager(form);
       this.callbacks.onStepChange = onStepChange;
       this.options = options;
+      const pathname = window.location.pathname;
+      this.isProfilePage = pathname.includes("/profile/edit");
     }
     initialize() {
       this.loadLocalStorage();
@@ -977,17 +1045,27 @@
         },
         false
       );
+      this.handleProfileEditPage();
       this.dataManager.fillFormWithData(this.getState().formData);
       this.uiManager.showStep(this.state.currentStep);
       this.validationManager.clearStepErrors();
       this.attachEventListeners();
       this.form.classList.remove("hide");
-      logger.log("[+] INITIAL STATE", JSON.stringify(this.state, null, 2));
+      logger2.log("[+] INITIAL STATE", JSON.stringify(this.state, null, 2));
       const style = document.createElement("style");
       style.textContent = `.${HIDDEN_CLASS} { display: none; }`;
       document.head.appendChild(style);
       this.initConditionalVisibility();
-      logger.log("[+] afterSubmitRedrect, this.options", this.options);
+      logger2.log("[+] afterSubmitRedrect, this.options", this.options);
+    }
+    //
+    //
+    //
+    handleProfileEditPage() {
+      if (this.isProfilePage) {
+        this.state.currentStep = 0;
+        this.state.totalSteps = this.steps.length;
+      }
     }
     initConditionalVisibility() {
       const conditionallyVisibleFields = this.form.querySelectorAll(
@@ -995,9 +1073,9 @@
       );
       conditionallyVisibleFields.forEach((field) => {
         const conditionAttribute = field.getAttribute("data-condition");
-        logger.log("[+] conditionAttribute", conditionAttribute);
+        logger2.log("[+] conditionAttribute", conditionAttribute);
         if (!conditionAttribute) {
-          logger.error("Condition attribute not found on field:", field);
+          logger2.error("Condition attribute not found on field:", field);
           return;
         }
         const condition = JSON.parse(conditionAttribute.replaceAll("'", '"'));
@@ -1005,7 +1083,7 @@
           `[name="${condition.field}"]`
         );
         if (!conditionField) {
-          logger.error(`Condition field "${condition.field}" not found.`);
+          logger2.error(`Condition field "${condition.field}" not found.`);
           return;
         }
         const eventType = conditionField.type === "radio" ? "change" : "input";
@@ -1016,11 +1094,11 @@
       });
     }
     evaluateCondition(field, condition) {
-      logger.log("evaluateCondition", field, condition);
+      logger2.log("evaluateCondition", field, condition);
       const conditionElements = document.querySelectorAll(
         `[name="${condition.field}"]`
       );
-      logger.log("[+] conditionField", conditionElements);
+      logger2.log("[+] conditionField", conditionElements);
       let conditionFieldValue = "";
       if (conditionElements[0]?.type === "radio") {
         const selectedRadio = Array.from(conditionElements).find(
@@ -1031,10 +1109,10 @@
         conditionFieldValue = conditionElements[0]?.value || "";
       }
       if (String(conditionFieldValue) === String(condition.value)) {
-        logger.log("[+] Condition Met:", conditionFieldValue, condition.value);
+        logger2.log("[+] Condition Met:", conditionFieldValue, condition.value);
         field.classList.remove(HIDDEN_CLASS);
       } else {
-        logger.log("[+] Condition NOT Met:", conditionFieldValue, condition.value);
+        logger2.log("[+] Condition NOT Met:", conditionFieldValue, condition.value);
         field.classList.add(HIDDEN_CLASS);
       }
     }
@@ -1088,7 +1166,7 @@
       }
     }
     decrementCurrentStep(step) {
-      logger.log("] decrementCurrentStep", step);
+      logger2.log("] decrementCurrentStep", step);
       if (this.state.currentStep > 0) {
         const state = this.getState();
         const currentStep = state.currentStep - 1;
@@ -1101,7 +1179,7 @@
       return JSON.parse(JSON.stringify(this.state));
     }
     attachEventListeners() {
-      this.formManager.addEventListenerToButtons("NEXT", () => {
+      this.formManager.addEventListenerToButtons("NEXT", (event) => {
         this.action_next();
       });
       this.formManager.addEventListenerToButtons("PREVIOUS", () => {
@@ -1122,8 +1200,8 @@
       const fieldsToValidate = this.formManager.detectFieldToValidateInStep(this.state.currentStep);
       const { isStepValid, errors } = this.validationManager.validateStep(fieldsToValidate);
       const data = this.dataManager.gatherStepData(thisStepFields);
-      logger.log(" THIS STEP DATA", data);
-      logger.log("[+] THIS STEP ERRORS", Object.keys(errors).length, errors);
+      logger2.log(" THIS STEP DATA", data);
+      logger2.log("[+] THIS STEP ERRORS", Object.keys(errors).length, errors);
       const state = this.getState();
       let isOnboardingComplete = state.formData.isOnboardingComplete || false;
       if (!isOnboardingComplete && isStepValid && this.isLastStep()) {
@@ -1141,7 +1219,8 @@
     action_next() {
       this.state.direction = "NEXT";
       const isStepValid = this.action_updateDataAndError();
-      logger.log("[+] isStepValid", isStepValid);
+      logger2.log("[+] isStepValid", isStepValid);
+      return true;
       if (isStepValid) {
         if (this.isLastStep()) {
           if (this.options.afterSubmitRedrect) {
@@ -1152,7 +1231,7 @@
         } else {
           this.incrementCurrentStep();
           const state = this.getState();
-          logger.log("[+] NEXT STATE:", JSON.stringify(state, null, 2));
+          logger2.log("[+] NEXT STATE:", JSON.stringify(state, null, 2));
           const currentStep = state.currentStep;
           this.uiManager.showStep(currentStep);
           this.validationManager.clearStepErrors();
@@ -1162,14 +1241,14 @@
       }
     }
     submit(event) {
-      logger.log("[+] Submitting Form", event);
+      logger2.log("[+] Submitting Form", event);
       event.preventDefault();
       this.action_next();
     }
     action_previous() {
       this.state.direction = "PREVIOUS";
       const state = this.getState();
-      logger.log("[+] PREVIOUS STATE:", state);
+      logger2.log("[+] PREVIOUS STATE:", state);
       const PREVIOUS_STEP = state.currentStep - 1;
       this.uiManager.showStep(PREVIOUS_STEP);
       this.decrementCurrentStep(this.state.currentStep);
@@ -2164,7 +2243,7 @@
   };
 
   // src/env.ts
-  var logger2 = createLogger("ENV");
+  var logger3 = createLogger("ENV");
   var HOST = window.location.host;
   var PROTECTED_PAGES = ["/onboarding", "/profile", "/dashboard", "/profile"];
   var IS_PRODUCTION = HOST == "www.seedtoscale.com";
@@ -2187,7 +2266,7 @@
   function getKey(keyName) {
     const env = IS_PRODUCTION ? "production" : "development";
     const value = ENV_KEYS[env][keyName];
-    logger2.log("[+] USING KEY", keyName, value);
+    logger3.log("[+] USING KEY", keyName, value);
     return value;
   }
   var ENV = {
@@ -2197,7 +2276,7 @@
     isProduction: IS_PRODUCTION,
     isLocalHost: HOST.includes("localhost")
   };
-  logger2.log("[+] ENVIRONMENT", ENV.isProduction ? "Production" : "Development");
+  logger3.log("[+] ENVIRONMENT", ENV.isProduction ? "Production" : "Development");
   var RELATIVE_ROUTES = {
     HOME: "/home-new",
     LOGIN: "/home-new",
@@ -6563,9 +6642,9 @@
   };
 
   // src/auth/login.ts
-  var logger3 = createLogger("LOGIN");
+  var logger4 = createLogger("LOGIN");
   var initAuthModule = async (userLoaded) => {
-    logger3.log("[+] AUTH MODULE INITIALIZED");
+    logger4.log("[+] AUTH MODULE INITIALIZED");
     loginHandler(LocalAuth0Client, ".v2-sign-up-btn");
     loginHandler(LocalAuth0Client, '[data-action="login"]');
     logoutHandler(LocalAuth0Client, '[data-action="logout"]');
@@ -6577,9 +6656,9 @@
       if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
         await auth0Client.handleRedirectCallback();
         const user = await getCurrentUser(auth0Client);
-        logger3.log("[+] handleRedirectCallback-> user", user);
+        logger4.log("[+] handleRedirectCallback-> user", user);
         const user_metadata = user.user_metadata;
-        logger3.log("user_metadata", user_metadata);
+        logger4.log("user_metadata", user_metadata);
         if (user_metadata && user_metadata["isOnboardingComplete"]) {
           window.history.replaceState({}, document.title, RELATIVE_ROUTES.HOME);
           window.location.assign(RELATIVE_ROUTES.HOME);
@@ -6589,23 +6668,23 @@
         }
       }
     } catch (error) {
-      logger3.log("[+] handleRedirectCallback", error);
+      logger4.log("[+] handleRedirectCallback", error);
     }
   };
   var setAuthenticatedCookie = function(status, logMessage = "Not Set") {
-    logger3.log("[+] setAuthenticatedCookie LOG", logMessage);
+    logger4.log("[+] setAuthenticatedCookie LOG", logMessage);
     document.cookie = `isAuthenticated=${status}; Path=/;`;
   };
   var getCurrentUser = async (auth0Client) => {
     try {
-      logger3.log("[+] getCurrentUser [STARTS]");
+      logger4.log("[+] getCurrentUser [STARTS]");
       setAuthenticatedCookie(false, "default");
       const accessToken = await auth0Client.getTokenSilently();
       const isAuthenticated = await auth0Client.isAuthenticated();
       const userProfile = await auth0Client.getUser();
       let user = null;
       setAuthenticatedCookie(isAuthenticated, "USER IS AUTHENTICATED");
-      logger3.log("[+] isAuthenticated", isAuthenticated);
+      logger4.log("[+] isAuthenticated", isAuthenticated);
       if (userProfile) {
         const userId = userProfile.sub || "";
         const response = await fetch(
@@ -6615,11 +6694,11 @@
           }
         );
         user = await response.json();
-        logger3.log("user->metadata", user.user_metadata);
+        logger4.log("user->metadata", user.user_metadata);
       }
       return user;
     } catch (error) {
-      logger3.log("getCurrentUser-> ERROR", error);
+      logger4.log("getCurrentUser-> ERROR", error);
       setAuthenticatedCookie(false, "USER AUTH ERROR");
       throw error;
     }
@@ -6627,30 +6706,30 @@
   var redirectAnonUserFromProtectedRoute = async (auth0Client) => {
     try {
       const isAuthenticated = await auth0Client.isAuthenticated();
-      logger3.log(
+      logger4.log(
         "[+] !isAuthenticated && isUserOrProtectedRoute()",
         !isAuthenticated,
         isUserOrProtectedRoute()
       );
       if (!isAuthenticated && isUserOrProtectedRoute()) {
-        logger3.log("[+] Redirecting User to Login Page");
+        logger4.log("[+] Redirecting User to Login Page");
         await auth0Client.loginWithRedirect({
           appState: { targetUrl: window.location.pathname }
         });
       }
     } catch (error) {
-      logger3.error("redirectAnonUserFromProtectedRoute", error);
+      logger4.error("redirectAnonUserFromProtectedRoute", error);
     }
   };
   var checkAuthentication = async (auth0Client, userLoaded) => {
-    logger3.log("[+] checkAuthentication - Method");
+    logger4.log("[+] checkAuthentication - Method");
     try {
-      logger3.log("[+] checkAuthentication - Method - 1");
+      logger4.log("[+] checkAuthentication - Method - 1");
       const user = await getCurrentUser(auth0Client);
-      logger3.log("[+] checkAuthentication - Method - 2");
+      logger4.log("[+] checkAuthentication - Method - 2");
       userLoaded(user);
     } catch (error) {
-      logger3.log("checkAuthentication", error);
+      logger4.log("checkAuthentication", error);
       userLoaded(null);
       redirectAnonUserFromProtectedRoute(auth0Client);
     }
@@ -6665,7 +6744,7 @@
         });
       });
     } else {
-      logger3.info("[-] Login Button Not Found");
+      logger4.info("[-] Login Button Not Found");
     }
   };
   var logoutHandler = (auth0Client, elementId = "#logout-button") => {
@@ -6687,7 +6766,7 @@
   };
 
   // src/auth/user.ts
-  var logger4 = createLogger("USER");
+  var logger5 = createLogger("USER");
   var User = class {
     //   private accessToken: string;
     //   private authOClient: Auth0Client;
@@ -6698,7 +6777,7 @@
       });
       __publicField(this, "getUser", async () => {
         const userProfile = await LocalAuth0Client.getUser();
-        logger4.log("userProfile", userProfile);
+        logger5.log("userProfile", userProfile);
         return userProfile;
       });
       __publicField(this, "getUserId", async () => {
@@ -6715,7 +6794,7 @@
           }
         });
         const userObject = await response.json();
-        logger4.log("[+] User -> User Object", userObject);
+        logger5.log("[+] User -> User Object", userObject);
         return userObject;
       });
       __publicField(this, "getUserFromLocalStorage", () => {
@@ -6735,10 +6814,10 @@
           })
         });
         const user = await response.json();
-        logger4.log("[+] User - Metadata Updated", userId, user);
+        logger5.log("[+] User - Metadata Updated", userId, user);
       });
       __publicField(this, "updateMetaDataInLocalStorage", async (user_metadata, replaceState = false) => {
-        logger4.log("[+] replaceState", replaceState);
+        logger5.log("[+] replaceState", replaceState);
         const data = localStorage.getItem("formState");
         if (!data) {
           return;
@@ -6753,7 +6832,7 @@
       if (elements.length == 0) {
         return;
       }
-      logger4.log("[+] Data User -> showUserDetailsOnScreen", user);
+      logger5.log("[+] Data User -> showUserDetailsOnScreen", user);
       elements.forEach((element) => {
         const template = element.getAttribute("data-user") || "";
         let finalString = template;
@@ -6763,11 +6842,11 @@
           const metaData = user.user_metadata;
           if (metaData) {
             const value = user.user_metadata[key];
-            logger4.log("[+] KEY VALUE", key, value);
+            logger5.log("[+] KEY VALUE", key, value);
             finalString = finalString.replace(new RegExp(part, "g"), user.user_metadata[key] || "");
           }
         });
-        logger4.log("finalString", template, "[+]", finalString);
+        logger5.log("finalString", template, "[+]", finalString);
         if (element.tagName == "IMG") {
           element.setAttribute("src", finalString);
         } else {
@@ -6791,7 +6870,7 @@
         const key = condition[0];
         const value = condition[1];
         if (metaData[key].toString() == value) {
-          logger4.log("[+] ELEMENT ALREADY VISIBLE");
+          logger5.log("[+] ELEMENT ALREADY VISIBLE");
         } else {
           element.style.display = "none";
         }
@@ -6865,7 +6944,7 @@
   var recentArticle_default = '\n<div class="swiper-slide dash-recently-viewed-slide">\n  <a\n    id="w-node-_13467009-6ae5-90ec-9f65-7c6ea88a7318-bc066943"\n    href="{{url}}"\n    class="dash_card-wrapper is-recently-viewed w-inline-block"\n    ><div class="dash_card-img-wrapper">\n      <img\n        src="{{featuredImage}}"\n        loading="lazy"\n        alt=""\n        class="dash_card-img"\n      />\n    </div>\n    <div\n      id="w-node-_13467009-6ae5-90ec-9f65-7c6ea88a731b-bc066943"\n      class="dash_card-content is-recently-viewed"\n    >\n      <div class="dash_card-topic">{{contentType}}</div>\n      <h2 class="dash_card-title text-style-2lines">\n        {{title}}\n      </h2>\n    </div></a\n  >\n</div>\n\n';
 
   // src/content/recent-articles.ts
-  var logger5 = createLogger("RECENT ARTICLES");
+  var logger6 = createLogger("RECENT ARTICLES");
   var MAX_ARTICLE_COUNT = window.MAX_ARTICLE_COUNT || 10;
   var CONSTANT = {
     ARTICLE_LIST: "RECENT_ARTICLE_LIST"
@@ -6884,7 +6963,7 @@
     image: isBlog ? selectorsMap.blogImage : isPodcast ? selectorsMap.podcastImage : ""
   };
   function addArticle(article) {
-    logger5.log("Adding Article", article);
+    logger6.log("Adding Article", article);
     const allArticlesString = localStorage.getItem(CONSTANT.ARTICLE_LIST) || "[]";
     const allArticles = JSON.parse(allArticlesString);
     const newArticleList = allArticles.filter((a3) => a3.url !== article.url);
@@ -6892,7 +6971,7 @@
     if (newArticleList.length > MAX_ARTICLE_COUNT) {
       newArticleList.pop();
     }
-    logger5.log("New Article List", newArticleList);
+    logger6.log("New Article List", newArticleList);
     localStorage.setItem(CONSTANT.ARTICLE_LIST, JSON.stringify(newArticleList));
   }
   function getArticleFromWebpage() {
@@ -6901,14 +6980,14 @@
     const url = window.location.href;
     const type = url.split("/")[3];
     const description = "";
-    logger5.log("Article", { title, description, image, url, type });
+    logger6.log("Article", { title, description, image, url, type });
     if (title && image) {
       addArticle({ title, description, image, url, type });
     }
   }
   function renderArticlesOnScreen(container = '[data-content="recent-articles"]') {
     const articles = getRecentArticles();
-    logger5.log("Articles", articles);
+    logger6.log("Articles", articles);
     const articleContainer = document.querySelector(container);
     const articleListHtml = [];
     if (articleContainer) {
@@ -6937,11 +7016,11 @@
     });
   }
   function run() {
-    logger5.log("[+] RECENT ARTICLE MANAGER -> Running");
+    logger6.log("[+] RECENT ARTICLE MANAGER -> Running");
     const articlesToTrack = ["/blog/", "/podcast/", "/video/"];
     const pathname = window.location.pathname;
     const toAddArticle = articlesToTrack.some((article) => pathname.startsWith(article));
-    logger5.log("toAddArticle", toAddArticle);
+    logger6.log("toAddArticle", toAddArticle);
     if (toAddArticle) {
       getArticleFromWebpage();
     }
@@ -6957,8 +7036,69 @@
     renderArticlesOnScreen
   };
 
+  // src/content/phonenumber-input.js
+  var run2 = () => {
+    const input = document.querySelector("#Whatsapp-Number");
+    window.iti = window.intlTelInput(input, {
+      // Automatically detect the country using geoIpLookup
+      initialCountry: "auto",
+      geoIpLookup: function(callback) {
+        fetch("https://ipapi.co/json/").then((response) => response.json()).then((data) => {
+          callback(data.country_code);
+        }).catch(() => {
+          callback("us");
+        });
+      },
+      separateDialCode: true,
+      strictMode: true,
+      // Set the placeholder number type to 'FIXED_LINE'
+      placeholderNumberType: "FIXED_LINE",
+      // Load the utils script for validation
+      loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.2.0/build/js/utils.js")
+    });
+    const dialCode = document.querySelector(".dialCode");
+    const errorMsg = document.querySelector("#Tel-Error-Msg");
+    const validMsg = document.querySelector("#valid-msg");
+    const updateInputValue = function() {
+      dialCode.value = "+" + window.iti.getSelectedCountryData().dialCode;
+    };
+    input.addEventListener("input", updateInputValue, false);
+    input.addEventListener("countrychange", updateInputValue, false);
+    const errorMap = [
+      "Invalid number",
+      "Invalid country code",
+      "Too short",
+      "Too long",
+      "Invalid number"
+    ];
+    const reset = function() {
+      input.classList.remove("error");
+      errorMsg.innerHTML = "";
+      errorMsg.classList.add("hide");
+      validMsg.classList.add("hide");
+    };
+    input.addEventListener("blur", function() {
+      reset();
+      if (input.value.trim()) {
+        if (window.iti.isValidNumber()) {
+          validMsg.classList.remove("hide");
+        } else {
+          input.classList.add("error");
+          const errorCode = window.iti.getValidationError();
+          errorMsg.innerHTML = errorMap[errorCode] || "Invalid number";
+          errorMsg.classList.remove("hide");
+        }
+      }
+    });
+    input.addEventListener("change", reset);
+    input.addEventListener("keyup", reset);
+  };
+  var PhoneNumberManager = {
+    run: run2
+  };
+
   // src/index.ts
-  var logger6 = createLogger("INDEX");
+  var logger7 = createLogger("INDEX");
   window.Webflow || (window.Webflow = []);
   window.Webflow.push(() => {
     const loader = document.querySelector(".onb-preloader");
@@ -6970,7 +7110,7 @@
     const user = new User();
     let MSF;
     function userLoaded(userObject) {
-      logger6.log("[+] UserLoaded", userObject);
+      logger7.log("[+] UserLoaded", userObject);
       if (userObject) {
         const replaceState = true;
         user.updateMetaDataInLocalStorage(userObject.user_metadata, replaceState);
@@ -7000,7 +7140,7 @@
       dashboardButton?.classList.remove("hide");
     }
     if (form) {
-      logger6.log("[+] Form", form);
+      logger7.log("[+] Form", form);
       form.classList.add("hide");
       MSF = new MultiStepFormManager({
         formSelector,
@@ -7009,7 +7149,7 @@
           afterSubmitRedrect: document.querySelector(formSelector)?.getAttribute("data-redirect") || RELATIVE_ROUTES.HOME
         },
         onStepChange: (state) => {
-          logger6.log("onStepChange", state);
+          logger7.log("onStepChange", state);
           const errors = Object.keys(state.errors);
           if (errors.length == 0) {
             user.updateUserMetadata(state.formData);
@@ -7020,5 +7160,6 @@
     initAuthModule(userLoaded);
     PosthogManager.initPosthog();
     RecentArticleManager.run();
+    PhoneNumberManager.run();
   });
 })();
