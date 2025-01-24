@@ -6167,8 +6167,8 @@
       console.log("[+] handleRedirectCallback", error);
     }
   };
-  var setAuthenticatedCookie = function(status, log = "Not Set") {
-    console.log("[+] setAuthenticatedCookie LOG", log);
+  var setAuthenticatedCookie = function(status, log2 = "Not Set") {
+    console.log("[+] setAuthenticatedCookie LOG", log2);
     document.cookie = `isAuthenticated=${status}; Path=/;`;
   };
   var getCurrentUser = async (auth0Client) => {
@@ -6435,6 +6435,87 @@
     }
   };
 
+  // src/template/recentArticle.html
+  var recentArticle_default = '<a id="{{title}}" href="{{articleLink}}" class="content-card_small w-inline-block"\n  ><img\n    src="{{featuredImage}}"\n    loading="lazy"\n    id="w-node-_9f4bdf26-485f-e5ec-e71b-ab31fd0f124d-0e503327"\n    alt=""\n    class="content-card_small-img"\n  />\n  <div id="w-node-_9f4bdf26-485f-e5ec-e71b-ab31fd0f124e-0e503327">    \n    <h3 class="text-size-medium">{{title}}</h3>\n  </div></a\n>\n';
+
+  // src/content/recent-articles.ts
+  var MAX_ARTICLE_COUNT = window.MAX_ARTICLE_COUNT || 10;
+  var CONSTANT = {
+    ARTICLE_LIST: "RECENT_ARTICLE_LIST"
+  };
+  var selectorsMap = {
+    blogTitle: ".blog-internal_heading",
+    podcastTitle: ".blog-internal_heading",
+    blogImage: "#featuredImage",
+    podcastImage: ".content-internal_video-thumbnail"
+  };
+  var isBlog = window.location.pathname.startsWith("/blog/");
+  var isPodcast = window.location.pathname.startsWith("/podcast/");
+  var isVideo = window.location.pathname.startsWith("/video/");
+  var selectors = {
+    title: isBlog ? selectorsMap.blogTitle : isPodcast ? selectorsMap.podcastTitle : "",
+    image: isBlog ? selectorsMap.blogImage : isPodcast ? selectorsMap.podcastImage : ""
+  };
+  function log(message, arg) {
+    console.log(`[+] RECENT ARTICLE MANAGER -> ${message}`, arg);
+  }
+  function addArticle(article) {
+    log("Adding Article", article);
+    const allArticlesString = localStorage.getItem(CONSTANT.ARTICLE_LIST) || "[]";
+    const allArticles = JSON.parse(allArticlesString);
+    const newArticleList = allArticles.filter((a3) => a3.url !== article.url);
+    newArticleList.unshift(article);
+    if (newArticleList.length > MAX_ARTICLE_COUNT) {
+      newArticleList.pop();
+    }
+    log("New Article List", newArticleList);
+    localStorage.setItem(CONSTANT.ARTICLE_LIST, JSON.stringify(newArticleList));
+  }
+  function getArticleFromWebpage() {
+    const title = document.querySelector(selectors.title)?.textContent;
+    const image = document.querySelector(selectors.image)?.getAttribute("src");
+    const url = window.location.href;
+    const type = url.split("/")[3];
+    const description = "";
+    log("Article", { title, description, image, url, type });
+    if (title && image) {
+      addArticle({ title, description, image, url, type });
+    }
+  }
+  function run() {
+    const articlesToTrack = ["/blog/", "/podcast/", "/video/"];
+    const pathname = window.location.pathname;
+    const toAddArticle = articlesToTrack.some((article) => pathname.startsWith(article));
+    log("toAddArticle", toAddArticle);
+    if (toAddArticle) {
+      getArticleFromWebpage();
+    }
+    renderArticlesOnScreen();
+  }
+  function getRecentArticles() {
+    const allArticlesString = localStorage.getItem(CONSTANT.ARTICLE_LIST) || "[]";
+    return JSON.parse(allArticlesString);
+  }
+  function renderArticlesOnScreen(container = '[data-content="recent-articles"]') {
+    const articles = getRecentArticles();
+    log("Articles", articles);
+    const articleContainer = document.querySelector(container);
+    const articleListHtml = [];
+    if (articleContainer) {
+      articles.forEach((article) => {
+        let template = recentArticle_default;
+        template = template.replaceAll("{{title}}", article.title).replaceAll("{{description}}", article.description).replaceAll("{{image}}", article.image).replaceAll("{{featuredImage}}", article.image).replaceAll("{{url}}", article.url).replaceAll("{{articleLink}}", article.url);
+        articleListHtml.push(template);
+      });
+      articleContainer.innerHTML = articleListHtml.join("");
+    }
+  }
+  var RecentArticleManager = {
+    run,
+    getRecentArticles,
+    renderArticlesOnScreen
+  };
+
   // src/index.ts
   window.Webflow || (window.Webflow = []);
   window.Webflow.push(() => {
@@ -6496,5 +6577,6 @@
     }
     initAuthModule(userLoaded);
     PosthogManager.initPosthog();
+    RecentArticleManager.run();
   });
 })();
