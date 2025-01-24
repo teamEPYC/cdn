@@ -1219,8 +1219,7 @@
     action_next() {
       this.state.direction = "NEXT";
       const isStepValid = this.action_updateDataAndError();
-      logger2.log("[+] isStepValid", isStepValid);
-      return true;
+      logger2.log("[+] isStepValid", isStepValid);      
       if (isStepValid) {
         if (this.isLastStep()) {
           if (this.options.afterSubmitRedrect) {
