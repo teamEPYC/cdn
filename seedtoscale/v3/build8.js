@@ -6436,7 +6436,7 @@
   };
 
   // src/template/recentArticle.html
-  var recentArticle_default = '<a id="{{title}}" href="{{articleLink}}" class="content-card_small w-inline-block"\n  ><img\n    src="{{featuredImage}}"\n    loading="lazy"\n    id="w-node-_9f4bdf26-485f-e5ec-e71b-ab31fd0f124d-0e503327"\n    alt=""\n    class="content-card_small-img"\n  />\n  <div id="w-node-_9f4bdf26-485f-e5ec-e71b-ab31fd0f124e-0e503327">    \n    <h3 class="text-size-medium">{{title}}</h3>\n  </div></a\n>\n';
+  var recentArticle_default = '\n<div class="swiper-slide dash-recently-viewed-slide">\n  <a\n    id="w-node-_13467009-6ae5-90ec-9f65-7c6ea88a7318-bc066943"\n    href="{{url}}"\n    class="dash_card-wrapper is-recently-viewed w-inline-block"\n    ><div class="dash_card-img-wrapper">\n      <img\n        src="{{featuredImage}}"\n        loading="lazy"\n        alt=""\n        class="dash_card-img"\n      />\n    </div>\n    <div\n      id="w-node-_13467009-6ae5-90ec-9f65-7c6ea88a731b-bc066943"\n      class="dash_card-content is-recently-viewed"\n    >\n      <div class="dash_card-topic">{{contentType}}</div>\n      <h2 class="dash_card-title text-style-2lines">\n        {{title}}\n      </h2>\n    </div></a\n  >\n</div>\n\n';
 
   // src/content/recent-articles.ts
   var MAX_ARTICLE_COUNT = window.MAX_ARTICLE_COUNT || 10;
@@ -6496,7 +6496,7 @@
     const allArticlesString = localStorage.getItem(CONSTANT.ARTICLE_LIST) || "[]";
     return JSON.parse(allArticlesString);
   }
-  function renderArticlesOnScreen(container = '[data-content="recent-articles"]') {
+  function renderArticlesOnScreen(container = ".dash-recently-viewed-wrapper") {
     const articles = getRecentArticles();
     log("Articles", articles);
     const articleContainer = document.querySelector(container);
@@ -6504,11 +6504,28 @@
     if (articleContainer) {
       articles.forEach((article) => {
         let template = recentArticle_default;
-        template = template.replaceAll("{{title}}", article.title).replaceAll("{{description}}", article.description).replaceAll("{{image}}", article.image).replaceAll("{{featuredImage}}", article.image).replaceAll("{{url}}", article.url).replaceAll("{{articleLink}}", article.url);
+        template = template.replaceAll("{{title}}", article.title).replaceAll("{{description}}", article.description).replaceAll("{{image}}", article.image).replaceAll("{{featuredImage}}", article.image).replaceAll("{{contentType}}", article.type).replaceAll("{{url}}", article.url).replaceAll("{{articleLink}}", article.url);
         articleListHtml.push(template);
       });
       articleContainer.innerHTML = articleListHtml.join("");
+      initializeSwiper();
     }
+  }
+  function initializeSwiper() {
+    const swiper = new Swiper(".dash-recently-viewed-swiper", {
+      slidesPerView: "auto",
+      spaceBetween: 54,
+      // Gap between slides (in px)
+      navigation: {
+        nextEl: ".dash-recent-swiper-arrow-next",
+        // Use your custom next button
+        prevEl: ".dash-recent-swiper-arrow-prev"
+        // Use your custom prev button
+      },
+      loop: false
+      // Optional: Enable infinite loop
+    });
+    log("Swiper Initialized", swiper);
   }
   var RecentArticleManager = {
     run,
