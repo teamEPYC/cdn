@@ -1219,7 +1219,7 @@
     action_next() {
       this.state.direction = "NEXT";
       const isStepValid = this.action_updateDataAndError();
-      logger2.log("[+] isStepValid", isStepValid);      
+      logger2.log("[+] isStepValid", isStepValid);
       if (isStepValid) {
         if (this.isLastStep()) {
           if (this.options.afterSubmitRedrect) {
@@ -2244,14 +2244,9 @@
   // src/env.ts
   var logger3 = createLogger("ENV");
   var HOST = window.location.host;
-  var PROTECTED_PAGES = ["/onboarding", "/profile", "/dashboard", "/profile"];
   var IS_PRODUCTION = HOST == "www.seedtoscale.com";
-  function isProtectedRoute(currentRoute, protectedRoutes) {
-    return protectedRoutes.some((protectedRoute) => {
-      const isProtectedRoute2 = currentRoute.startsWith(protectedRoute);
-      return isProtectedRoute2;
-    });
-  }
+  var PROTECTED_PAGES = ["/onboarding", "/profile", "/dashboard", "/profile"];
+  var PROTECTED_CONTENT_PAGES = ["/blog", "/podcast", "/video"];
   var ENV_KEYS = {
     production: {
       AUTH0DOMAIN: "seedtoscale.au.auth0.com",
@@ -2262,6 +2257,12 @@
       AUTHO_CLIENT_ID: "vQxonvUHjMSnug4MLvdiJnHuAvJtcV7V"
     }
   };
+  function isProtectedRoute(currentRoute, protectedRoutes) {
+    return protectedRoutes.some((protectedRoute) => {
+      const isProtectedRoute2 = currentRoute.startsWith(protectedRoute);
+      return isProtectedRoute2;
+    });
+  }
   function getKey(keyName) {
     const env = IS_PRODUCTION ? "production" : "development";
     const value = ENV_KEYS[env][keyName];
@@ -2277,9 +2278,9 @@
   };
   logger3.log("[+] ENVIRONMENT", ENV.isProduction ? "Production" : "Development");
   var RELATIVE_ROUTES = {
-    HOME: "/home-new",
-    LOGIN: "/home-new",
-    EXCHANGE: "/exchange",
+    HOME: "/",
+    LOGIN: "/",
+    POST_LOGIN: "/setup",
     ONBOARDING: "/onboarding",
     DASHBOARD: "/dashboard",
     PROFILE: "/profile"
@@ -2296,6 +2297,10 @@
     const currentRoute = window.location.pathname;
     return isProtectedRoute(currentRoute, PROTECTED_PAGES);
   };
+  var isProtectedContentRoute = () => {
+    const currentRoute = window.location.pathname;
+    return isProtectedRoute(currentRoute, PROTECTED_CONTENT_PAGES);
+  };
 
   // src/auth/auth0client.ts
   var createAuth0Client = () => {
@@ -2305,7 +2310,7 @@
       cacheLocation: "localstorage",
       authorizationParams: {
         audience: `https://${ENV.AUTHO_DOMAIN}/api/v2/`,
-        redirect_uri: ROUTES.ONBOARDING,
+        redirect_uri: ROUTES.POST_LOGIN,
         scope: "openid profile email update:current_user_metadata read:current_user"
       }
     };
@@ -6631,12 +6636,16 @@
       console.log("[+] Posthog - User Identified", userId);
     }
   };
+  var captureExceptions = (error) => {
+    yo.captureException(error);
+  };
   var logoutUser = () => {
     yo.reset();
   };
   var PosthogManager = {
     initPosthog,
     identifyUser,
+    captureExceptions,
     logoutUser
   };
 
@@ -6650,24 +6659,49 @@
     await handleRedirectCallback(LocalAuth0Client);
     await checkAuthentication(LocalAuth0Client, userLoaded);
   };
+  function takeUserToPostLoginRoute() {
+    const postLoginRoute = getPostLoginRoute();
+    if (postLoginRoute) {
+      logger4.log("[+] takeUserToPostLoginRoute", postLoginRoute);
+      removePostLoginRoute();
+      window.history.replaceState({}, document.title, postLoginRoute);
+      window.location.assign(postLoginRoute);
+    } else {
+      logger4.log("[+] takeUserToPostLoginRoute", RELATIVE_ROUTES.POST_LOGIN);
+      takeUserToHome();
+    }
+  }
+  function takeUserToHome() {
+    window.history.replaceState({}, document.title, RELATIVE_ROUTES.HOME);
+    window.location.assign(RELATIVE_ROUTES.HOME);
+  }
+  function takeUserToOnboarding() {
+    window.history.replaceState({}, document.title, RELATIVE_ROUTES.ONBOARDING);
+    window.location.assign(RELATIVE_ROUTES.ONBOARDING);
+  }
   var handleRedirectCallback = async (auth0Client) => {
     try {
-      if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
+      const searchParams = location.search;
+      const ifLoginCallback = searchParams.includes("state=") && (searchParams.includes("code=") || searchParams.includes("error="));
+      const isLogoutCallBack = searchParams.includes("logout=true");
+      if (ifLoginCallback) {
         await auth0Client.handleRedirectCallback();
         const user = await getCurrentUser(auth0Client);
         logger4.log("[+] handleRedirectCallback-> user", user);
         const user_metadata = user.user_metadata;
         logger4.log("user_metadata", user_metadata);
         if (user_metadata && user_metadata["isOnboardingComplete"]) {
-          window.history.replaceState({}, document.title, RELATIVE_ROUTES.HOME);
-          window.location.assign(RELATIVE_ROUTES.HOME);
+          takeUserToPostLoginRoute();
         } else {
-          window.history.replaceState({}, document.title, RELATIVE_ROUTES.ONBOARDING);
-          window.location.assign(RELATIVE_ROUTES.ONBOARDING);
+          takeUserToOnboarding();
         }
+      }
+      if (isLogoutCallBack) {
+        takeUserToHome();
       }
     } catch (error) {
       logger4.log("[+] handleRedirectCallback", error);
+      PosthogManager.captureExceptions(error);
     }
   };
   var setAuthenticatedCookie = function(status, logMessage = "Not Set") {
@@ -6733,12 +6767,28 @@
       redirectAnonUserFromProtectedRoute(auth0Client);
     }
   };
+  function writeArticleLinkForPostLogin() {
+    const pathname = window.location.pathname;
+    const KEYNAME = "POST_LOGIN_ROUTE";
+    localStorage.setItem(KEYNAME, pathname);
+  }
+  function removePostLoginRoute() {
+    localStorage.removeItem("POST_LOGIN_ROUTE");
+  }
+  function getPostLoginRoute() {
+    const route = localStorage.getItem("POST_LOGIN_ROUTE");
+    return route;
+  }
   var loginHandler = (auth0Client, elementId = "#login-button") => {
     const elements = document.querySelectorAll(elementId);
     if (elements && elements.length) {
       elements.forEach((element) => {
         element.addEventListener("click", (e3) => {
           e3.preventDefault();
+          if (isProtectedContentRoute()) {
+            console.log("[+] writeArticleLinkForPostLogin");
+            writeArticleLinkForPostLogin();
+          }
           auth0Client.loginWithRedirect();
         });
       });
@@ -6756,7 +6806,7 @@
           PosthogManager.logoutUser();
           auth0Client.logout({
             logoutParams: {
-              returnTo: ROUTES.HOME
+              returnTo: ROUTES.POST_LOGIN + "?logout=true"
             }
           });
         });
