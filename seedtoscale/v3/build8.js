@@ -904,7 +904,7 @@
       this.buttons = buttons;
       this.customProgressBar = customProgressBar;
       const pathname = window.location.pathname;
-      this.isProfilePage = pathname.includes("/profile/edit");
+      this.isProfilePage = false;
     }
     initiliaze() {
       if (this.isProfilePage) {
@@ -939,14 +939,15 @@
       });
     }
     showStep(stepIndex) {
+      let INDEX_TO_MATCH = stepIndex || 0;
       this.steps.forEach((step, index) => {
         if (this.isProfilePage) {
           step.style.display = "block";
         } else {
-          step.style.display = index === stepIndex ? "block" : "none";
+          step.style.display = index === INDEX_TO_MATCH ? "block" : "none";
         }
       });
-      this.handleCustomProgressBar(stepIndex);
+      this.handleCustomProgressBar(INDEX_TO_MATCH);
     }
     handleCustomProgressBar(stepIndex) {
       this.customProgressBar?.forEach((progressBar, index) => {
@@ -1039,9 +1040,17 @@
     }
     initialize() {
       this.loadLocalStorage();
+      const state = this.getState();
+      let currentStep = 0;
+      if (this.isProfilePage) {
+        currentStep = 0;
+      } else {
+        currentStep = state.currentStep || 0;
+      }
       this.updateState(
         {
-          totalSteps: this.steps.length
+          totalSteps: this.steps.length,
+          currentStep
         },
         false
       );
@@ -1062,6 +1071,7 @@
     //
     //
     handleProfileEditPage() {
+      return false;
       if (this.isProfilePage) {
         this.state.currentStep = 0;
         this.state.totalSteps = this.steps.length;
@@ -1125,7 +1135,7 @@
     }
     updateState({ currentStep, totalSteps, formData, errors, direction }, triggerCallback = true) {
       if (isNaN(currentStep) === false) {
-        this.state.currentStep = currentStep;
+        this.state.currentStep = currentStep || 0;
       }
       if (totalSteps) {
         this.state.totalSteps = totalSteps;
@@ -1134,7 +1144,7 @@
         this.state.formData = formData;
       }
       if (errors) {
-        this.state.errors = errors;
+        this.state.errors = errors || {};
       }
       if (direction) {
         this.state.direction = direction;
@@ -6649,10 +6659,138 @@
     logoutUser
   };
 
+  // src/auth/user.ts
+  var logger4 = createLogger("USER");
+  var User = class {
+    //   private accessToken: string;
+    //   private authOClient: Auth0Client;
+    constructor() {
+      __publicField(this, "getAccessToken", async () => {
+        const accessToken = await LocalAuth0Client.getTokenSilently();
+        return accessToken;
+      });
+      __publicField(this, "getUser", async () => {
+        const userProfile = await LocalAuth0Client.getUser();
+        logger4.log("userProfile", userProfile);
+        return userProfile;
+      });
+      __publicField(this, "getUserId", async () => {
+        const userProfile = await this.getUser();
+        return userProfile?.sub || "";
+      });
+      __publicField(this, "getUserWithMetadata", async () => {
+        const userId = await this.getUserId();
+        const accessToken = await this.getAccessToken();
+        const API_ROUTE = AUTH0_API_ROUTES.USER + "/" + encodeURIComponent(userId);
+        const response = await fetch(API_ROUTE, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+        const userObject = await response.json();
+        logger4.log("[+] User -> User Object", userObject);
+        return userObject;
+      });
+      __publicField(this, "getUserFromLocalStorage", () => {
+      });
+      __publicField(this, "updateUserMetadata", async (user_metadata) => {
+        const userId = await this.getUserId();
+        const accessToken = await this.getAccessToken();
+        const API_ROUTE = AUTH0_API_ROUTES.USER + "/" + encodeURIComponent(userId);
+        const response = await fetch(API_ROUTE, {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            user_metadata
+          })
+        });
+        const user = await response.json();
+        logger4.log("[+] User - Metadata Updated", userId, user);
+      });
+      __publicField(this, "updateMetaDataInLocalStorage", async (user_metadata, replaceState = false) => {
+        logger4.log("[+] replaceState", replaceState);
+        const data = localStorage.getItem("formState") || "{}";
+        const state = JSON.parse(data);
+        let newState = { ...state, formData: { ...state.formData, ...user_metadata } };
+        localStorage.setItem("formState", JSON.stringify(newState));
+      });
+    }
+    showUserDetailsOnScreen(user) {
+      const elements = document.querySelectorAll("[data-user]");
+      if (elements.length == 0) {
+        return;
+      }
+      logger4.log("[+] Data User -> showUserDetailsOnScreen", user);
+      elements.forEach((element) => {
+        const template = element.getAttribute("data-user") || "";
+        let finalString = template;
+        const parts = template.match(/{(.*?)}/g);
+        parts?.forEach((part) => {
+          const key = part.replace(/{|}/g, "");
+          const metaData = user.user_metadata;
+          if (metaData) {
+            const value = user.user_metadata[key];
+            logger4.log("[+] KEY VALUE", key, value);
+            finalString = finalString.replace(new RegExp(part, "g"), user.user_metadata[key] || "");
+          }
+        });
+        logger4.log("finalString", template, "[+]", finalString);
+        if (element.tagName == "IMG") {
+          element.setAttribute("src", finalString);
+        } else {
+          element.innerHTML = finalString;
+        }
+      });
+      this.handleDataShow(user);
+    }
+    handleDataShow(user) {
+      const elements = document.querySelectorAll("[data-show-if]");
+      const metaData = user.user_metadata;
+      if (elements.length == 0 || !metaData) {
+        return;
+      }
+      elements.forEach((element) => {
+        const showIf = element.getAttribute("data-show-if") || "";
+        const condition = showIf.split(":");
+        if (!condition) {
+          return;
+        }
+        const key = condition[0];
+        const value = condition[1];
+        if (metaData[key].toString() == value) {
+          logger4.log("[+] ELEMENT ALREADY VISIBLE");
+        } else {
+          element.style.display = "none";
+        }
+      });
+    }
+    static getUserIfMetadataMissing(userObject) {
+      const updatedUser = { ...userObject };
+      const FIRST_NAME = "First-Name";
+      const LAST_NAME = "Last-Name";
+      if (!updatedUser.user_metadata) {
+        updatedUser.user_metadata = {};
+      }
+      if (!updatedUser.user_metadata[FIRST_NAME]) {
+        updatedUser.user_metadata[FIRST_NAME] = updatedUser.given_name;
+      }
+      if (!updatedUser.user_metadata[LAST_NAME]) {
+        updatedUser.user_metadata[LAST_NAME] = updatedUser.family_name;
+      }
+      return updatedUser;
+    }
+  };
+  __publicField(User, "clearFormStateInLocalStorage", () => {
+    localStorage.removeItem("formState");
+  });
+
   // src/auth/login.ts
-  var logger4 = createLogger("LOGIN");
+  var logger5 = createLogger("LOGIN");
   var initAuthModule = async (userLoaded) => {
-    logger4.log("[+] AUTH MODULE INITIALIZED");
+    logger5.log("[+] AUTH MODULE INITIALIZED");
     loginHandler(LocalAuth0Client, ".v2-sign-up-btn");
     loginHandler(LocalAuth0Client, '[data-action="login"]');
     logoutHandler(LocalAuth0Client, '[data-action="logout"]');
@@ -6662,12 +6800,12 @@
   function takeUserToPostLoginRoute() {
     const postLoginRoute = getPostLoginRoute();
     if (postLoginRoute) {
-      logger4.log("[+] takeUserToPostLoginRoute", postLoginRoute);
+      logger5.log("[+] takeUserToPostLoginRoute", postLoginRoute);
       removePostLoginRoute();
       window.history.replaceState({}, document.title, postLoginRoute);
       window.location.assign(postLoginRoute);
     } else {
-      logger4.log("[+] takeUserToPostLoginRoute", RELATIVE_ROUTES.POST_LOGIN);
+      logger5.log("[+] takeUserToPostLoginRoute", RELATIVE_ROUTES.POST_LOGIN);
       takeUserToHome();
     }
   }
@@ -6687,9 +6825,9 @@
       if (ifLoginCallback) {
         await auth0Client.handleRedirectCallback();
         const user = await getCurrentUser(auth0Client);
-        logger4.log("[+] handleRedirectCallback-> user", user);
+        logger5.log("[+] handleRedirectCallback-> user", user);
         const user_metadata = user.user_metadata;
-        logger4.log("user_metadata", user_metadata);
+        logger5.log("user_metadata", user_metadata);
         if (user_metadata && user_metadata["isOnboardingComplete"]) {
           takeUserToPostLoginRoute();
         } else {
@@ -6700,24 +6838,24 @@
         takeUserToHome();
       }
     } catch (error) {
-      logger4.log("[+] handleRedirectCallback", error);
+      logger5.log("[+] handleRedirectCallback", error);
       PosthogManager.captureExceptions(error);
     }
   };
   var setAuthenticatedCookie = function(status, logMessage = "Not Set") {
-    logger4.log("[+] setAuthenticatedCookie LOG", logMessage);
+    logger5.log("[+] setAuthenticatedCookie LOG", logMessage);
     document.cookie = `isAuthenticated=${status}; Path=/;`;
   };
   var getCurrentUser = async (auth0Client) => {
     try {
-      logger4.log("[+] getCurrentUser [STARTS]");
+      logger5.log("[+] getCurrentUser [STARTS]");
       setAuthenticatedCookie(false, "default");
       const accessToken = await auth0Client.getTokenSilently();
       const isAuthenticated = await auth0Client.isAuthenticated();
       const userProfile = await auth0Client.getUser();
       let user = null;
       setAuthenticatedCookie(isAuthenticated, "USER IS AUTHENTICATED");
-      logger4.log("[+] isAuthenticated", isAuthenticated);
+      logger5.log("[+] isAuthenticated", isAuthenticated);
       if (userProfile) {
         const userId = userProfile.sub || "";
         const response = await fetch(
@@ -6727,11 +6865,12 @@
           }
         );
         user = await response.json();
-        logger4.log("user->metadata", user.user_metadata);
+        logger5.log("user->metadata", user.user_metadata);
+        user = User.getUserIfMetadataMissing(user);
       }
       return user;
     } catch (error) {
-      logger4.log("getCurrentUser-> ERROR", error);
+      logger5.log("getCurrentUser-> ERROR", error);
       setAuthenticatedCookie(false, "USER AUTH ERROR");
       throw error;
     }
@@ -6739,30 +6878,30 @@
   var redirectAnonUserFromProtectedRoute = async (auth0Client) => {
     try {
       const isAuthenticated = await auth0Client.isAuthenticated();
-      logger4.log(
+      logger5.log(
         "[+] !isAuthenticated && isUserOrProtectedRoute()",
         !isAuthenticated,
         isUserOrProtectedRoute()
       );
       if (!isAuthenticated && isUserOrProtectedRoute()) {
-        logger4.log("[+] Redirecting User to Login Page");
+        logger5.log("[+] Redirecting User to Login Page");
         await auth0Client.loginWithRedirect({
           appState: { targetUrl: window.location.pathname }
         });
       }
     } catch (error) {
-      logger4.error("redirectAnonUserFromProtectedRoute", error);
+      logger5.error("redirectAnonUserFromProtectedRoute", error);
     }
   };
   var checkAuthentication = async (auth0Client, userLoaded) => {
-    logger4.log("[+] checkAuthentication - Method");
+    logger5.log("[+] checkAuthentication - Method");
     try {
-      logger4.log("[+] checkAuthentication - Method - 1");
+      logger5.log("[+] checkAuthentication - Method - 1");
       const user = await getCurrentUser(auth0Client);
-      logger4.log("[+] checkAuthentication - Method - 2");
+      logger5.log("[+] checkAuthentication - Method - 2");
       userLoaded(user);
     } catch (error) {
-      logger4.log("checkAuthentication", error);
+      logger5.log("checkAuthentication", error);
       userLoaded(null);
       redirectAnonUserFromProtectedRoute(auth0Client);
     }
@@ -6793,7 +6932,7 @@
         });
       });
     } else {
-      logger4.info("[-] Login Button Not Found");
+      logger5.info("[-] Login Button Not Found");
     }
   };
   var logoutHandler = (auth0Client, elementId = "#logout-button") => {
@@ -6803,6 +6942,7 @@
         element.addEventListener("click", (e3) => {
           e3.preventDefault();
           setAuthenticatedCookie(false, "LOGOUT");
+          User.clearFormStateInLocalStorage();
           PosthogManager.logoutUser();
           auth0Client.logout({
             logoutParams: {
@@ -6810,119 +6950,6 @@
             }
           });
         });
-      });
-    }
-  };
-
-  // src/auth/user.ts
-  var logger5 = createLogger("USER");
-  var User = class {
-    //   private accessToken: string;
-    //   private authOClient: Auth0Client;
-    constructor() {
-      __publicField(this, "getAccessToken", async () => {
-        const accessToken = await LocalAuth0Client.getTokenSilently();
-        return accessToken;
-      });
-      __publicField(this, "getUser", async () => {
-        const userProfile = await LocalAuth0Client.getUser();
-        logger5.log("userProfile", userProfile);
-        return userProfile;
-      });
-      __publicField(this, "getUserId", async () => {
-        const userProfile = await this.getUser();
-        return userProfile?.sub || "";
-      });
-      __publicField(this, "getUserWithMetadata", async () => {
-        const userId = await this.getUserId();
-        const accessToken = await this.getAccessToken();
-        const API_ROUTE = AUTH0_API_ROUTES.USER + "/" + encodeURIComponent(userId);
-        const response = await fetch(API_ROUTE, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        });
-        const userObject = await response.json();
-        logger5.log("[+] User -> User Object", userObject);
-        return userObject;
-      });
-      __publicField(this, "getUserFromLocalStorage", () => {
-      });
-      __publicField(this, "updateUserMetadata", async (user_metadata) => {
-        const userId = await this.getUserId();
-        const accessToken = await this.getAccessToken();
-        const API_ROUTE = AUTH0_API_ROUTES.USER + "/" + encodeURIComponent(userId);
-        const response = await fetch(API_ROUTE, {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            user_metadata
-          })
-        });
-        const user = await response.json();
-        logger5.log("[+] User - Metadata Updated", userId, user);
-      });
-      __publicField(this, "updateMetaDataInLocalStorage", async (user_metadata, replaceState = false) => {
-        logger5.log("[+] replaceState", replaceState);
-        const data = localStorage.getItem("formState");
-        if (!data) {
-          return;
-        }
-        const state = JSON.parse(data);
-        let newState = { ...state, formData: { ...state.formData, ...user_metadata } };
-        localStorage.setItem("formState", JSON.stringify(newState));
-      });
-    }
-    showUserDetailsOnScreen(user) {
-      const elements = document.querySelectorAll("[data-user]");
-      if (elements.length == 0) {
-        return;
-      }
-      logger5.log("[+] Data User -> showUserDetailsOnScreen", user);
-      elements.forEach((element) => {
-        const template = element.getAttribute("data-user") || "";
-        let finalString = template;
-        const parts = template.match(/{(.*?)}/g);
-        parts?.forEach((part) => {
-          const key = part.replace(/{|}/g, "");
-          const metaData = user.user_metadata;
-          if (metaData) {
-            const value = user.user_metadata[key];
-            logger5.log("[+] KEY VALUE", key, value);
-            finalString = finalString.replace(new RegExp(part, "g"), user.user_metadata[key] || "");
-          }
-        });
-        logger5.log("finalString", template, "[+]", finalString);
-        if (element.tagName == "IMG") {
-          element.setAttribute("src", finalString);
-        } else {
-          element.innerHTML = finalString;
-        }
-      });
-      this.handleDataShow(user);
-    }
-    handleDataShow(user) {
-      const elements = document.querySelectorAll("[data-show-if]");
-      const metaData = user.user_metadata;
-      if (elements.length == 0 || !metaData) {
-        return;
-      }
-      elements.forEach((element) => {
-        const showIf = element.getAttribute("data-show-if") || "";
-        const condition = showIf.split(":");
-        if (!condition) {
-          return;
-        }
-        const key = condition[0];
-        const value = condition[1];
-        if (metaData[key].toString() == value) {
-          logger5.log("[+] ELEMENT ALREADY VISIBLE");
-        } else {
-          element.style.display = "none";
-        }
       });
     }
   };
@@ -7035,18 +7062,37 @@
     }
   }
   function renderArticlesOnScreen(container = '[data-content="recent-articles"] > .swiper-wrapper') {
+    logger6.log("Rendering Articles");
     const articles = getRecentArticles();
-    logger6.log("Articles", articles);
-    const articleContainer = document.querySelector(container);
-    const articleListHtml = [];
-    if (articleContainer) {
-      articles.forEach((article) => {
-        let template = recentArticle_default;
-        template = template.replaceAll("{{title}}", article.title).replaceAll("{{description}}", article.description).replaceAll("{{image}}", article.image).replaceAll("{{featuredImage}}", article.image).replaceAll("{{contentType}}", article.type).replaceAll("{{url}}", article.url).replaceAll("{{articleLink}}", article.url);
-        articleListHtml.push(template);
-      });
-      articleContainer.innerHTML = articleListHtml.join("");
-      initializeSwiper();
+    if (articles && articles.length > 0) {
+      logger6.log("Articles", articles);
+      const articleContainer = document.querySelector(container);
+      const articleListHtml = [];
+      if (articleContainer) {
+        articles.forEach((article) => {
+          let template = recentArticle_default;
+          template = template.replaceAll("{{title}}", article.title).replaceAll("{{description}}", article.description).replaceAll("{{image}}", article.image).replaceAll("{{featuredImage}}", article.image).replaceAll("{{contentType}}", article.type).replaceAll("{{url}}", article.url).replaceAll("{{articleLink}}", article.url);
+          articleListHtml.push(template);
+        });
+        articleContainer.innerHTML = articleListHtml.join("");
+        initializeSwiper();
+      }
+    } else {
+      logger6.log("Articles not found");
+      showEmptyScreen();
+    }
+  }
+  function showEmptyScreen() {
+    logger6.log("Showing Empty Screen");
+    const mainSelector = `[data-content="recent-articles"]`;
+    const mainElement = document.querySelector(mainSelector);
+    if (mainElement) {
+      mainElement.classList.add("hide");
+    }
+    const selector = `[data-content="recently-viewed-empty"]`;
+    const element = document.querySelector(selector);
+    if (element) {
+      element.classList.remove("hide");
     }
   }
   function initializeSwiper() {
@@ -7167,6 +7213,12 @@
         user.updateMetaDataInLocalStorage(userObject.user_metadata, replaceState);
         user.showUserDetailsOnScreen(userObject);
         PosthogManager.identifyUser(userObject);
+        if (MSF) {
+          MSF.initialize();
+          setTimeout(() => {
+            loader?.classList.add("hide");
+          }, 1e3);
+        }
       } else {
         new NudgeHandler({
           elementSelector: 'data-limit-type="nudge"',
@@ -7175,12 +7227,6 @@
           delay: 7
           // N seconds
         });
-      }
-      if (MSF) {
-        MSF.initialize();
-        setTimeout(() => {
-          loader?.classList.add("hide");
-        }, 1e3);
       }
       const loginButton = document.querySelector("#login-button");
       const dashboardButton = document.querySelector("#dashboard-button");
