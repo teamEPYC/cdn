@@ -7034,7 +7034,7 @@
       addArticle({ title, description, image, url, type });
     }
   }
-  function renderArticlesOnScreen(container = '[data-content="recent-articles"]') {
+  function renderArticlesOnScreen(container = '[data-content="recent-articles"] > .swiper-wrapper') {
     const articles = getRecentArticles();
     logger6.log("Articles", articles);
     const articleContainer = document.querySelector(container);
@@ -7050,6 +7050,7 @@
     }
   }
   function initializeSwiper() {
+    logger6.log("Initializing Swiper");
     const swiper = new Swiper('[data-content="recent-articles"]', {
       slidesPerView: "auto",
       spaceBetween: 54,
@@ -7063,6 +7064,7 @@
       loop: false
       // Optional: Enable infinite loop
     });
+    logger6.log("Swiper Initialized");
   }
   function run() {
     logger6.log("[+] RECENT ARTICLE MANAGER -> Running");
