@@ -6835,7 +6835,7 @@
         }
       }
       if (isLogoutCallBack) {
-        takeUserToHome();
+        setTimeout(takeUserToHome, 2e3);
       }
     } catch (error) {
       logger5.log("[+] handleRedirectCallback", error);
