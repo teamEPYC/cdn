@@ -6724,6 +6724,9 @@
         return userObject;
       });
       __publicField(this, "getUserFromLocalStorage", () => {
+        const data = localStorage.getItem("formState") || "{}";
+        const state = JSON.parse(data);
+        return state.formData;
       });
       __publicField(this, "updateUserMetadata", async (user_metadata) => {
         const userId = await this.getUserId();
@@ -6748,6 +6751,17 @@
         const state = JSON.parse(data);
         let newState = { ...state, formData: { ...state.formData, ...user_metadata } };
         localStorage.setItem("formState", JSON.stringify(newState));
+      });
+      __publicField(this, "showUserDetailsFromLocalStorage", () => {
+        try {
+          const user_metadata = this.getUserFromLocalStorage();
+          const userData = {
+            user_metadata
+          };
+          this.showUserDetailsOnScreen(userData);
+        } catch (error) {
+          console.error("UNABLE TO SHOW", error);
+        }
       });
     }
     showUserDetailsOnScreen(user) {
@@ -7238,12 +7252,14 @@
     }
     const user = new User();
     let MSF;
+    if (user) {
+      user.showUserDetailsFromLocalStorage();
+    }
     function userLoaded(userObject) {
       logger7.log("[+] UserLoaded", userObject);
       if (userObject) {
         const replaceState = true;
         user.updateMetaDataInLocalStorage(userObject.user_metadata, replaceState);
-        user.showUserDetailsOnScreen(userObject);
         PosthogManager.identifyUser(userObject);
         if (MSF) {
           MSF.initialize();
