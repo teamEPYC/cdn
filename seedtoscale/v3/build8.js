@@ -207,7 +207,7 @@
         "[required]"
       );
       console.log("====================================");
-      console.log("[+] VISIBLE FIELD FOR VALIDATION", fields, requriedFields);
+      console.log("[+] FIELD FOR VALIDATION", fields, requriedFields);
       console.log("====================================");
       const visibleFields = Array.from(fields).filter(this.isVisible);
       const visibleRequriedFields = Array.from(requriedFields).filter(this.isVisible);
@@ -1055,6 +1055,7 @@
         false
       );
       this.handleProfileEditPage();
+      this.fixDataNameOfCollectionListChecboxes();
       this.dataManager.fillFormWithData(this.getState().formData);
       this.uiManager.showStep(this.state.currentStep);
       this.validationManager.clearStepErrors();
@@ -1066,6 +1067,21 @@
       document.head.appendChild(style);
       this.initConditionalVisibility();
       logger2.log("[+] afterSubmitRedrect, this.options", this.options);
+    }
+    fixDataNameOfCollectionListChecboxes() {
+      const checkboxGroup = this.form.querySelectorAll('[data-validation="checkbox-group"]');
+      checkboxGroup.forEach((checkboxGroup2) => {
+        const checkboxes = checkboxGroup2.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach((checkbox) => {
+          const requireResetOfName = checkbox.getAttribute("name")?.toLocaleLowerCase().startsWith("checkbox");
+          if (requireResetOfName) {
+            const id = checkbox.getAttribute("id");
+            const groupName = checkboxGroup2.getAttribute("data-group");
+            const newName = groupName + "_" + id;
+            checkbox.setAttribute("name", newName);
+          }
+        });
+      });
     }
     //
     //
