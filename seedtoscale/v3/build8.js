@@ -1029,7 +1029,9 @@
       const form = this.formManager.form;
       this.steps = this.formManager.detectSteps();
       const buttons = this.formManager.detectButtons();
-      const customProgressBar = this.form.querySelectorAll(`${this.selectors.customProgressBar}`);
+      const customProgressBar = document.querySelectorAll(
+        `.onb-prog-container ${this.selectors.customProgressBar}`
+      );
       this.uiManager = new UIManager(form, this.steps, buttons, customProgressBar);
       this.validationManager = new FormValidationManager(form);
       this.dataManager = new DataGatheringManager(form);
