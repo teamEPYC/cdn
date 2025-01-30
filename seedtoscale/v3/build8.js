@@ -206,6 +206,9 @@
       const requriedFields = currentStep.querySelectorAll(
         "[required]"
       );
+      console.log("====================================");
+      console.log("[+] VISIBLE FIELD FOR VALIDATION", fields, requriedFields);
+      console.log("====================================");
       const visibleFields = Array.from(fields).filter(this.isVisible);
       const visibleRequriedFields = Array.from(requriedFields).filter(this.isVisible);
       const finalMap = {};
@@ -383,7 +386,6 @@
         }
       }
       if (!result.valid) {
-        console.log("[+] field", field);
         this.errors[fieldName] = result.message;
       } else {
         delete this.errors[fieldName];
@@ -396,14 +398,12 @@
       let isStepValid = true;
       this.errors = {};
       fields.forEach((field) => {
-        console.log("[_] Validating Field:", field.name);
         const fieldStatus = this.validateField(field);
         if (!fieldStatus.valid) {
           isStepValid = false;
         }
       });
       const result = { isStepValid, errors: this.errors };
-      console.log("[+] STEP VALIDATION RESULT", result);
       return result;
     }
     getErrors() {
@@ -412,8 +412,8 @@
     showFieldError(field) {
       this.clearFieldError(field);
       const errorContainer = this.getErrorContainer(field);
-      console.log("[+] SHOWING ERROR FIELD", field.name);
       const keyName = field.name || field.dataset.group || "";
+      console.log("[+] CHECKING ERROR FIELD", keyName);
       if (errorContainer && this.errors[keyName]) {
         console.log("%c[+] SHOWING ERROR FIELD", "color:red", keyName);
         errorContainer.textContent = this.errors[keyName];
@@ -1062,7 +1062,7 @@
       this.form.classList.remove("hide");
       logger2.log("[+] INITIAL STATE", JSON.stringify(this.state, null, 2));
       const style = document.createElement("style");
-      style.textContent = `.${HIDDEN_CLASS} { display: none; }`;
+      style.textContent = `.${HIDDEN_CLASS} { display: none; } .onb-form-select {display: block}`;
       document.head.appendChild(style);
       this.initConditionalVisibility();
       logger2.log("[+] afterSubmitRedrect, this.options", this.options);
@@ -1121,10 +1121,24 @@
       if (String(conditionFieldValue) === String(condition.value)) {
         logger2.log("[+] Condition Met:", conditionFieldValue, condition.value);
         field.classList.remove(HIDDEN_CLASS);
+        this.removeClassOnInputFields(field, HIDDEN_CLASS);
       } else {
         logger2.log("[+] Condition NOT Met:", conditionFieldValue, condition.value);
         field.classList.add(HIDDEN_CLASS);
+        this.addClassOnInputFields(field, HIDDEN_CLASS);
       }
+    }
+    addClassOnInputFields(field, className) {
+      const elements = field.querySelectorAll("input, select, textarea, [data-validation]");
+      elements.forEach((element) => {
+        element.classList.add(className);
+      });
+    }
+    removeClassOnInputFields(field, className) {
+      const elements = field.querySelectorAll("input, select, textarea, [data-validation]");
+      elements.forEach((element) => {
+        element.classList.remove(className);
+      });
     }
     loadLocalStorage() {
       const formState = localStorage.getItem("formState");
