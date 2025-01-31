@@ -1165,7 +1165,7 @@
         this.state = { ...state };
       }
     }
-    updateState({ currentStep, totalSteps, formData, errors, direction }, triggerCallback = true) {
+    updateState({ currentStep, totalSteps, formData, errors, direction }, triggerCallback = false) {
       if (isNaN(currentStep) === false) {
         this.state.currentStep = currentStep || 0;
       }
@@ -1249,10 +1249,13 @@
       if (!isOnboardingComplete && isStepValid && this.isLastStep()) {
         isOnboardingComplete = true;
       }
-      this.updateState({
-        formData: { ...data, isOnboardingComplete },
-        errors
-      });
+      this.updateState(
+        {
+          formData: { ...data, isOnboardingComplete },
+          errors
+        },
+        isStepValid
+      );
       return isStepValid;
     }
     isLastStep() {
