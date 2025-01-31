@@ -7056,6 +7056,7 @@
         element.addEventListener("click", (e3) => {
           e3.preventDefault();
           setAuthenticatedCookie(false, "LOGOUT");
+          User.clearFormStateInLocalStorage();
           PosthogManager.logoutUser();
           auth0Client.logout({
             logoutParams: {
