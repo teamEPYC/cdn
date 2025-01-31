@@ -6954,6 +6954,7 @@
     } catch (error) {
       logger5.log("[+] handleRedirectCallback", error);
       PosthogManager.captureExceptions(error);
+      window.location.assign(RELATIVE_ROUTES.HOME + "?error=error_while_logging_in");
     }
   };
   var setAuthenticatedCookie = function(status, logMessage = "Not Set") {
