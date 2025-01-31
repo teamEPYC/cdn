@@ -7325,9 +7325,10 @@
     }
     function userLoaded(userObject) {
       logger7.log("[+] UserLoaded", userObject);
-      if (userObject) {
+      if (userObject && !userObject.error) {
         const replaceState = true;
         user.updateMetaDataInLocalStorage(userObject.user_metadata, replaceState);
+        user.showUserDetailsOnScreen(userObject);
         PosthogManager.identifyUser(userObject);
         if (MSF) {
           MSF.initialize();
