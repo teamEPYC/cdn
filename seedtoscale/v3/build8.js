@@ -6790,9 +6790,77 @@
           element.innerHTML = finalString;
         }
       });
-      this.handleDataShow(user);
+      this.handleDataShowIfCondition(user);
+    }
+    handleVisibility(element, userStatus) {
+      const dataShow = element.getAttribute("data-show");
+      const dataStrip = element.getAttribute("data-strip");
+      const dataHide = element.getAttribute("data-hide");
+      logger4.log(
+        "[+] ConditionalVisibility: dataShow, dataStrip, dataHide",
+        dataShow,
+        dataStrip,
+        dataHide
+      );
+      if (dataShow) {
+        const conditions = dataShow.split(";").map((cond) => cond.trim());
+        const shouldShow = conditions.every((condition) => {
+          if (condition === "user:loggedin") return userStatus.loggedIn;
+          if (condition === "user:anon") return !userStatus.loggedIn;
+          if (condition === "limit:reached") return userStatus.limitReached;
+          if (condition === "limit:available") return !userStatus.limitReached;
+          return true;
+        });
+        if (!shouldShow) {
+          element.setAttribute("style", "display:none;");
+        } else {
+          element.removeAttribute("style");
+        }
+      }
+      if (dataStrip) {
+        const conditions = dataStrip.split(";").map((cond) => cond.trim());
+        const shouldHide = conditions.every((condition) => {
+          if (condition === "user:loggedin") return userStatus.loggedIn;
+          if (condition === "user:anon") return !userStatus.loggedIn;
+          if (condition === "limit:reached") return userStatus.limitReached;
+          if (condition === "limit:available") return !userStatus.limitReached;
+          return false;
+        });
+        console.log("dataStrip -> shouldHide", shouldHide);
+        if (shouldHide) {
+          element.setAttribute("style", "display:none;");
+        }
+      }
+      if (dataHide) {
+        const conditions = dataHide.split(";").map((cond) => cond.trim());
+        const shouldHide = conditions.every((condition) => {
+          if (condition === "user:loggedin") return userStatus.loggedIn;
+          if (condition === "user:anon") return !userStatus.loggedIn;
+          if (condition === "limit:reached") return userStatus.limitReached;
+          if (condition === "limit:available") return !userStatus.limitReached;
+          return false;
+        });
+        console.log("[+] dataHide -> shouldHide", shouldHide);
+        if (shouldHide) {
+          element.setAttribute("style", "display:none;");
+        } else {
+          element.removeAttribute("style");
+        }
+      }
     }
     handleDataShow(user) {
+      const USER_STATUS = { loggedIn: false, limitReached: false, canAccessThisPage: false };
+      if (user) {
+        USER_STATUS.loggedIn = true;
+      }
+      const showElements = document.querySelectorAll("[data-show]");
+      const hideElements = document.querySelectorAll("[data-hide]");
+      const elements = [...Array.from(showElements), ...Array.from(hideElements)];
+      elements.forEach((element) => {
+        this.handleVisibility(element, USER_STATUS);
+      });
+    }
+    handleDataShowIfCondition(user) {
       const elements = document.querySelectorAll("[data-show-if]");
       const metaData = user.user_metadata;
       if (elements.length == 0 || !metaData) {
@@ -6988,7 +7056,6 @@
         element.addEventListener("click", (e3) => {
           e3.preventDefault();
           setAuthenticatedCookie(false, "LOGOUT");
-          User.clearFormStateInLocalStorage();
           PosthogManager.logoutUser();
           auth0Client.logout({
             logoutParams: {
@@ -7283,6 +7350,7 @@
         loginButton?.classList.add("hide");
       }
       dashboardButton?.classList.remove("hide");
+      user.handleDataShow(userObject);
     }
     if (form) {
       logger7.log("[+] Form", form);
