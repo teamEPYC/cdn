@@ -7350,7 +7350,9 @@
         loginButton?.classList.add("hide");
       }
       dashboardButton?.classList.remove("hide");
-      user.handleDataShow(userObject);
+      if (window.location.pathname === "/") {
+        user.handleDataShow(userObject);
+      }
     }
     if (form) {
       logger7.log("[+] Form", form);
