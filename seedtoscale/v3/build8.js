@@ -6673,6 +6673,8 @@
     if (userId && !yo._isIdentified()) {
       let firstName = user.given_name || (user.user_metadata ? user.user_metadata["First-Name"] : "");
       let lastName = user.family_name || (user.user_metadata ? user.user_metadata["Last-Name"] : "");
+      firstName = firstName || "";
+      lastName = lastName || "";
       let fullName = `${firstName} ${lastName}`;
       yo.identify(userId, {
         email: user.email,
@@ -6779,16 +6781,23 @@
         const parts = template.match(/{(.*?)}/g);
         parts?.forEach((part) => {
           const key = part.replace(/{|}/g, "");
-          const metaData = user.user_metadata;
-          if (metaData) {
-            const value = user.user_metadata[key];
-            logger4.log("[+] KEY VALUE", key, value);
-            finalString = finalString.replace(new RegExp(part, "g"), user.user_metadata[key] || "");
-          }
+          const dataToCheck = {
+            ...user,
+            ...user.user_metadata
+          };
+          const value = dataToCheck[key];
+          logger4.log("[+] KEY VALUE", key, value);
+          finalString = finalString.replace(new RegExp(part, "g"), dataToCheck[key] || "");
         });
-        logger4.log("finalString", template, "[+]", finalString);
-        if (element.tagName == "IMG") {
+        const isImageTag = element.tagName == "IMG";
+        const isInputTag = element.tagName == "INPUT";
+        const isSelectTag = element.tagName == "SELECT";
+        const isTextAreaTag = element.tagName == "TEXTAREA";
+        if (isImageTag && finalString) {
           element.setAttribute("src", finalString);
+        } else if (isInputTag || isSelectTag || isTextAreaTag) {
+          console.log("[+] SETTING INPUT FIELD VALUES", finalString);
+          element.value = finalString;
         } else {
           element.innerHTML = finalString;
         }
@@ -6877,8 +6886,8 @@
         }
         const key = condition[0];
         const value = condition[1];
-        if (metaData[key].toString() == value) {
-          logger4.log("[+] ELEMENT ALREADY VISIBLE");
+        if (metaData[key] && metaData[key].toString() == value) {
+          logger4.log("[+] ELEMENT ALREADY VISIBLE", key);
         } else {
           element.style.display = "none";
         }
