@@ -6778,17 +6778,21 @@
       elements.forEach((element) => {
         const template = element.getAttribute("data-user") || "";
         let finalString = template;
+        const dataToCheck = {
+          ...user,
+          ...user.user_metadata
+        };
         const parts = template.match(/{(.*?)}/g);
         parts?.forEach((part) => {
           const key = part.replace(/{|}/g, "");
-          const dataToCheck = {
-            ...user,
-            ...user.user_metadata
-          };
+          logger4.log("[key=]", key);
           const value = dataToCheck[key];
           logger4.log("[+] KEY VALUE", key, value);
           finalString = finalString.replace(new RegExp(part, "g"), dataToCheck[key] || "");
         });
+        if (template == "initials") {
+          finalString = dataToCheck["First-Name"]?.charAt(0);
+        }
         const isImageTag = element.tagName == "IMG";
         const isInputTag = element.tagName == "INPUT";
         const isSelectTag = element.tagName == "SELECT";
@@ -7144,11 +7148,11 @@
   };
 
   // src/template/recentArticle.html
-  var recentArticle_default = '\n<div class="swiper-slide dash-recently-viewed-slide">\n  <a\n    id="w-node-_13467009-6ae5-90ec-9f65-7c6ea88a7318-bc066943"\n    href="{{url}}"\n    class="dash_card-wrapper is-recently-viewed w-inline-block"\n    ><div class="dash_card-img-wrapper">\n      <img\n        src="{{featuredImage}}"\n        loading="lazy"\n        alt=""\n        class="dash_card-img"\n      />\n    </div>\n    <div\n      id="w-node-_13467009-6ae5-90ec-9f65-7c6ea88a731b-bc066943"\n      class="dash_card-content is-recently-viewed"\n    >\n      <div class="dash_card-topic">{{contentType}}</div>\n      <h2 class="dash_card-title text-style-2lines">\n        {{title}}\n      </h2>\n    </div></a\n  >\n</div>\n\n';
+  var recentArticle_default = '<a\n  id="w-node-_2d62179d-8156-36fb-2518-94981619b40e-56888ad6"\n  href="{{url}}"\n  class="dashboard-content-card w-inline-block"\n  ><div class="dash_card-img-wrapper">\n    <img src="{{featuredImage}}" loading="lazy" alt="" class="dash_card-img" />\n  </div>\n  <div\n    id="w-node-_2d62179d-8156-36fb-2518-94981619b411-56888ad6"\n    class="dash_card-content is-recently-viewed"\n  >\n    <div class="dash_card-topic">{{contentType}}</div>\n    <h2 class="dash_card-title">{{title}}</h2>\n  </div>\n</a>\n';
 
   // src/content/recent-articles.ts
   var logger6 = createLogger("RECENT ARTICLES");
-  var MAX_ARTICLE_COUNT = window.MAX_ARTICLE_COUNT || 10;
+  var MAX_ARTICLE_COUNT = window.MAX_ARTICLE_COUNT || 20;
   var CONSTANT = {
     ARTICLE_LIST: "RECENT_ARTICLE_LIST"
   };
@@ -7188,7 +7192,7 @@
       addArticle({ title, description, image, url, type });
     }
   }
-  function renderArticlesOnScreen(container = '[data-content="recent-articles"] > .swiper-wrapper') {
+  function renderArticlesOnScreen(container = '[data-content="recent-articles"]') {
     logger6.log("Rendering Articles");
     const articles = getRecentArticles();
     if (articles && articles.length > 0) {
