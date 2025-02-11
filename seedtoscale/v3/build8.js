@@ -7218,7 +7218,7 @@
     const mainSelector = `[data-content="recent-articles"]`;
     const mainElement = document.querySelector(mainSelector);
     if (mainElement) {
-      mainElement.classList.add("hide");
+      mainElement.remove();
     }
     const selector = `[data-content="recently-viewed-empty"]`;
     const element = document.querySelector(selector);
