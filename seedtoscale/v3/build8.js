@@ -89,7 +89,8 @@
         }
       });
       const customSelect = this.form.querySelectorAll('[fs-selectcustom-element="select"]');
-      if (window.FsAttributes && window.FsAttributes.selectcustom) {
+      console.log("[+] CUSTOM SELECT", customSelect);
+      if (customSelect && window.FsAttributes && window.FsAttributes.selectcustom) {
         window.FsAttributes.selectcustom.destroy();
         window.FsAttributes.selectcustom.init();
         customSelect.forEach((field) => {
@@ -7162,11 +7163,17 @@
       return finalData;
     }
     static getUserIfMetadataMissing(userObject) {
+      function isLinkedInLogin(userObject2) {
+        return userObject2.identities.some(
+          (identity) => identity.connection.toLowerCase() === "linkedin"
+        );
+      }
       const updatedUser = { ...userObject };
       const FIRST_NAME = "First-Name";
       const LAST_NAME = "Last-Name";
       const COUNTRY_NAME = "Country-Name";
       const CITY_NAME = "City-Name";
+      const LINKEDIN_URL_KEY = "Linkedin-Url";
       if (!updatedUser.user_metadata) {
         updatedUser.user_metadata = {};
       }
@@ -7212,8 +7219,8 @@
     }
   }
   function takeUserToHome() {
-    window.history.replaceState({}, document.title, RELATIVE_ROUTES.HOME);
-    window.location.assign(RELATIVE_ROUTES.HOME);
+    window.history.replaceState({}, document.title, RELATIVE_ROUTES.DASHBOARD);
+    window.location.assign(RELATIVE_ROUTES.DASHBOARD);
   }
   function takeUserToOnboarding() {
     window.history.replaceState({}, document.title, RELATIVE_ROUTES.ONBOARDING);
