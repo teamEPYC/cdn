@@ -6669,6 +6669,15 @@
       ENVIRONMENT: getEnvironment()
     });
   };
+  var getValuesFromUser = (user) => {
+    const keysToPick = ["Organisation-Industry", "Organisation-Designation", "Organisation-Name"];
+    const userMetadata = user.user_metadata || {};
+    const userValues = keysToPick.reduce((acc, key) => {
+      acc[key] = userMetadata[key] || "";
+      return acc;
+    }, {});
+    return userValues;
+  };
   var identifyUser = (user) => {
     const userId = user.user_id || "";
     if (userId && !yo._isIdentified()) {
@@ -6677,10 +6686,12 @@
       firstName = firstName || "";
       lastName = lastName || "";
       let fullName = `${firstName} ${lastName}`;
-      yo.identify(userId, {
+      const userOptions = {
         email: user.email,
-        name: fullName.trim()
-      });
+        name: fullName.trim(),
+        ...getValuesFromUser(user)
+      };
+      yo.identify(userId, userOptions);
       console.log("[+] Posthog - User Identified", userId);
     }
   };
