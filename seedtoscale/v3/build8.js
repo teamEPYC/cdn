@@ -6670,7 +6670,13 @@
     });
   };
   var getValuesFromUser = (user) => {
-    const keysToPick = ["Organisation-Industry", "Organisation-Designation", "Organisation-Name"];
+    const keysToPick = [
+      "Organisation-Industry",
+      "Organisation-Designation",
+      "Organisation-Name",
+      "Are-you-a-founder",
+      "Company-Stage"
+    ];
     const userMetadata = user.user_metadata || {};
     const userValues = keysToPick.reduce((acc, key) => {
       acc[key] = userMetadata[key] || "";
