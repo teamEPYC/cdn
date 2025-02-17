@@ -333,6 +333,14 @@
           valid: window.iti.isValidNumber(),
           message: "Enter a valid phone number."
         }),
+        "radio-group": (group) => {
+          const radios = group.querySelectorAll('input[type="radio"]');
+          const isChecked = Array.from(radios).some((radio) => radio.checked);
+          return {
+            valid: isChecked,
+            message: "Please select an option."
+          };
+        },
         "checkbox-group": (value) => {
           const checkboxes = value.querySelectorAll('input[type="checkbox"]');
           const isChecked = Array.from(checkboxes).some((checkbox) => {
@@ -373,6 +381,9 @@
             if (rule === "checkbox-group") {
               localResult = this.validators["checkbox-group"](field);
               fieldName = field.getAttribute("data-group") || "";
+            } else if (rule == "radio-group") {
+              localResult = this.validators["radio-group"](field);
+              fieldName = field.querySelector('input[type="radio"]')?.name;
             } else {
               localResult = this.validators[ruleName](value, param);
             }
@@ -391,7 +402,6 @@
       } else {
         delete this.errors[fieldName];
       }
-      console.log("[+] FIELD VALIDATION RESULT", fieldName, result);
       return result;
     }
     // clearAllErrors() {}
@@ -460,6 +470,7 @@
         const parent = field.closest(".onb-form-field-comp");
         element = parent?.querySelector(this.errorSelector);
       }
+      console.log("[+] ERROR CONTAINER", field.name || field.dataset.group, element);
       return element;
     }
   };
@@ -7205,6 +7216,30 @@
       }
       if (!updatedUser.user_metadata[CITY_NAME] && updatedUser[CITY_NAME]) {
         updatedUser.user_metadata[CITY_NAME] = updatedUser[CITY_NAME];
+      }
+      let linkedinUrlInData = updatedUser.user_metadata[LINKEDIN_URL_KEY];
+      const isLinkedinLogin = isLinkedInLogin(updatedUser);
+      logger4.log("[+] linkedinUrlInMetadataData", linkedinUrlInData);
+      logger4.log("[+] isLinkedinLogin", isLinkedinLogin);
+      logger4.log("[+] updatedUser.nickname", updatedUser.nickname);
+      if (!linkedinUrlInData && isLinkedinLogin && updatedUser.nickname) {
+        logger4.log("[+] LinkedIn Data", updatedUser.nickname);
+        const linkedInData = JSON.parse(updatedUser.nickname);
+        if (linkedInData) {
+          const vanityName = linkedInData["vanityName"];
+          if (linkedInData["vanityName"]) {
+            const LINKEDIN_URL = `https://www.linkedin.com/in/${vanityName}`;
+            updatedUser.user_metadata[LINKEDIN_URL_KEY] = LINKEDIN_URL;
+          }
+          const company = linkedInData["company"];
+          if (company) {
+            updatedUser.user_metadata["Organisation-Name"] = company;
+          }
+          const jobTitle = linkedInData["job_title"];
+          if (jobTitle) {
+            updatedUser.user_metadata["Organisation-Designation"] = jobTitle;
+          }
+        }
       }
       return updatedUser;
     }
