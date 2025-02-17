@@ -7068,7 +7068,7 @@
           finalString = finalString.replace(new RegExp(part, "g"), dataToCheck[key] || "");
         });
         if (template == "initials") {
-          finalString = dataToCheck["First-Name"]?.charAt(0);
+          finalString = dataToCheck["First-Name"]?.charAt(0) || "";
         }
         const isImageTag = element.tagName == "IMG";
         const isInputTag = element.tagName == "INPUT";
@@ -7267,12 +7267,16 @@
       window.location.assign(postLoginRoute);
     } else {
       logger5.log("[+] takeUserToPostLoginRoute", RELATIVE_ROUTES.POST_LOGIN);
-      takeUserToHome();
+      takeUserToDashboard();
     }
   }
-  function takeUserToHome() {
+  function takeUserToDashboard() {
     window.history.replaceState({}, document.title, RELATIVE_ROUTES.DASHBOARD);
     window.location.assign(RELATIVE_ROUTES.DASHBOARD);
+  }
+  function takeUserToHome() {
+    window.history.replaceState({}, document.title, RELATIVE_ROUTES.HOME);
+    window.location.assign(RELATIVE_ROUTES.HOME);
   }
   function takeUserToOnboarding() {
     window.history.replaceState({}, document.title, RELATIVE_ROUTES.ONBOARDING);
