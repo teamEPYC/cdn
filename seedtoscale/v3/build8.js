@@ -1261,9 +1261,11 @@
       if (!isOnboardingComplete && isStepValid && this.isLastStep()) {
         isOnboardingComplete = true;
       }
+      const newFormData = { ...state.formData, ...data, isOnboardingComplete };
+      logger2.log("[+] newFormData", newFormData);
       this.updateState(
         {
-          formData: { ...data, isOnboardingComplete },
+          formData: { ...newFormData },
           errors
         },
         isStepValid
@@ -7077,7 +7079,7 @@
         if (isImageTag && finalString) {
           element.setAttribute("src", finalString);
         } else if (isInputTag || isSelectTag || isTextAreaTag) {
-          console.log("[+] SETTING INPUT FIELD VALUES", finalString);
+          logger4.log("[+] SETTING INPUT FIELD VALUES", finalString);
           element.value = finalString;
         } else {
           element.innerHTML = finalString;
@@ -7119,7 +7121,7 @@
           if (condition === "limit:available") return !userStatus.limitReached;
           return false;
         });
-        console.log("dataStrip -> shouldHide", shouldHide);
+        logger4.log("dataStrip -> shouldHide", shouldHide);
         if (shouldHide) {
           element.setAttribute("style", "display:none;");
         }
@@ -7133,7 +7135,7 @@
           if (condition === "limit:available") return !userStatus.limitReached;
           return false;
         });
-        console.log("[+] dataHide -> shouldHide", shouldHide);
+        logger4.log("[+] dataHide -> shouldHide", shouldHide);
         if (shouldHide) {
           element.setAttribute("style", "display:none;");
         } else {
@@ -7177,7 +7179,7 @@
     static async getLocationDetails() {
       const response = await fetch("https://ipinfo.io/json?token=43a22b23bbdddb");
       const data = await response.json();
-      console.log("[+] LOCATION DETAILS", data);
+      logger4.log("[+] LOCATION DETAILS", data);
       const countryCode = data.country;
       const countryName = countryCodeMap[countryCode];
       const city = data.city;
@@ -7221,7 +7223,6 @@
       const isLinkedinLogin = isLinkedInLogin(updatedUser);
       logger4.log("[+] linkedinUrlInMetadataData", linkedinUrlInData);
       logger4.log("[+] isLinkedinLogin", isLinkedinLogin);
-      logger4.log("[+] updatedUser.nickname", updatedUser.nickname);
       if (!linkedinUrlInData && isLinkedinLogin && updatedUser.nickname) {
         logger4.log("[+] LinkedIn Data", updatedUser.nickname);
         const linkedInData = JSON.parse(updatedUser.nickname);
