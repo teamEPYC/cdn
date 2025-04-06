@@ -2159,7 +2159,7 @@
             self.y = y;
           }
 
-          if (self.x !== startElementX || Math.abs(startElementY - y) > minimumMovement) {
+          if (self.x !== startElementX || Math.max(Math.abs(startPointerX - pointerX), Math.abs(startPointerY - pointerY)) > minimumMovement) {
             self.y = y;
             x = startElementX + (startElementY - y) * dragTolerance;
           } else {
@@ -2749,7 +2749,7 @@
           InertiaPlugin.track(scrollProxy || target, xyMode ? "x,y" : rotationMode ? "rotation" : "top,left");
         }
 
-        target._gsDragID = id = "d" + _lookupCount++;
+        target._gsDragID = id = target._gsDragID || "d" + _lookupCount++;
         _lookup[id] = self;
 
         if (scrollProxy) {
@@ -2955,14 +2955,14 @@
   });
 
   Draggable.zIndex = 1000;
-  Draggable.version = "3.12.5";
+  Draggable.version = "3.12.7";
   _getGSAP() && gsap.registerPlugin(Draggable);
 
   /*!
-   * GSDevTools 3.12.5
+   * GSDevTools 3.12.7
    * https://gsap.com
    *
-   * @license Copyright 2008-2024, GreenSock. All rights reserved.
+   * @license Copyright 2008-2025, GreenSock. All rights reserved.
    * Subject to the terms at https://gsap.com/standard-license or for
    * Club GSAP members, the agreement issued with that membership.
    * @author: Jack Doyle, jack@greensock.com
@@ -4408,7 +4408,7 @@
     _context$1(this);
   };
 
-  GSDevTools.version = "3.12.5";
+  GSDevTools.version = "3.12.7";
   GSDevTools.globalRecordingTime = 2;
 
   GSDevTools.getById = function (id) {

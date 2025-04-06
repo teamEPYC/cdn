@@ -1,8 +1,8 @@
 /*!
- * PathEditor 3.12.5
+ * PathEditor 3.12.7
  * https://gsap.com
  *
- * Copyright 2008-2024, GreenSock. All rights reserved.
+ * Copyright 2008-2025, GreenSock. All rights reserved.
  * Subject to the terms at https://gsap.com/standard-license or for
  * Club GSAP members, the agreement issued with that membership.
  * @author: Jack Doyle, jack@greensock.com
@@ -1012,7 +1012,7 @@ export var PathEditor = /*#__PURE__*/function () {
       newIndex = closestData.i + 6;
 
       for (_i = 0; _i < this._anchors.length; _i++) {
-        if (this._anchors[_i].i >= newIndex) {
+        if (this._anchors[_i].i >= newIndex && this._anchors[_i].j === closestData.j) {
           this._anchors[_i].i += 6;
         }
       }
@@ -1150,7 +1150,8 @@ export var PathEditor = /*#__PURE__*/function () {
         i = anchors.length,
         anchor,
         index,
-        j;
+        j,
+        jIndex;
 
     while (--i > -1) {
       anchor = anchors[i];
@@ -1159,6 +1160,7 @@ export var PathEditor = /*#__PURE__*/function () {
       anchor._draggable.enabled(false);
 
       index = anchor.i;
+      jIndex = anchor.j;
 
       if (!index) {
         //first
@@ -1175,7 +1177,7 @@ export var PathEditor = /*#__PURE__*/function () {
       this._anchors.splice(this._anchors.indexOf(anchor), 1);
 
       for (j = 0; j < this._anchors.length; j++) {
-        if (this._anchors[j].i >= index) {
+        if (this._anchors[j].i >= index && this._anchors[j].j === jIndex) {
           this._anchors[j].i -= 6;
         }
       }
@@ -1814,6 +1816,6 @@ PathEditor.getSnapFunction = function (vars) {
   };
 };
 
-PathEditor.version = "3.12.5";
+PathEditor.version = "3.12.7";
 PathEditor.register = _initCore;
 export { PathEditor as default };

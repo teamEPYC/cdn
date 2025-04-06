@@ -3,10 +3,10 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 /*!
- * ScrollSmoother 3.12.5
+ * ScrollSmoother 3.12.7
  * https://gsap.com
  *
- * @license Copyright 2008-2024, GreenSock. All rights reserved.
+ * @license Copyright 2008-2025, GreenSock. All rights reserved.
  * Subject to the terms at https://gsap.com/standard-license or for
  * Club GSAP members, the agreement issued with that membership.
  * @author: Jack Doyle, jack@greensock.com
@@ -291,6 +291,9 @@ export var ScrollSmoother = /*#__PURE__*/function () {
       });
     },
         onRefresh = function onRefresh() {
+      _docEl = _doc.documentElement; // some frameworks like Astro may cache the <body> and replace it during routing, so we'll just re-record the _docEl and _body for safety (otherwise, the markers may not get added properly).
+
+      _body = _doc.body;
       removeScroll();
       requestAnimationFrame(removeScroll);
 
@@ -932,10 +935,8 @@ export var ScrollSmoother = /*#__PURE__*/function () {
     }
 
     ScrollTrigger.config(vars); // in case user passes in ignoreMobileResize for example
+    // ("overscrollBehavior" in _win.getComputedStyle(_body)) && gsap.set([_body, _docEl], {overscrollBehavior: "none"}); // this caused Safari 17+ not to scroll the entire page (bug in Safari), so let people set this in the CSS instead if they want.
 
-    "overscrollBehavior" in _win.getComputedStyle(_body) && gsap.set([_body, _docEl], {
-      overscrollBehavior: "none"
-    });
     "scrollBehavior" in _win.getComputedStyle(_body) && gsap.set([_body, _docEl], {
       scrollBehavior: "auto"
     }); // if the user hits the tab key (or whatever) to shift focus to an element that's off-screen, center that element.
@@ -994,7 +995,7 @@ export var ScrollSmoother = /*#__PURE__*/function () {
 
   return ScrollSmoother;
 }();
-ScrollSmoother.version = "3.12.5";
+ScrollSmoother.version = "3.12.7";
 
 ScrollSmoother.create = function (vars) {
   return _mainInstance && vars && _mainInstance.content() === _toArray(vars.content)[0] ? _mainInstance : new ScrollSmoother(vars);

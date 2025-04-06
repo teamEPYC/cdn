@@ -21,10 +21,10 @@
   }
 
   /*!
-   * ScrollSmoother 3.12.5
+   * ScrollSmoother 3.12.7
    * https://gsap.com
    *
-   * @license Copyright 2008-2024, GreenSock. All rights reserved.
+   * @license Copyright 2008-2025, GreenSock. All rights reserved.
    * Subject to the terms at https://gsap.com/standard-license or for
    * Club GSAP members, the agreement issued with that membership.
    * @author: Jack Doyle, jack@greensock.com
@@ -285,6 +285,8 @@
         });
       },
           onRefresh = function onRefresh() {
+        _docEl = _doc.documentElement;
+        _body = _doc.body;
         removeScroll();
         requestAnimationFrame(removeScroll);
 
@@ -894,9 +896,6 @@
       }
 
       ScrollTrigger.config(vars);
-      "overscrollBehavior" in _win.getComputedStyle(_body) && gsap.set([_body, _docEl], {
-        overscrollBehavior: "none"
-      });
       "scrollBehavior" in _win.getComputedStyle(_body) && gsap.set([_body, _docEl], {
         scrollBehavior: "auto"
       });
@@ -954,7 +953,7 @@
 
     return ScrollSmoother;
   }();
-  ScrollSmoother.version = "3.12.5";
+  ScrollSmoother.version = "3.12.7";
 
   ScrollSmoother.create = function (vars) {
     return _mainInstance && vars && _mainInstance.content() === _toArray(vars.content)[0] ? _mainInstance : new ScrollSmoother(vars);

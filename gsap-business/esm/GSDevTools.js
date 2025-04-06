@@ -1,8 +1,8 @@
 /*!
- * GSDevTools 3.12.5
+ * GSDevTools 3.12.7
  * https://gsap.com
  *
- * @license Copyright 2008-2024, GreenSock. All rights reserved.
+ * @license Copyright 2008-2025, GreenSock. All rights reserved.
  * Subject to the terms at https://gsap.com/standard-license or for
  * Club GSAP members, the agreement issued with that membership.
  * @author: Jack Doyle, jack@greensock.com
@@ -1546,7 +1546,7 @@ _merge = function _merge() {
 }; //if on startup, someone does a timeline.seek(), we need to honor it, so when initialize() is called, it'll check the _recordedRoot._start so that we can use that as an offset. Remember, however, that we call initialize() twice on startup, once after a tick has elapsed just in case someone called GSDevTools.create() before their animation code, so we must record the value (once).
 
 
-GSDevTools.version = "3.12.5";
+GSDevTools.version = "3.12.7";
 GSDevTools.globalRecordingTime = 2;
 
 GSDevTools.getById = function (id) {

@@ -1,8 +1,8 @@
 /*!
- * SplitText: 3.12.5
+ * SplitText: 3.12.7
  * https://gsap.com
  *
- * @license Copyright 2008-2024, GreenSock. All rights reserved.
+ * @license Copyright 2008-2025, GreenSock. All rights reserved.
  * Subject to the terms at https://gsap.com/standard-license or for
  * Club GSAP members, the agreement issued with that membership.
  * @author: Jack Doyle, jack@greensock.com
@@ -594,7 +594,7 @@ export var SplitText = /*#__PURE__*/function () {
 
     this.elements.forEach(function (e, i) {
       e.innerHTML = originals[i].html;
-      e.setAttribute("style", originals[i].style);
+      e.setAttribute("style", originals[i].style || "");
     });
     this.chars = [];
     this.words = [];
@@ -609,6 +609,6 @@ export var SplitText = /*#__PURE__*/function () {
 
   return SplitText;
 }();
-SplitText.version = "3.12.5";
+SplitText.version = "3.12.7";
 SplitText.register = _initCore;
 export { SplitText as default };

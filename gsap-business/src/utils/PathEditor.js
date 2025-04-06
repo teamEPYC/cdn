@@ -1,8 +1,8 @@
 /*!
- * PathEditor 3.12.5
+ * PathEditor 3.12.7
  * https://gsap.com
  *
- * Copyright 2008-2024, GreenSock. All rights reserved.
+ * Copyright 2008-2025, GreenSock. All rights reserved.
  * Subject to the terms at https://gsap.com/standard-license or for
  * Club GSAP members, the agreement issued with that membership.
  * @author: Jack Doyle, jack@greensock.com
@@ -692,7 +692,7 @@ export class PathEditor {
 			subdivideSegment(this._rawPath[closestData.j], closestData.i, closestData.t);
 			newIndex = closestData.i + 6;
 			for (i = 0; i < this._anchors.length; i++) {
-				if (this._anchors[i].i >= newIndex) {
+				if (this._anchors[i].i >= newIndex && this._anchors[i].j === closestData.j) {
 					this._anchors[i].i += 6;
 				}
 			}
@@ -793,12 +793,13 @@ export class PathEditor {
 	_deleteSelectedAnchors() {
 		let anchors = this._selectedAnchors,
 			i = anchors.length,
-			anchor, index, j;
+			anchor, index, j, jIndex;
 		while (--i > -1) {
 			anchor = anchors[i];
 			anchor.element.parentNode.removeChild(anchor.element);
 			anchor._draggable.enabled(false);
 			index = anchor.i;
+			jIndex = anchor.j;
 			if (!index) { //first
 				anchor.segment.splice(index, 6);
 			} else if (index < anchor.segment.length - 2) {
@@ -809,7 +810,7 @@ export class PathEditor {
 			anchors.splice(i, 1);
 			this._anchors.splice(this._anchors.indexOf(anchor), 1);
 			for (j = 0; j < this._anchors.length; j++) {
-				if (this._anchors[j].i >= index) {
+				if (this._anchors[j].i >= index && this._anchors[j].j === jIndex) {
 					this._anchors[j].i -= 6;
 				}
 			}
@@ -1309,7 +1310,7 @@ PathEditor.getSnapFunction = (vars) => { //{gridSize, radius, x, y, width, heigh
 	};
 };
 
-PathEditor.version = "3.12.5";
+PathEditor.version = "3.12.7";
 
 PathEditor.register = _initCore;
 
