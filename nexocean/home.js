@@ -1,5 +1,3 @@
-console.log("Hey");
-
 ("use strict");
 
 const lenis = new Lenis({
