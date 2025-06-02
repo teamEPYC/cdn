@@ -1,10 +1,8 @@
 function applyCornerCircleCutoutsV2() {
-  // Target all divs that need SVGs (parent or child)
   const targets = document.querySelectorAll('[data-cutout="true"], [data-cutout-child="true"]');
 
   targets.forEach((container, index) => {
     const isChild = container.getAttribute("data-cutout-child") === "true";
-    const isParent = container.getAttribute("data-cutout") === "true";
 
     // Prevent duplication if SVG already injected
     if (container.querySelector("svg.cutout-svg")) return;
@@ -12,9 +10,6 @@ function applyCornerCircleCutoutsV2() {
     // Determine cutout radius
     let radius = parseFloat(container.getAttribute("data-cutout-radius") || "50");
     let offset = 0;
-
-    // Determine fill color
-    const fill = container.getAttribute("data-cutout-fill") || "#ffffff";
 
     // If child, calculate offset from parent
     if (isChild) {
@@ -53,16 +48,9 @@ function applyCornerCircleCutoutsV2() {
     svg.style.left = "0";
     svg.style.zIndex = "-1";
 
-    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    rect.setAttribute("width", "100%");
-    rect.setAttribute("height", "100%");
-    rect.setAttribute("fill", fill);
-    svg.appendChild(rect);
-
     container.insertBefore(svg, container.firstChild); // Inject SVG
 
     // Apply cutout mask logic
-    const diameter = radius * 2;
     const parentWidth = container.offsetWidth;
     const parentHeight = container.offsetHeight;
 
@@ -71,11 +59,16 @@ function applyCornerCircleCutoutsV2() {
     svg.setAttribute("viewBox", `0 0 ${parentWidth} ${parentHeight}`);
 
     const maskId = `cutout-mask-${index}`;
-    rect.setAttribute("mask", `url(#${maskId})`);
 
+    // Apply mask to the container itself
+    container.style.mask = `url(#${maskId})`;
+    container.style.webkitMask = `url(#${maskId})`; // For Safari
+
+    // Create <defs> and <mask>
     const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
     const mask = document.createElementNS("http://www.w3.org/2000/svg", "mask");
     mask.setAttribute("id", maskId);
+    mask.setAttribute("maskUnits", "userSpaceOnUse");
 
     const whiteRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     whiteRect.setAttribute("width", "100%");
@@ -100,13 +93,12 @@ function applyCornerCircleCutoutsV2() {
     });
 
     defs.appendChild(mask);
-    svg.insertBefore(defs, svg.firstChild);
+    svg.appendChild(defs);
   });
 }
 
 window.addEventListener("load", applyCornerCircleCutoutsV2);
 window.addEventListener("resize", () => {
-  // Clear old svgs and reapply
   document.querySelectorAll("svg.cutout-svg").forEach(el => el.remove());
   applyCornerCircleCutoutsV2();
 });
