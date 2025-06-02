@@ -1,18 +1,31 @@
-function applyCornerCircleCutouts(className = "cutout-svg") {
-  document.querySelectorAll(`svg.${className}`).forEach((svg, index) => {
-    const isChild = svg.getAttribute("data-cutout-child") === "true";
-    let offset = 0;
-    let radius = 50; // fallback
+function applyCornerCircleCutoutsV2() {
+  // Target all divs that need SVGs (parent or child)
+  const targets = document.querySelectorAll('[data-cutout="true"], [data-cutout-child="true"]');
 
+  targets.forEach((container, index) => {
+    const isChild = container.getAttribute("data-cutout-child") === "true";
+    const isParent = container.getAttribute("data-cutout") === "true";
+
+    // Prevent duplication if SVG already injected
+    if (container.querySelector("svg.cutout-svg")) return;
+
+    // Determine cutout radius
+    let radius = parseFloat(container.getAttribute("data-cutout-radius") || "50");
+    let offset = 0;
+
+    // Determine fill color
+    const fill = container.getAttribute("data-cutout-fill") || "#ffffff";
+
+    // If child, calculate offset from parent
     if (isChild) {
-      let current = svg.parentElement;
+      let current = container;
       let totalPadding = 0;
       let foundBase = false;
 
       while (current && current !== document.body) {
-        const baseSvg = current.querySelector(`svg.cutout-svg[data-cutout-parent="true"]`);
-        if (baseSvg) {
-          const baseRadius = parseFloat(baseSvg.getAttribute("data-cutout-radius") || "50");
+        const base = current.querySelector('[data-cutout="true"]');
+        if (base) {
+          const baseRadius = parseFloat(base.getAttribute("data-cutout-radius") || "50");
           radius = baseRadius + totalPadding;
           offset = totalPadding;
           foundBase = true;
@@ -28,37 +41,35 @@ function applyCornerCircleCutouts(className = "cutout-svg") {
       }
 
       if (!foundBase) {
-        console.warn("No base parent SVG found for child:", svg);
-        radius = 50;
-        offset = totalPadding;
+        console.warn("No base parent container found for child:", container);
       }
-
-      svg.setAttribute("data-cutout-offset", offset);
-      svg.setAttribute("data-cutout-radius", radius);
     }
 
-    // Clean old defs
-    svg.querySelectorAll("defs").forEach(def => def.remove());
-
-    // Set layout properties
+    // Create SVG
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.classList.add("cutout-svg");
     svg.style.position = "absolute";
     svg.style.top = "0";
     svg.style.left = "0";
     svg.style.zIndex = "-1";
 
-    const offsetAttr = parseFloat(svg.getAttribute("data-cutout-offset") || "0");
-    const diameter = parseFloat(svg.getAttribute("data-cutout-radius") || "50") * 2;
-    const circleRadius = diameter / 2;
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("width", "100%");
+    rect.setAttribute("height", "100%");
+    rect.setAttribute("fill", fill);
+    svg.appendChild(rect);
 
-    const parent = svg.parentElement;
-    const parentWidth = parent.offsetWidth;
-    const parentHeight = parent.offsetHeight;
+    container.insertBefore(svg, container.firstChild); // Inject SVG
+
+    // Apply cutout mask logic
+    const diameter = radius * 2;
+    const parentWidth = container.offsetWidth;
+    const parentHeight = container.offsetHeight;
 
     svg.setAttribute("width", parentWidth);
     svg.setAttribute("height", parentHeight);
     svg.setAttribute("viewBox", `0 0 ${parentWidth} ${parentHeight}`);
 
-    const rect = svg.querySelector("rect");
     const maskId = `cutout-mask-${index}`;
     rect.setAttribute("mask", `url(#${maskId})`);
 
@@ -73,17 +84,17 @@ function applyCornerCircleCutouts(className = "cutout-svg") {
     mask.appendChild(whiteRect);
 
     const positions = [
-      [0 - offsetAttr, 0 - offsetAttr],
-      [parentWidth + offsetAttr, 0 - offsetAttr],
-      [0 - offsetAttr, parentHeight + offsetAttr],
-      [parentWidth + offsetAttr, parentHeight + offsetAttr],
+      [0 - offset, 0 - offset],
+      [parentWidth + offset, 0 - offset],
+      [0 - offset, parentHeight + offset],
+      [parentWidth + offset, parentHeight + offset],
     ];
 
     positions.forEach(([cx, cy]) => {
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       circle.setAttribute("cx", cx);
       circle.setAttribute("cy", cy);
-      circle.setAttribute("r", circleRadius);
+      circle.setAttribute("r", radius);
       circle.setAttribute("fill", "black");
       mask.appendChild(circle);
     });
@@ -93,5 +104,9 @@ function applyCornerCircleCutouts(className = "cutout-svg") {
   });
 }
 
-window.addEventListener("load", () => applyCornerCircleCutouts());
-window.addEventListener("resize", () => applyCornerCircleCutouts());
+window.addEventListener("load", applyCornerCircleCutoutsV2);
+window.addEventListener("resize", () => {
+  // Clear old svgs and reapply
+  document.querySelectorAll("svg.cutout-svg").forEach(el => el.remove());
+  applyCornerCircleCutoutsV2();
+});
