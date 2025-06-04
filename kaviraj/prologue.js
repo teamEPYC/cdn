@@ -75,9 +75,9 @@ prologueTimeline.fromTo(prologue1text1.chars,
     {filter: "blur(10px)", y: -60, scale: 1.5, opacity: 0},
     {filter: "blur(0px)", y: 0, scale: 1, opacity: 1, stagger: 0.3, duration: 4, ease: "sine.inOut"}, "<"
 ).fromTo(prologue3image, 
-    {r: 0},
-    {r: 350, duration: 20, ease: "sine.inOut"}, "-=5"
+    {r: "0%"},
+    {r: "100%", duration: 10, ease: "sine.inOut"}, "-=5"
 ).fromTo(prologue3text4.chars, 
     {opacity: 0},
-    {opacity: 1, stagger: 0.07, duration: 1.5, ease: "power1.out"}, "-=12"
+    {opacity: 1, stagger: 0.07, duration: 1.5, ease: "power1.out"}, "-=2"
 );
