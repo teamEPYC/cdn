@@ -18,7 +18,7 @@ prologueContents.forEach((el, index) => {
 
 
 //change this value to collectively slow down the timeleine scroll speed, min value is 0vh
-gsap.set(".prologue-speed-controller", {height: "100vh"});
+gsap.set(".prologue-speed-controller", {height: "200vh"});
 
 
 //adding will-change for performance
