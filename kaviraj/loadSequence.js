@@ -1,3 +1,7 @@
+document.querySelectorAll(".heading, .hero-subtext, .primary-button-wrapper").forEach(el => {
+  el.style.willChange = "transform, opacity, filter, width";
+});
+
 const heroTimeline = gsap.timeline();
 
 const heading1 = new SplitText(".heading:nth-child(1)", { type: "chars" });
