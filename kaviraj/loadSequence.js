@@ -17,10 +17,10 @@ heroTimeline.fromTo(".bgNoise",
   { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.5, ease: "power3.out", stagger: 0.1}, "-=1.5"
 ).fromTo(heading2.chars,
   { opacity: 0, scale: 1.5, filter: "blur(10px)" },
-  { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.5, ease: "power3.out", stagger: 0.1}
+  { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.5, ease: "power3.out", stagger: 0.1}, "-=0.7"
 ).fromTo(heading3.chars,
   { opacity: 0, scale: 1.5, filter: "blur(10px)" },
-  { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.5, ease: "power3.out", stagger: 0.1}
+  { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.5, ease: "power3.out", stagger: 0.1}, "-=0.7"
 ).fromTo(subtext.chars,
   { opacity: 0 },
   { opacity: 1, duration: 2, ease: "power1.out", stagger: 0.01}, "-=1.4"
