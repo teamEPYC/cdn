@@ -1,15 +1,28 @@
-document.querySelectorAll(".heading, .hero-subtext, .primary-button-wrapper").forEach(el => {
+document.querySelectorAll(".heading, .hero-subtext, .loader-prelude .primary-button-wrapper").forEach(el => {
   el.style.willChange = "transform, opacity, filter, width";
 });
 
-const heroTimeline = gsap.timeline();
+const heroTimeline = gsap.timeline({
+  paused: true
+});
 
 const heading1 = new SplitText(".heading:nth-child(1)", { type: "chars" });
 const heading2 = new SplitText(".heading:nth-child(2)", { type: "chars" });
 const heading3 = new SplitText(".heading:nth-child(3)", { type: "chars" });
+const loaderPrelude = new SplitText(".loader-prelude", { type: "chars" });
 const subtext = SplitText.create(".hero-subtext", { type: "chars" });
 
-heroTimeline.fromTo(".bgNoise", 
+
+heroTimeline.fromTo(".loader-content", 
+  {opacity: 1},
+  {opacity: 0, duration: 1, ease: "none"}
+).fromTo(loaderPrelude.chars, 
+  { opacity: 0, filter: "blur(10px)" },
+  { opacity: 1, filter: "blur(0px)", duration: 1, ease: "power1.out", stagger: 0.1}
+).fromTo(".loader", 
+  {opacity: 1},
+  {opacity: 0, duration: 1, ease: "none", onComplete: () => {document.querySelector(".loader")?.remove();}}
+).fromTo(".bgNoise", 
   {r: "0%"},
   {r: "100%", duration: 3, ease: "sine.inOut"}
 ).fromTo(heading1.chars,
@@ -24,6 +37,9 @@ heroTimeline.fromTo(".bgNoise",
 ).fromTo(subtext.chars,
   { opacity: 0 },
   { opacity: 1, duration: 2, ease: "power1.out", stagger: 0.01}, "-=1.4"
+).fromTo(".nav", 
+  {opacity: 0},
+  {opacity: 1, duration: 0.5, ease: "none"}, "-=2"
 );
 
 // 3. Animate buttons
@@ -44,4 +60,9 @@ buttonWrappers.forEach((wrapper, i) => {
 
   const start = i === 0 ? button1Start : button1Start + i * buttonDuration;
   heroTimeline.add(timeline, start);
+});
+
+
+document.querySelector(".loader-content .button-e")?.addEventListener("click", () => {
+  heroTimeline.play();
 });
