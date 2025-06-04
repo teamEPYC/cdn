@@ -1,4 +1,5 @@
-document.querySelectorAll(".heading, .hero-subtext, .loader-prelude .primary-button-wrapper").forEach(el => {
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".heading, .hero-subtext, .loader-prelude .primary-button-wrapper").forEach(el => {
   el.style.willChange = "transform, opacity, filter, width";
 });
 
@@ -65,4 +66,5 @@ buttonWrappers.forEach((wrapper, i) => {
 
 document.querySelector(".loader-content .button-e")?.addEventListener("click", () => {
   heroTimeline.play();
+});
 });
