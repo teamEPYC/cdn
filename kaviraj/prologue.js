@@ -32,9 +32,9 @@ const prologue1text2 = new SplitText(prologueContents[0].querySelectorAll(".prol
 const prologue2text1 = new SplitText(prologueContents[1].querySelectorAll(".prologue-content-block:nth-child(1) .prologue-text"), { type: "chars" });
 const prologue2text2 = new SplitText(prologueContents[1].querySelectorAll(".prologue-content-block:nth-child(2) .prologue-text"), { type: "chars" });
 const prologue3text1 = new SplitText(prologueContents[2].querySelectorAll(".prologue-content-block:nth-child(1) .prologue-text-small"), { type: "chars" });
-const prologue3text2 = new SplitText(prologueContents[2].querySelector(".prologue-dp-container .prologue-grandfathers-name:nth-of-type(1)"), { type: "chars" });
-const prologue3text3 = new SplitText(prologueContents[2].querySelector(".prologue-grandfather-image-container .prologue-grandfathers-name"), { type: "chars" }); // splitting internal text so that it aligns with the external
-const prologue3image = prologueContents[2].querySelector(".prologue-grandfather-image-container");
+const prologue3text2 = new SplitText(prologueContents[2].querySelector(".prologue-grandfather-container .prologue-grandfathers-name:nth-of-type(1)"), { type: "chars" });
+const prologue3text3 = new SplitText(prologueContents[2].querySelector(".prologue-grandfather-image .prologue-grandfathers-name"), { type: "chars" }); // splitting internal text so that it aligns with the external
+const prologue3image = prologueContents[2].querySelector(".prologue-grandfather-image-mask .noise");
 const prologue3text4 = new SplitText(prologueContents[2].querySelectorAll(".prologue-content-block:nth-child(2) .prologue-text-small"), { type: "chars" });
 
 
@@ -75,9 +75,9 @@ prologueTimeline.fromTo(prologue1text1.chars,
     {filter: "blur(10px)", y: -60, scale: 1.5, opacity: 0},
     {filter: "blur(0px)", y: 0, scale: 1, opacity: 1, stagger: 0.3, duration: 4, ease: "sine.inOut"}, "<"
 ).fromTo(prologue3image, 
-    {opacity: 0},
-    {opacity: 1, duration: 2, ease: "power1.out"}, "-=2"
+    {r: 0},
+    {r: 350, duration: 10, ease: "sine.inOut"}, "-=5"
 ).fromTo(prologue3text4.chars, 
     {opacity: 0},
-    {opacity: 1, stagger: 0.07, duration: 1.5, ease: "power1.out"}, "+=1"
+    {opacity: 1, stagger: 0.07, duration: 1.5, ease: "power1.out"}, "+=2"
 );
