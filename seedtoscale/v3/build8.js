@@ -2312,8 +2312,8 @@
       AUTHO_CLIENT_ID: "iiLfr784Qf911CWf7HhYrDRfIuVGvn6f"
     },
     development: {
-      AUTH0DOMAIN: "seedtoscale-dev.us.auth0.com",
-      AUTHO_CLIENT_ID: "vQxonvUHjMSnug4MLvdiJnHuAvJtcV7V"
+      AUTH0DOMAIN: "s2s.us.auth0.com",
+      AUTHO_CLIENT_ID: "jyf7xK3NLpFaHXwUvwypTyFs87hHhnAx"
     }
   };
   function isProtectedRoute(currentRoute, protectedRoutes) {
