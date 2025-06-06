@@ -7691,6 +7691,7 @@
     const loader = document.querySelector(".onb-preloader");
     const formSelector = '[data-form="multistep"]';
     const form = document.querySelector(formSelector);
+    const dashboardPageWrapper = document.querySelector("dashboard-component");
     if (loader) {
       loader.classList.remove("hide");
     }
@@ -7712,6 +7713,9 @@
             loader?.classList.add("hide");
           }, 1e3);
         }
+        if (dashboardPageWrapper) {
+          dashboardPageWrapper.classList.remove("hide");
+        }
       } else {
         new NudgeHandler({
           elementSelector: 'data-limit-type="nudge"',
@@ -7731,6 +7735,9 @@
       if (window.location.pathname === "/") {
         user.handleDataShow(userObject);
       }
+      setTimeout(() => {
+        loader?.classList.add("hide");
+      }, 1e3);
     }
     if (form) {
       logger7.log("[+] Form", form);
