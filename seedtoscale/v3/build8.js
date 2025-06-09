@@ -7691,7 +7691,10 @@
     const loader = document.querySelector(".onb-preloader");
     const formSelector = '[data-form="multistep"]';
     const form = document.querySelector(formSelector);
-    const dashboardPageWrapper = document.querySelector("dashboard-component");
+    const dashboardPageWrapper = document.querySelector(".dashboard-component");
+    if (dashboardPageWrapper) {
+      dashboardPageWrapper.classList.add("hide");
+    }
     if (loader) {
       loader.classList.remove("hide");
     }
