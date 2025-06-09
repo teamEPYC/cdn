@@ -7761,7 +7761,7 @@
       });
     }
     initAuthModule(userLoaded);
-    PosthogManager.initPosthog();
+    // PosthogManager.initPosthog();
     RecentArticleManager.run();
     PhoneNumberManager.run();
   });
