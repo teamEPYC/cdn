@@ -7609,6 +7609,10 @@
 
   // src/content/phonenumber-input.js
   var run2 = () => {
+    if (typeof window.intlTelInput === "undefined") {
+      console.log("[+] Error intlTelInput library is not loaded.");
+      return;
+    }
     const input = document.querySelector("#Whatsapp-Number");
     window.iti = window.intlTelInput(input, {
       // Automatically detect the country using geoIpLookup
@@ -7761,7 +7765,7 @@
       });
     }
     initAuthModule(userLoaded);
-    // PosthogManager.initPosthog();
+    PosthogManager.initPosthog();
     RecentArticleManager.run();
     PhoneNumberManager.run();
   });
