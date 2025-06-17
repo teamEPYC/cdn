@@ -1,4 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Preload first few shorts
+    const firstShorts = document.querySelectorAll(".shorts-video-comp");
+    const preloadedVideos = new Map();
+    
+    // Preload first 3 shorts
+    for (let i = 0; i < Math.min(3, firstShorts.length); i++) {
+        const videoUrl = firstShorts[i].getAttribute("shorts-link");
+        if (videoUrl) {
+            const preloadVideo = document.createElement("video");
+            preloadVideo.src = videoUrl;
+            preloadVideo.preload = "auto";
+            preloadVideo.muted = true;
+            preloadVideo.load();
+            preloadedVideos.set(videoUrl, preloadVideo);
+        }
+    }
+
     function initShortsControls(container) {
         const video = container.querySelector("video");
         const playIcon = container.querySelector(".shorts-play-icon");
