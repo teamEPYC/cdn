@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const preloadedVideos = new Map();
     
     // Preload first 3 shorts
-    for (let i = 0; i < Math.min(3, firstShorts.length); i++) {
+    for (let i = 0; i < Math.min(1, firstShorts.length); i++) {
         const videoUrl = firstShorts[i].getAttribute("shorts-link");
         if (videoUrl) {
             const preloadVideo = document.createElement("video");
