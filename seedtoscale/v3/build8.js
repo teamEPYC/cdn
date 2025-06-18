@@ -2308,8 +2308,8 @@
   var PROTECTED_CONTENT_PAGES = ["/blog", "/podcast", "/video"];
   var ENV_KEYS = {
     production: {
-      AUTH0DOMAIN: "seedtoscale.au.auth0.com",
-      AUTHO_CLIENT_ID: "iiLfr784Qf911CWf7HhYrDRfIuVGvn6f"
+      AUTH0DOMAIN: "seedtoscale.us.auth0.com",
+      AUTHO_CLIENT_ID: "zVCpBkigsLFTKo9EI4YOCd58Nh9fPFhl"
     },
     development: {
       AUTH0DOMAIN: "s2s.us.auth0.com",
@@ -6975,6 +6975,58 @@
     ZW: "Zimbabwe"
   };
 
+  // src/utils/ProfilePicture.ts
+  var ProfilePicture = class extends HTMLElement {
+    constructor() {
+      super();
+      this.attachShadow({ mode: "open" });
+    }
+    connectedCallback() {
+      this.render();
+    }
+    async render() {
+      const imgUrl = this.getAttribute("src") || "";
+      console.log("Image URL:", imgUrl);
+      console.log("Image URL:", imgUrl);
+      console.log("Image URL:", imgUrl);
+      const username = this.getAttribute("username") || "User";
+      const initials = username.split(" ").map((n3) => n3[0]).join("").toUpperCase();
+      const isValid = await this.imageExists(imgUrl);
+      this.shadowRoot.innerHTML = `
+      <style>
+        .container {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;                    
+          display: flex;
+          align-items: center;
+          justify-content: center;          
+          text-transform: uppercase;
+          pointer: cursor;
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      </style>
+      ${isValid ? `<img src="${imgUrl}" alt="${username}" />` : `<div class="container">${initials}</div>`}
+    `;
+    }
+    async imageExists(url) {
+      try {
+        const res = await fetch(url, { method: "HEAD" });
+        console.log("Image exists:", res.ok, url);
+        return res.ok;
+      } catch {
+        return false;
+      }
+    }
+  };
+  customElements.define("profile-picture", ProfilePicture);
+
   // src/auth/user.ts
   var logger4 = createLogger("USER");
   var User = class {
@@ -7071,6 +7123,10 @@
         });
         if (template == "initials") {
           finalString = dataToCheck["First-Name"]?.charAt(0) || "";
+          const pictureUrl = dataToCheck["picture"];
+          if (pictureUrl) {
+            finalString = `<profile-picture src="${pictureUrl}" alt="image" username="${finalString}" style="width: 100%; height: 100%; border-radius: 50%;">`;
+          }
         }
         const isImageTag = element.tagName == "IMG";
         const isInputTag = element.tagName == "INPUT";
@@ -7491,7 +7547,7 @@
   };
 
   // src/template/recentArticle.html
-  var recentArticle_default = '<a\n  id="w-node-_2d62179d-8156-36fb-2518-94981619b40e-56888ad6"\n  href="{{url}}"\n  class="dashboard-content-card w-inline-block"\n  ><div class="dash_card-img-wrapper">\n    <img src="{{featuredImage}}" loading="lazy" alt="" class="dash_card-img" />\n  </div>\n  <div\n    id="w-node-_2d62179d-8156-36fb-2518-94981619b411-56888ad6"\n    class="dash_card-content is-recently-viewed"\n  >\n    <div class="dash_card-topic">{{contentType}}</div>\n    <h2 class="dash_card-title">{{title}}</h2>\n  </div>\n</a>\n';
+  var recentArticle_default = '<a\n  id="w-node-_2d62179d-8156-36fb-2518-94981619b40e-56888ad6"\n  href="{{url}}"\n  class="dashboard-content-card scale-child-onhover w-inline-block"\n  ><div class="dash_card-img-wrapper">\n    <img src="{{featuredImage}}" loading="lazy" alt="" class="dash_card-img scale-on-parent-hover" />\n  </div>\n  <div\n    id="w-node-_2d62179d-8156-36fb-2518-94981619b411-56888ad6"\n    class="dash_card-content is-recently-viewed"\n  >\n    <div class="dash_card-topic">{{contentType}}</div>\n    <h2 class="dash_card-title">{{title}}</h2>\n  </div>\n</a>\n';
 
   // src/content/recent-articles.ts
   var logger6 = createLogger("RECENT ARTICLES");
