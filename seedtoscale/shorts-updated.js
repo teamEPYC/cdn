@@ -1,20 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Preload first few shorts
-    const firstShorts = document.querySelectorAll(".shorts-video-comp");
+    // JS-driven preload for first 3 shorts
+    const shortsEls = Array.from(document.querySelectorAll(".shorts-video-comp"));
+    const PRELOAD_COUNT = 3;
     const preloadedVideos = new Map();
-    
-    // Preload first 3 shorts
-    for (let i = 0; i < Math.min(1, firstShorts.length); i++) {
-        const videoUrl = firstShorts[i].getAttribute("shorts-link");
-        if (videoUrl) {
-            const preloadVideo = document.createElement("video");
-            preloadVideo.src = videoUrl;
-            preloadVideo.preload = "auto";
-            preloadVideo.muted = true;
-            preloadVideo.load();
-            preloadedVideos.set(videoUrl, preloadVideo);
-        }
-    }
+
+    shortsEls.slice(0, PRELOAD_COUNT).forEach(el => {
+      const url = el.getAttribute("shorts-link");
+      if (!url || preloadedVideos.has(url)) return;
+      const v = document.createElement("video");
+      v.preload     = "auto";       // fetch full file into cache
+      v.playsInline = true;
+      v.muted       = true;
+      v.src         = url;
+      v.load();
+      preloadedVideos.set(url, v);
+    });
 
     function initShortsControls(container) {
         const video = container.querySelector("video");
