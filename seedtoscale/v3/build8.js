@@ -7132,14 +7132,18 @@
         const isInputTag = element.tagName == "INPUT";
         const isSelectTag = element.tagName == "SELECT";
         const isTextAreaTag = element.tagName == "TEXTAREA";
+        finalString = finalString.trim();
         if (isImageTag && finalString) {
           element.setAttribute("src", finalString);
         } else if (isInputTag || isSelectTag || isTextAreaTag) {
-          logger4.log("[+] SETTING INPUT FIELD VALUES", finalString);
-          element.value = finalString;
+          logger4.log("[+] SETTING INPUT FIELD VALUES", finalString, typeof finalString, finalString.length);
+          if (finalString && finalString !== ",") {
+            element.value = finalString;
+          }
         } else {
           element.innerHTML = finalString;
         }
+        console.log("[+] FINAL STRING", finalString);
       });
       this.handleDataShowIfCondition(user);
     }
