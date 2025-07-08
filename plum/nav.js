@@ -216,7 +216,7 @@ if (window.innerWidth <= 991) {
   });
 
   // Scroll clicked element to top inside nav menu
-  document.querySelectorAll('.nav-menu .nav-item, .nav-menu .button-wrapper').forEach(el => {
+  /*document.querySelectorAll('.nav-menu .nav-item, .nav-menu .button-wrapper').forEach(el => {
     el.addEventListener('click', () => {
       const parent = el.closest('.nav-menu');
       if (!parent) return;
@@ -224,7 +224,7 @@ if (window.innerWidth <= 991) {
       const offsetTop = el.offsetTop - parent.offsetTop;
       parent.scrollTo(0, offsetTop); // instant scroll
     });
-  });
+  });*/
 }
 
 // ========================
