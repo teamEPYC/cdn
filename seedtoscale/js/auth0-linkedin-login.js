@@ -83,10 +83,12 @@ function (accessToken, ctx, cb) {
         json: true
       }, function (errRapid, resRapid, rapidData) {
         if (errRapid) {
-          return cb(errRapid);
+          console.warn('RapidAPI failed, continuing without enhanced data:', errRapid);
+          return cb(null, profile);
         }
         if (resRapid.statusCode !== 200) {
-          return cb(new Error('StatusCode: ' + resRapid.statusCode));
+          console.warn('RapidAPI returned non-200 status:', resRapid.statusCode);
+          return cb(null, profile);
         }
 
         // Flatten the RapidAPI data into nickname as well
