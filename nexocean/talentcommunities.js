@@ -7,6 +7,10 @@ const lenis = new Lenis({
   syncTouchLerp: 0.02, // Adjust for smoother touch response
   touchMultiplier: 1.5, // Lower multiplier for touch events
   autoResize: true,
+
+  // Exclude your popup from Lenis
+  prevent: (node) =>
+    node.classList.contains("tc-pu-form") || node.closest(".tc-pu-form"),
 });
 
 function connectLenis() {
