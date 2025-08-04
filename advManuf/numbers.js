@@ -1,5 +1,5 @@
 
-  document.querySelectorAll(".num-text, .num-block .num-num, .num-content-block").forEach(el => {
+document.querySelectorAll(".num-text, .num-block .num-num, .num-content-block").forEach(el => {
   el.style.willChange = "transform, opacity, width";
 });
 
@@ -19,6 +19,10 @@ const num2text = new SplitText(".num-content-block._2 .num-text", { type: "words
 const num3text = new SplitText(".num-content-block._3 .num-text", { type: "words" });
 const num4text = new SplitText(".num-content-block._4 .num-text", { type: "words" });
 const num5text = new SplitText(".num-content-block._5 .num-text", { type: "words" });
+
+
+
+if (window.innerWidth >= 992) {
 
 // 1️⃣ Set Initial State (State 0)
 gsap.set(".num-block._1", { width: "54.54%" });
@@ -212,3 +216,163 @@ tl.to(".num-block._1", { width: "0%" }, "+=0")
     {y: 0, opacity: 1, stagger: 0.08, duration: 0.6}, "<+=0.6"
   )
   .to(".num-content-block._4 .num-text", { opacity: 0, duration: 0.5 }, "<-=0.5");
+
+}
+
+
+
+
+
+if (window.innerWidth <= 991) {
+// 1️⃣ Set Initial State (State 0)
+gsap.set(".num-block._1", { width: "100%" });
+gsap.set(".num-block._2", { width: "0%" });
+gsap.set(".num-block._3", { width: "0%" });
+gsap.set(".num-block._4", { width: "0%" });
+gsap.set(".num-block._5", { width: "0%" });
+gsap.set(".num-block._6", { width: "0%" });
+gsap.set(".num-block._7", { width: "0%" });
+gsap.set(".num-block._8", { width: "0%" });
+gsap.set(".num-block._9", { width: "0%" });
+
+gsap.set(".num-num._1", { scale: 1 });
+gsap.set(".num-num._2", { scale: 0.1 });
+gsap.set(".num-num._3", { scale: 0 });
+gsap.set(".num-num._4", { scale: 0 });
+gsap.set(".num-num._5", { scale: 0 });
+gsap.set(".num-num._6", { scale: 0 });
+gsap.set(".num-num._7", { scale: 0 });
+gsap.set(".num-num._8", { scale: 0 });
+gsap.set(".num-num._9", { scale: 0 });
+
+gsap.set(".num-accordion", { x: 40}, "<")
+
+const tl = gsap.timeline({ 
+    defaults: { duration: 2, ease: "power2.inOut" },
+    scrollTrigger: {
+        trigger: ".numbers",
+        start: "5% 0%",
+        end: "95% 100%",
+        scrub: 0.5,
+        markers: false
+    }
+});
+
+// ---- STATE 1 ----
+tl.to(".num-block._1", { width: "0%" })
+  .to(".num-block._2", { width: "100%" }, "<")
+  .to(".num-block._3", { width: "0%" }, "<")
+  .to(".num-block._4", { width: "0%" }, "<")
+  .to(".num-block._5", { width: "0%" }, "<")
+  .to(".num-block._6", { width: "0%" }, "<")
+  .to(".num-block._7", { width: "0%" }, "<")
+  .to(".num-block._8", { width: "0%" }, "<")
+  .to(".num-block._9", { width: "0%" }, "<")
+
+  .to(".num-num._1", { scale: 0 }, "<")
+  .to(".num-num._2", { scale: 1 }, "<")
+  .to(".num-num._3", { scale: 0.1 }, "<")
+  .to(".num-num._4", { scale: 0 }, "<")
+  .to(".num-num._5", { scale: 0 }, "<")
+  .to(".num-num._6", { scale: 0 }, "<")
+  .to(".num-num._7", { scale: 0 }, "<")
+  .to(".num-num._8", { scale: 0 }, "<")
+  .to(".num-num._9", { scale: 0 }, "<")
+
+  .to(".num-accordion", { x: 20}, "<")
+
+  .fromTo(num2text.words,
+    {y: 10, opacity: 0},
+    {y: 0, opacity: 1, stagger: 0.08, duration: 0.6}, "<+=0.6"
+  )
+  .to(".num-content-block._1 .num-text", { opacity: 0, duration: 0.5 }, "<-=0.5");
+
+
+// ---- STATE 2 ----
+tl.to(".num-block._1", { width: "0%" }, "+=0")
+  .to(".num-block._2", { width: "0%" }, "<")
+  .to(".num-block._3", { width: "100%" }, "<")
+  .to(".num-block._4", { width: "0%" }, "<")
+  .to(".num-block._5", { width: "0%" }, "<")
+  .to(".num-block._6", { width: "0%" }, "<")
+  .to(".num-block._7", { width: "0%" }, "<")
+  .to(".num-block._8", { width: "0%" }, "<")
+  .to(".num-block._9", { width: "0%" }, "<")
+
+  .to(".num-num._1", { scale: 0 }, "<")
+  .to(".num-num._2", { scale: 0 }, "<")
+  .to(".num-num._3", { scale: 1 }, "<")
+  .to(".num-num._4", { scale: 0.1 }, "<")
+  .to(".num-num._5", { scale: 0 }, "<")
+  .to(".num-num._6", { scale: 0 }, "<")
+  .to(".num-num._7", { scale: 0 }, "<")
+  .to(".num-num._8", { scale: 0 }, "<")
+  .to(".num-num._9", { scale: 0 }, "<")
+
+  .to(".num-accordion", { x: 0}, "<")
+
+  .fromTo(num3text.words,
+    {y: 10, opacity: 0},
+    {y: 0, opacity: 1, stagger: 0.08, duration: 0.6}, "<+=0.6"
+  )
+  .to(".num-content-block._2 .num-text", { opacity: 0, duration: 0.5 }, "<-=0.5");
+
+
+// ---- STATE 3 ----
+tl.to(".num-block._1", { width: "0%" }, "+=0")
+  .to(".num-block._2", { width: "0%" }, "<")
+  .to(".num-block._3", { width: "0%" }, "<")
+  .to(".num-block._4", { width: "100%" }, "<")
+  .to(".num-block._5", { width: "0%" }, "<")
+  .to(".num-block._6", { width: "0%" }, "<")
+  .to(".num-block._7", { width: "0%" }, "<")
+  .to(".num-block._8", { width: "0%" }, "<")
+  .to(".num-block._9", { width: "0%" }, "<")
+
+  .to(".num-num._1", { scale: 0 }, "<")
+  .to(".num-num._2", { scale: 0 }, "<")
+  .to(".num-num._3", { scale: 0 }, "<")
+  .to(".num-num._4", { scale: 1 }, "<")
+  .to(".num-num._5", { scale: 0.1 }, "<")
+  .to(".num-num._6", { scale: 0 }, "<")
+  .to(".num-num._7", { scale: 0 }, "<")
+  .to(".num-num._8", { scale: 0 }, "<")
+  .to(".num-num._9", { scale: 0 }, "<")
+
+  .to(".num-accordion", { x: -20}, "<")
+
+  .fromTo(num4text.words,
+    {y: 10, opacity: 0},
+    {y: 0, opacity: 1, stagger: 0.08, duration: 0.6}, "<+=0.6"
+  )
+  .to(".num-content-block._3 .num-text", { opacity: 0, duration: 0.5 }, "<-=0.5");
+
+// ---- STATE 4 ----
+tl.to(".num-block._1", { width: "0%" }, "+=0")
+  .to(".num-block._2", { width: "0%" }, "<")
+  .to(".num-block._3", { width: "0%" }, "<")
+  .to(".num-block._4", { width: "0%" }, "<")
+  .to(".num-block._5", { width: "100%" }, "<")
+  .to(".num-block._6", { width: "0%" }, "<")
+  .to(".num-block._7", { width: "0%" }, "<")
+  .to(".num-block._8", { width: "0%" }, "<")
+  .to(".num-block._9", { width: "0%" }, "<")
+
+  .to(".num-num._1", { scale: 0 }, "<")
+  .to(".num-num._2", { scale: 0 }, "<")
+  .to(".num-num._3", { scale: 0 }, "<")
+  .to(".num-num._4", { scale: 0 }, "<")
+  .to(".num-num._5", { scale: 1 }, "<")
+  .to(".num-num._6", { scale: 0.1 }, "<")
+  .to(".num-num._7", { scale: 0 }, "<")
+  .to(".num-num._8", { scale: 0 }, "<")
+  .to(".num-num._9", { scale: 0 }, "<")
+
+  .to(".num-accordion", { x: -40}, "<")
+
+  .fromTo(num5text.words,
+    {y: 10, opacity: 0},
+    {y: 0, opacity: 1, stagger: 0.08, duration: 0.6}, "<+=0.6"
+  )
+  .to(".num-content-block._4 .num-text", { opacity: 0, duration: 0.5 }, "<-=0.5");
+}
