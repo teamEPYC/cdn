@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
   heroTl.to(counter, {
     onUpdate: updatePreloaderText,
     value: 2.5,
-    duration: 2, //original duration
+    duration: 1, //original duration
     ease: "power1.out",
   });
 
@@ -152,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     onComplete: marqueesCentral,
     //This fix is unexpected, but it's also solving another bug where the central line jumps back when initializing.
   });
+
   heroTl.call(() => {
     toggleScrolling("play");
     marqueesCentral();
@@ -252,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   heroTl.from(
-    [".logo", ".nav-link"],
+    [".logo", ".nav-link", ".nav-dd"],
     {
       scale: 0.5,
       opacity: 0,
@@ -389,7 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  gsap.to([".logo", ".nav-link"], {
+  gsap.to([".nav-link", ".nav-dd-toggle"], {
     duration: 0.2,
     color: "#000000",
     borderColor: "#000000", // Use `borderColor` instead of `border`
@@ -398,113 +399,149 @@ document.addEventListener("DOMContentLoaded", () => {
       start: "top 10%",
       end: "top top",
       scrub: true,
-      toggleActions: "play pause reverse none",
+      toggleActions: "play none none reverse",
     },
+  });
+
+  //=================================================================== Floating Test on Scroll Scroll Code ===============================================================================================
+
+  document.querySelectorAll(".theme-text").forEach((el) => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: el,
+        start: "top center", // when the top of element hits center of viewport
+        toggleActions: "play none none none",
+      },
+    });
+
+    // Animate background-size
+    tl.to(el, {
+      backgroundSize: "100% 100%",
+      duration: 1,
+      ease: "power2.out",
+    });
+
+    // If neon, change color 0.2s before the bg reveal ends
+    if (el.classList.contains("neon")) {
+      tl.to(
+        el,
+        {
+          color: "#171e1f",
+          duration: 0.2,
+          ease: "power1.out",
+        },
+        "<0.2"
+      ); // start 0.2s before previous ends
+    }
   });
 
   if (window.innerWidth > 991) {
     gsap.matchMedia().add("(min-width: 992px)", () => {
-      const container = document.querySelector(".tx-floating-text");
-      const nodes = Array.from(container.childNodes);
-      let newHTML = "";
+      // =========================================================================== Floating Test on Scroll Interation Code ===================================================================================
 
-      nodes.forEach((node) => {
-        if (node.nodeType === Node.TEXT_NODE) {
-          const words = node.textContent.split(/(\s+)/); // split by spaces, keep them
-          words.forEach((word) => {
-            if (word.trim() === "") {
-              newHTML += word; // preserve spaces
-            } else {
-              const chars = [...word]
-                .map((char) =>
-                  char === " "
-                    ? `<span class="char">&nbsp;</span>`
-                    : `<span class="char">${char}</span>`
-                )
-                .join("");
-              newHTML += `<span class="word">${chars}</span>`;
-            }
-          });
-        } else if (
-          node.nodeType === Node.ELEMENT_NODE &&
-          node.classList.contains("theme-text")
-        ) {
-          const words = node.textContent.split(/(\s+)/);
-          const extraClasses = [...node.classList].join(" ");
-          let spanHTML = "";
+      // const container = document.querySelector(".tx-floating-text");
+      // const nodes = Array.from(container.childNodes);
+      // let newHTML = "";
 
-          words.forEach((word) => {
-            if (word.trim() === "") {
-              spanHTML += word;
-            } else {
-              const chars = [...word]
-                .map((char) =>
-                  char === " "
-                    ? `<span class="char">&nbsp;</span>`
-                    : `<span class="char">${char}</span>`
-                )
-                .join("");
-              spanHTML += `<span class="word">${chars}</span>`;
-            }
-          });
+      // nodes.forEach((node) => {
+      //   if (node.nodeType === Node.TEXT_NODE) {
+      //     const words = node.textContent.split(/(\s+)/); // split by spaces, keep them
+      //     words.forEach((word) => {
+      //       if (word.trim() === "") {
+      //         newHTML += word; // preserve spaces
+      //       } else {
+      //         const chars = [...word]
+      //           .map((char) =>
+      //             char === " "
+      //               ? `<span class="char">&nbsp;</span>`
+      //               : `<span class="char">${char}</span>`
+      //           )
+      //           .join("");
+      //         newHTML += `<span class="word">${chars}</span>`;
+      //       }
+      //     });
+      //   } else if (
+      //     node.nodeType === Node.ELEMENT_NODE &&
+      //     node.classList.contains("theme-text")
+      //   ) {
+      //     const words = node.textContent.split(/(\s+)/);
+      //     const extraClasses = [...node.classList].join(" ");
+      //     let spanHTML = "";
 
-          newHTML += `<span class="fill-bg-block ${extraClasses}">${spanHTML}</span>`;
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-          newHTML += node.outerHTML;
-        }
-      });
+      //     words.forEach((word) => {
+      //       if (word.trim() === "") {
+      //         spanHTML += word;
+      //       } else {
+      //         const chars = [...word]
+      //           .map((char) =>
+      //             char === " "
+      //               ? `<span class="char">&nbsp;</span>`
+      //               : `<span class="char">${char}</span>`
+      //           )
+      //           .join("");
+      //         spanHTML += `<span class="word">${chars}</span>`;
+      //       }
+      //     });
 
-      container.innerHTML = `<div class="chunk-block">${newHTML}</div>`;
+      //     newHTML += `<span class="fill-bg-block ${extraClasses}">${spanHTML}</span>`;
+      //   } else if (node.nodeType === Node.ELEMENT_NODE) {
+      //     newHTML += node.outerHTML;
+      //   }
+      // });
 
-      const block = container.querySelector(".chunk-block");
-      const chars = block.querySelectorAll(".char");
-      const allChars = Array.from(chars);
+      // container.innerHTML = `<div class="chunk-block">${newHTML}</div>`;
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: block,
-          start: "top 70%",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
+      // const block = container.querySelector(".chunk-block");
+      // const chars = block.querySelectorAll(".char");
+      // const allChars = Array.from(chars);
 
-      // Animate background size for highlighted spans
-      block.querySelectorAll(".fill-bg-block").forEach((span) => {
-        const spanChars = Array.from(span.querySelectorAll(".char"));
-        const firstChar = spanChars[0];
-        const index = allChars.indexOf(firstChar);
-        const delay = index * 0.03;
+      // const tl = gsap.timeline({
+      //   scrollTrigger: {
+      //     trigger: block,
+      //     start: "top 70%",
+      //     end: "bottom top",
+      //     scrub: true,
+      //   },
+      // });
 
-        tl.fromTo(
-          span,
-          { backgroundSize: "0% 100%" },
-          {
-            backgroundSize: "100% 100%",
-            duration: 1,
-            ease: "none",
-            onUpdate: function () {
-              if (span.classList.contains("neon")) {
-                const progress = this.progress(); // 'this' refers to the tween
-                span.style.color = progress > 0.5 ? "#171e1f" : "#e2e2e0"; // dark gray or light gray
-              }
-            },
-          },
-          delay
-        );
-      });
+      // // Animate background size for highlighted spans
+      // block.querySelectorAll(".fill-bg-block").forEach((span) => {
+      //   const spanChars = Array.from(span.querySelectorAll(".char"));
+      //   const firstChar = spanChars[0];
+      //   const index = allChars.indexOf(firstChar);
+      //   const delay = index * 0.03;
 
-      // Animate character opacity
-      tl.to(
-        chars,
-        {
-          opacity: 1,
-          duration: 1,
-          stagger: 0.03,
-          ease: "none",
-        },
-        0
-      );
+      //   tl.fromTo(
+      //     span,
+      //     { backgroundSize: "0% 100%" },
+      //     {
+      //       backgroundSize: "100% 100%",
+      //       duration: 1,
+      //       ease: "none",
+      //       onUpdate: function () {
+      //         if (span.classList.contains("neon")) {
+      //           const progress = this.progress(); // 'this' refers to the tween
+      //           span.style.color = progress > 0.5 ? "#171e1f" : "#e2e2e0"; // dark gray or light gray
+      //         }
+      //       },
+      //     },
+      //     delay
+      //   );
+      // });
+
+      // // Animate character opacity
+      // tl.to(
+      //   chars,
+      //   {
+      //     opacity: 1,
+      //     duration: 1,
+      //     stagger: 0.03,
+      //     ease: "none",
+      //   },
+      //   0
+      // );
+
+      // ===================================================================Split Section Animation Code ===============================================================================
 
       gsap.fromTo(
         ".domain-split-section",
@@ -515,21 +552,23 @@ document.addEventListener("DOMContentLoaded", () => {
           duration: 1,
           scrollTrigger: {
             trigger: ".overlaping-sticky-container",
-            start: "top -85%", // When the sticky section reaches the top
+            start: "top -35%", // When the sticky section reaches the top
             toggleActions: "play none none reverse",
           },
         }
       );
+
       // Section 3 Animation
       let dsTl = gsap.timeline({
         scrollTrigger: {
           trigger: ".overlaping-sticky-container",
-          start: "top -100%", // When the sticky section reaches the top
+          start: "top -50%", // When the sticky section reaches the top
           end: "+=1000px",
           toggleActions: "play pause reverse none",
           scrub: 1, // Optional: smooth animation while scrolling
         },
       });
+
       dsTl.to(
         [".logo"],
         {
@@ -638,8 +677,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Card Animation
-      updateFooterYear();
-      // Cards Section Animation
+      updateFooterYear(); // Cards Section Animation
+
       const section = document.querySelector(".future-theme-scroll_container");
       const futureThemeCard = document.querySelector(
         ".future-theme-card-wrapper"
@@ -650,7 +689,7 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollTrigger: {
           trigger: ".ft-bg-black", // Ensure this matches an element in your HTML
           start: "top -60%",
-          end: "+=2900px", // add this in final version
+          end: "+=1000px", // add this in final version
           scrub: 1, // Using numeric value for scrub for smoother syncing with the scroll
         },
       });
@@ -661,7 +700,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { clipPath: "inset(0% 0% 0% 0%)", duration: 0.5 }
       );
 
-      futureBgTl.to([".logo", ".nav-link"], {
+      futureBgTl.to([".logo", ".nav-link", ".nav-dd-toggle"], {
         duration: 0.2,
         color: "#ffffff",
         borderColor: "#ffffff", // Use `borderColor` instead of `border`
@@ -685,52 +724,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
       futureBgTl.to(
         ".ft-card.is-1st",
-        { left: "5%", duration: 1.2 },
+        { left: "5%", duration: 0.5 },
         "CardsUnfold"
       );
       futureBgTl.to(
         ".ft-card.is-2nd",
-        { left: "15%", duration: 1.2 },
+        { left: "15%", duration: 0.5 },
         "CardsUnfold"
       );
       futureBgTl.to(
         ".ft-card.is-3rd",
-        { left: "25%", duration: 1.2 },
+        { left: "25%", duration: 0.5 },
         "CardsUnfold"
       );
       futureBgTl.to(
         ".ft-card.is-4th",
-        { left: "35%", duration: 1.2 },
+        { left: "35%", duration: 0.5 },
         "CardsUnfold"
       );
       futureBgTl.to(
         ".ft-card.is-5th",
-        { left: "45%", duration: 1.2 },
+        { left: "45%", duration: 0.5 },
         "CardsUnfold"
       );
       futureBgTl.to(
         ".ft-card.is-6th",
-        { left: "55%", duration: 1.2 },
+        { left: "55%", duration: 0.5 },
         "CardsUnfold"
       );
       futureBgTl.to(
         ".ft-card.is-7th",
-        { left: "65%", duration: 1.2 },
+        { left: "65%", duration: 0.5 },
         "CardsUnfold"
       );
       futureBgTl.to(
         ".ft-card.is-8th",
-        { left: "75%", duration: 1.2 },
+        { left: "75%", duration: 0.5 },
         "CardsUnfold"
       );
       futureBgTl.to(
         ".ft-card.is-9th",
-        { left: "85%", duration: 1.2 },
+        { left: "85%", duration: 0.5 },
         "CardsUnfold"
       );
       futureBgTl.to(
         ".ft-card.is-10th",
-        { left: "95%", duration: 1.2 },
+        { left: "95%", duration: 0.5 },
         "CardsUnfold"
       );
 
@@ -773,56 +812,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
       futureBgTl.to(
         ".ft-card.is-1st",
-        { left: "75%", duration: 0.8 },
+        { left: "75%", duration: 0.5 },
         "CardsFolding"
       );
 
       futureBgTl.to(
         ".ft-card.is-2nd",
-        { left: "75%", duration: 0.8 },
+        { left: "75%", duration: 0.5 },
         "CardsFolding"
       );
 
       futureBgTl.to(
         ".ft-card.is-3rd",
-        { left: "75%", duration: 0.8 },
+        { left: "75%", duration: 0.5 },
         "CardsFolding"
       );
 
       futureBgTl.to(
         ".ft-card.is-4th",
-        { left: "75%", duration: 0.8 },
+        { left: "75%", duration: 0.5 },
         "CardsFolding"
       );
 
       futureBgTl.to(
         ".ft-card.is-5th",
-        { left: "75%", duration: 0.8 },
+        { left: "75%", duration: 0.5 },
         "CardsFolding"
       );
       futureBgTl.to(
         ".ft-card.is-6th",
-        { left: "75%", duration: 0.8 },
+        { left: "75%", duration: 0.5 },
         "CardsFolding"
       );
       futureBgTl.to(
         ".ft-card.is-7th",
-        { left: "75%", duration: 0.8 },
+        { left: "75%", duration: 0.5 },
         "CardsFolding"
       );
       futureBgTl.to(
         ".ft-card.is-8th",
-        { left: "75%", duration: 0.8 },
+        { left: "75%", duration: 0.5 },
         "CardsFolding"
       );
       futureBgTl.to(
         ".ft-card.is-9th",
-        { left: "75%", duration: 0.8 },
+        { left: "75%", duration: 0.5 },
         "CardsFolding"
       );
       futureBgTl.to(
         ".ft-card.is-10th",
-        { left: "75%", duration: 0.8 },
+        { left: "75%", duration: 0.5 },
         "CardsFolding"
       );
 
@@ -909,15 +948,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       gsap.fromTo(
         "#scroll-btn-thesis",
-        { opacity: 0, y: 0 },
+        { autoAlpha: 0, y: 0 },
         {
-          opacity: 1,
-
-          duration: 0.3, // Ensures smooth animation
+          autoAlpha: 1,
+          duration: 0.3,
           ease: "power2.out",
           scrollTrigger: {
             trigger: ".content-hub",
-            start: "top 10%", // Adjusted for better visibility
+            start: "top 10%",
             toggleActions: "play none none reverse",
           },
         }
@@ -948,11 +986,14 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#D4D4D4",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".logo", ".nav-link"], {
-            duration: 0.2,
-            color: "#000000",
-            borderColor: "#000000", // Use `borderColor` instead of `border`
-          });
+          gsap.to(
+            [".storyline-card-text", ".logo", ".nav-link", ".nav-dd-toggle"],
+            {
+              duration: 0.2,
+              color: "#000000",
+              borderColor: "#000000", // Use `borderColor` instead of `border`
+            }
+          );
         },
 
         onLeaveBack: () => {
@@ -960,11 +1001,14 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#29AABE",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".logo", ".nav-link"], {
-            duration: 0.2,
-            color: "#ffffff",
-            borderColor: "#ffffff", // Use `borderColor` instead of `border`
-          });
+          gsap.to(
+            [".storyline-card-text", ".logo", ".nav-link", ".nav-dd-toggle"],
+            {
+              duration: 0.2,
+              color: "#ffffff",
+              borderColor: "#ffffff", // Use `borderColor` instead of `border`
+            }
+          );
         },
       });
 
@@ -982,11 +1026,13 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#013C6D",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".nav-link"], {
+          gsap.to([".storyline-card-text", ".nav-link", ".nav-dd-toggle"], {
             duration: 0.2,
             color: "#ffffff",
             borderColor: "#ffffff", // Use `borderColor` instead of `border`
           });
+          document.querySelector(".theme-logo-wrapper.is-2nd").style.display =
+            "flex";
         },
 
         onLeaveBack: () => {
@@ -998,11 +1044,13 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#D4D4D4",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".nav-link"], {
+          gsap.to([".storyline-card-text", ".nav-link", ".nav-dd-toggle"], {
             duration: 0.2,
             color: "#000000",
             borderColor: "#000000", // Use `borderColor` instead of `border`
           });
+          document.querySelector(".theme-logo-wrapper.is-2nd").style.display =
+            "none";
         },
       });
 
@@ -1020,11 +1068,13 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#CEE553",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".nav-link"], {
+          gsap.to([".storyline-card-text", ".nav-link", ".nav-dd-toggle"], {
             duration: 0.2,
             color: "#000000",
             borderColor: "#000000", // Use `borderColor` instead of `border`
           });
+          document.querySelector(".theme-logo-wrapper.is-3rd").style.display =
+            "flex";
         },
 
         onLeaveBack: () => {
@@ -1036,11 +1086,13 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#013C6D",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".nav-link"], {
+          gsap.to([".storyline-card-text", ".nav-link", ".nav-dd-toggle"], {
             duration: 0.2,
             color: "#ffffff",
             borderColor: "#ffffff", // Use `borderColor` instead of `border`
           });
+          document.querySelector(".theme-logo-wrapper.is-3rd").style.display =
+            "none";
         },
       });
 
@@ -1058,11 +1110,13 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#000000",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".nav-link"], {
+          gsap.to([".storyline-card-text", ".nav-link", ".nav-dd-toggle"], {
             duration: 0.2,
             color: "#ffffff",
             borderColor: "#ffffff", // Use `borderColor` instead of `border`
           });
+          document.querySelector(".theme-logo-wrapper.is-4th").style.display =
+            "flex";
         },
         onLeaveBack: () => {
           gsap.to(".story-card-wrapper.is-3rd", {
@@ -1073,11 +1127,13 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#CEE553",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".nav-link"], {
+          gsap.to([".storyline-card-text", ".nav-link", ".nav-dd-toggle"], {
             duration: 0.2,
             color: "#000000",
             borderColor: "#000000", // Use `borderColor` instead of `border`
           });
+          document.querySelector(".theme-logo-wrapper.is-4th").style.display =
+            "none";
         },
       });
 
@@ -1095,11 +1151,13 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#D4D4D4",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".nav-link"], {
+          gsap.to([".storyline-card-text", ".nav-link", ".nav-dd-toggle"], {
             duration: 0.2,
             color: "#000000",
             borderColor: "#000000", // Use `borderColor` instead of `border`
           });
+          document.querySelector(".theme-logo-wrapper.is-5th").style.display =
+            "flex";
         },
         onLeaveBack: () => {
           gsap.to(".story-card-wrapper.is-4th", {
@@ -1110,11 +1168,13 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#000000",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".nav-link"], {
+          gsap.to([".storyline-card-text", ".nav-link", ".nav-dd-toggle"], {
             duration: 0.2,
             color: "#ffffff",
             borderColor: "#ffffff", // Use `borderColor` instead of `border`
           });
+          document.querySelector(".theme-logo-wrapper.is-5th").style.display =
+            "none";
         },
       });
 
@@ -1132,6 +1192,8 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#CEE553",
             duration: 0.001,
           });
+          document.querySelector(".theme-logo-wrapper.is-6th").style.display =
+            "flex";
         },
         onLeaveBack: () => {
           gsap.to(".story-card-wrapper.is-5th", {
@@ -1142,6 +1204,8 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#D4D4D4",
             duration: 0.001,
           });
+          document.querySelector(".theme-logo-wrapper.is-6th").style.display =
+            "none";
         },
       });
 
@@ -1159,11 +1223,13 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#013C6D",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".nav-link"], {
+          gsap.to([".storyline-card-text", ".nav-link", ".nav-dd-toggle"], {
             duration: 0.2,
             color: "#ffffff",
             borderColor: "#ffffff", // Use `borderColor` instead of `border`
           });
+          document.querySelector(".theme-logo-wrapper.is-7th").style.display =
+            "flex";
         },
         onLeaveBack: () => {
           gsap.to(".story-card-wrapper.is-6th", {
@@ -1174,11 +1240,13 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#CEE553",
             duration: 0.001,
           });
-          gsap.to([".storyline-card-text", ".nav-link"], {
+          gsap.to([".storyline-card-text", ".nav-link", ".nav-dd-toggle"], {
             duration: 0.2,
             color: "#000000",
             borderColor: "#000000", // Use `borderColor` instead of `border`
           });
+          document.querySelector(".theme-logo-wrapper.is-7th").style.display =
+            "none";
         },
       });
 
@@ -1197,11 +1265,13 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#000000",
             duration: 0.001,
           });
-          gsap.to([".nav-link"], {
+          gsap.to([".nav-link", ".nav-dd-toggle"], {
             duration: 0.2,
             color: "#ffffff",
             borderColor: "#ffffff", // Use `borderColor` instead of `border`
           });
+          document.querySelector(".theme-logo-wrapper.is-8th").style.display =
+            "flex";
         },
         onLeaveBack: () => {
           toggleReportText();
@@ -1213,6 +1283,8 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#013C6D",
             duration: 0.001,
           });
+          document.querySelector(".theme-logo-wrapper.is-8th").style.display =
+            "none";
         },
       });
 
@@ -1231,6 +1303,8 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#29AABE",
             duration: 0.001,
           });
+          document.querySelector(".theme-logo-wrapper.is-9th").style.display =
+            "flex";
         },
         onLeaveBack: () => {
           toggleReportText();
@@ -1242,6 +1316,8 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#000000",
             duration: 0.001,
           });
+          document.querySelector(".theme-logo-wrapper.is-9th").style.display =
+            "none";
         },
       });
 
@@ -1260,6 +1336,8 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#013C6D",
             duration: 0.001,
           });
+          document.querySelector(".theme-logo-wrapper.is-10th").style.display =
+            "flex";
         },
 
         onLeaveBack: () => {
@@ -1272,10 +1350,12 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#29AABE",
             duration: 0.001,
           });
+          document.querySelector(".theme-logo-wrapper.is-10th").style.display =
+            "none";
         },
       });
 
-      gsap.to([".nav-link"], {
+      gsap.to([".nav-link", ".nav-dd-toggle"], {
         duration: 0.2,
         color: "#000000",
         scrollTrigger: {
@@ -1443,19 +1523,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
       ScrollTrigger.create({
         trigger: '[segment="1"]', // Ensure this exists
-        start: "top top",
-        end: "end 60%",
+        start: "center 75%",
         toggleActions: "play none none reverse",
         onEnter: () => {
           gsap.to(".timeline-right-col", {
             backgroundColor: "#D4D4D4",
             duration: 0.001,
           });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#000000",
+            },
+          });
         },
         onLeaveBack: () => {
           gsap.to(".timeline-right-col", {
             backgroundColor: "#29AABE",
             duration: 0.001,
+          });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#ffffff",
+            },
           });
         },
       });
@@ -1473,6 +1564,12 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#013C6D",
             duration: 0.001,
           });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#ffffff",
+            },
+          });
         },
         onLeaveBack: () => {
           gsap.to(".story-card-wrapper.is-1st", {
@@ -1482,6 +1579,12 @@ document.addEventListener("DOMContentLoaded", () => {
           gsap.to(".timeline-right-col", {
             backgroundColor: "#D4D4D4",
             duration: 0.001,
+          });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#000000",
+            },
           });
         },
       });
@@ -1499,6 +1602,12 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#CEE553",
             duration: 0.001,
           });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#000000",
+            },
+          });
         },
         onLeaveBack: () => {
           gsap.to(".story-card-wrapper.is-2nd", {
@@ -1508,6 +1617,12 @@ document.addEventListener("DOMContentLoaded", () => {
           gsap.to(".timeline-right-col", {
             backgroundColor: "#013C6D",
             duration: 0.001,
+          });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#ffffff",
+            },
           });
         },
       });
@@ -1525,6 +1640,12 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#000000",
             duration: 0.001,
           });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#ffffff",
+            },
+          });
         },
         onLeaveBack: () => {
           gsap.to(".story-card-wrapper.is-3rd", {
@@ -1534,6 +1655,12 @@ document.addEventListener("DOMContentLoaded", () => {
           gsap.to(".timeline-right-col", {
             backgroundColor: "#CEE553",
             duration: 0.001,
+          });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#000000",
+            },
           });
         },
       });
@@ -1551,6 +1678,12 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#D4D4D4",
             duration: 0.001,
           });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#000000",
+            },
+          });
         },
         onLeaveBack: () => {
           gsap.to(".story-card-wrapper.is-4th", {
@@ -1560,6 +1693,12 @@ document.addEventListener("DOMContentLoaded", () => {
           gsap.to(".timeline-right-col", {
             backgroundColor: "#000000",
             duration: 0.001,
+          });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#ffffff",
+            },
           });
         },
       });
@@ -1603,6 +1742,12 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#013C6D",
             duration: 0.001,
           });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#ffffff",
+            },
+          });
         },
         onLeaveBack: () => {
           gsap.to(".story-card-wrapper.is-6th", {
@@ -1612,6 +1757,12 @@ document.addEventListener("DOMContentLoaded", () => {
           gsap.to(".timeline-right-col", {
             backgroundColor: "#CEE553",
             duration: 0.001,
+          });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#000000",
+            },
           });
         },
       });
@@ -1655,6 +1806,12 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: "#29AABE",
             duration: 0.001,
           });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#ffffff",
+            },
+          });
         },
         onLeaveBack: () => {
           gsap.to(".story-card-wrapper.is-8th", {
@@ -1664,6 +1821,12 @@ document.addEventListener("DOMContentLoaded", () => {
           gsap.to(".timeline-right-col", {
             backgroundColor: "#000000",
             duration: 0.001,
+          });
+          gsap.to("body", {
+            duration: 0.2,
+            css: {
+              "--nav-color": "#000000",
+            },
           });
         },
       });
@@ -1764,7 +1927,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (offset.includes("rem")) {
       return parseFloat(offset) * rootFontSize;
     } else if (offset.includes("px")) {
-      return parseFloat(offset); // Allow decimal px values
+      return parseFloat(offset); // Allow decimal px valuesnav-dd
     } else {
       console.warn(`Unsupported offset unit: ${offset}`);
       return 0; // Fallback to 0 if an unknown unit is passed
@@ -1832,4 +1995,74 @@ document.addEventListener("DOMContentLoaded", () => {
       toggleActions: "play none none reset",
     },
   });
+});
+
+// ===================================================================== view all themes button scroll ============================================================
+if (window.innerWidth > 991) {
+  document
+    .querySelector(".btn-hero-secondary")
+    .addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const target = document.querySelector("#all-themes-story-timeline");
+      const offset = window.innerHeight * -0.25; // 25vh
+
+      const targetPosition =
+        target.getBoundingClientRect().top + window.pageYOffset - offset;
+
+      gsap.to(window, {
+        scrollTo: { y: targetPosition },
+        duration: 0.001,
+        ease: "power2.out",
+      });
+    });
+}
+if (window.innerWidth < 991) {
+  document
+    .querySelector(".btn-hero-secondary")
+    .addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const target = document.querySelector("#all-themes-story-timeline");
+      const offset = window.innerHeight * 0; // 25vh
+
+      const targetPosition =
+        target.getBoundingClientRect().top + window.pageYOffset - offset;
+
+      gsap.to(window, {
+        scrollTo: { y: targetPosition },
+        duration: 0.001,
+        ease: "power2.out",
+      });
+    });
+}
+
+window.addEventListener("load", () => {
+  if (window.innerWidth < 991) {
+    gsap.to("body", {
+      duration: 0.2,
+      css: {
+        "--nav-color": "#000000",
+      },
+      scrollTrigger: {
+        trigger: "#content-hub",
+        start: "top 10%",
+        toggleActions: "play none none reverse",
+      },
+    });
+
+    gsap.to("body", {
+      duration: 0.2,
+      css: {
+        "--nav-color": "#000000",
+      },
+      scrollTrigger: {
+        trigger: ".ds-container-left",
+        start: "top 10%",
+        toggleActions: "play reverse play reverse",
+      },
+    });
+
+    ScrollTrigger.refresh();
+  }
 });
