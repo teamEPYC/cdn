@@ -643,17 +643,17 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     });
 
-    folderTl.fromTo(".r-fw-folder-wrapper", { x: "0vw" }, { x: "-17vw" });
+    folderTl.fromTo(".r-fw-folder-wrapper", { x: "0vw" }, { x: "-20vw" });
     folderTl.to(".r-fw-folder-front", { skewX: "5deg" });
-    folderTl.fromTo(".r-fw-folder-card.is-first", { x: "0vw" }, { x: "48vw" });
-    folderTl.fromTo(".r-fw-folder-card.is-second", { x: "0vw" }, { x: "48vw" });
+    folderTl.fromTo(".r-fw-folder-card.is-first", { x: "0vw" }, { x: "51vw" });
+    folderTl.fromTo(".r-fw-folder-card.is-second", { x: "0vw" }, { x: "51vw" });
     folderTl.fromTo(
       ".r-fw-folder-card.is-first",
       { rotateZ: "0deg" },
       { rotateZ: "5deg" },
       "<"
     );
-    folderTl.fromTo(".r-fw-folder-card.is-third", { x: "0vw" }, { x: "48vw" });
+    folderTl.fromTo(".r-fw-folder-card.is-third", { x: "0vw" }, { x: "51vw" });
     folderTl.fromTo(
       ".r-fw-folder-card.is-second",
       { rotateZ: "0deg" },
