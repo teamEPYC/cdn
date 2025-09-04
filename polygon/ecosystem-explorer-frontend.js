@@ -114,7 +114,7 @@
   var { state: c, setState: h } = de(
     {
       tab: v.public_chains,
-      chain: p.zkevm,
+      chain: p.pos,
       type: r.dapps,
       categories: [],
       sort: "ascending",
