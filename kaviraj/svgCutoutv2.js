@@ -1,6 +1,6 @@
 (function () {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  const POLL_MS = 1; // low-frequency polling for Safari (cheap + smooth)
+  const POLL_MS = 180; // low-frequency polling for Safari (cheap + smooth)
 
   function applyCornerCircleCutoutsV5() {
     const targets = document.querySelectorAll(
