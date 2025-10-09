@@ -3,6 +3,11 @@ if (el) {
   el.setAttribute('data-count', window.innerWidth > 992 ? 65 : 40);
 }
 
+const el2 = document.querySelector('.cta-circular-text');
+if (el2) {
+  el2.setAttribute('data-count', window.innerWidth > 992 ? 65 : 40);
+}
+
 (() => {
   const NS  = "http://www.w3.org/2000/svg";
   const TAU = Math.PI * 2;
