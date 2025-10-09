@@ -1,4 +1,16 @@
-  console.log("hmoe-proolgue-test loaded");
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("home-prologue-test loaded");
+
+  // Check if required libraries are loaded
+  if (!window.THREE || !window.gsap || !window.ScrollTrigger || !window.SplitText) {
+    console.error("Required libraries not loaded: THREE, GSAP, ScrollTrigger, or SplitText");
+    return;
+  }
+
+  // Register ScrollTrigger if not already registered
+  if (!gsap.core.globals().ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+  }
 
   if (window.innerWidth > 991) {
     //–– Three.js setup ––
