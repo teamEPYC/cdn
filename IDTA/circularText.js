@@ -1,4 +1,4 @@
-const el = document.querySelector('.i-hero-right-circular-text');
+const el = document.querySelector('.m-hero-right-circular-text');
 if (el) {
   el.setAttribute('data-count', window.innerWidth > 992 ? 65 : 40);
 }
