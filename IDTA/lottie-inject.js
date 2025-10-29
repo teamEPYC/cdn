@@ -1,4 +1,3 @@
-
 (() => {
   const lotties = new Map();
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -14,19 +13,26 @@
 
       const anim = lottie.loadAnimation({
         container: el,
-        renderer: el.dataset.renderer || 'svg',
+        renderer: el.dataset.renderer || "canvas", // 👈 switched to canvas
         loop: true,
         autoplay: false,
         path,
-        rendererSettings: { progressiveLoad: true }
+        rendererSettings: {
+          progressiveLoad: true,              // stream frames in
+          preserveAspectRatio: "xMidYMid meet" // optional, keeps aspect nice
+        }
       });
 
-      anim.addEventListener('DOMLoaded', () => anim.setSpeed(speed));
+      anim.addEventListener("DOMLoaded", () => {
+        anim.setSpeed(speed);
+        // force an initial size pass, esp. if container had flex % sizing
+        anim.resize && anim.resize();
+      });
 
       const st = ScrollTrigger.create({
         trigger: el,
-        start: 'top 95%',
-        end: 'bottom 5%',
+        start: "top 95%",
+        end: "bottom 5%",
         onEnter: () => { if (!prefersReduced) anim.play(); },
         onEnterBack: () => { if (!prefersReduced) anim.play(); },
         onLeave: () => anim.pause(),
@@ -38,8 +44,8 @@
     });
   };
 
-  // visibility: pause all when hidden; resume only active ones
-  document.addEventListener('visibilitychange', () => {
+  // pause everything if tab not visible
+  document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       lotties.forEach(({ anim }) => anim.pause());
     } else {
@@ -47,18 +53,18 @@
     }
   });
 
-  // resize / refresh (debounced)
+  // handle resize / DPR changes
   let rAF;
   const onResize = () => {
     if (rAF) cancelAnimationFrame(rAF);
     rAF = requestAnimationFrame(() => {
       lotties.forEach(({ anim }) => anim.resize && anim.resize());
-      //ScrollTrigger.refresh();
+      ScrollTrigger.refresh();
     });
   };
-  window.addEventListener('resize', onResize);
+  window.addEventListener("resize", onResize);
 
-  // optional: expose a minimal API for runtime tweaks
+  // expose tiny API
   window.lottieGSAP = {
     setSpeed(el, speed) {
       const entry = lotties.get(el);
@@ -81,15 +87,17 @@
     }
   };
 
-  // boot
+  // boot once
   init();
 
-  // if content is injected later, call init() again.
-  // Example: new elements added dynamically → window.lottieGSAP && init();
+  // call init() again yourself if you inject new [data-lottie] later
 
-  // cleanup on unload
-  window.addEventListener('beforeunload', () => {
-    lotties.forEach(({ anim, st }) => { anim.destroy && anim.destroy(); st.kill(); });
+  // cleanup
+  window.addEventListener("beforeunload", () => {
+    lotties.forEach(({ anim, st }) => {
+      anim.destroy && anim.destroy();
+      st.kill();
+    });
     lotties.clear();
   });
 })();
