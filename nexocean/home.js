@@ -1,3 +1,5 @@
+console.log("Hey");
+
 ("use strict");
 
 const lenis = new Lenis({
@@ -659,7 +661,155 @@ if (window.matchMedia("(min-width: 1024px)").matches) {
     delay: 9,
   });
 
-  // integrateBlurTextAnimation(thirdHomeTl, "#playbook-heading");
+  thirdHomeTl.fromTo(
+    ".section-100vh.is-maps",
+    {
+      autoAlpha: 0,
+    },
+    {
+      autoAlpha: 1,
+      duration: 1.5,
+    }
+  );
+
+  gsap.set(".maps-wrap", { autoAlpha: 0 });
+  gsap.set(
+    ".austin-pin, .chicago-pin, .houston-pin, .newyork-pin, .melbourne-pin, .berlin-pin, .luxem-pin, .london-pin, .tokyo-pin",
+    { opacity: 0, y: -20 }
+  );
+
+  thirdHomeTl.fromTo(
+    ".content-wrapper.is-maps",
+    {
+      autoAlpha: 1,
+    },
+    {
+      autoAlpha: 0,
+    }
+  );
+
+  thirdHomeTl.fromTo(
+    ".maps-wrap.is-first",
+    {
+      autoAlpha: 0,
+    },
+    {
+      autoAlpha: 1,
+      duration: 3,
+    }
+  );
+
+  thirdHomeTl.to(".houston-pin", { opacity: 1, y: 0, duration: 2 });
+  thirdHomeTl.to(".chicago-pin", { opacity: 1, y: 0, duration: 2 });
+  thirdHomeTl.to(".austin-pin", { opacity: 1, y: 0, duration: 2 });
+  thirdHomeTl.to(".newyork-pin", { opacity: 1, y: 0, duration: 2 });
+
+  thirdHomeTl.fromTo(
+    ".maps-wrap.is-first",
+    {
+      autoAlpha: 1,
+    },
+    {
+      autoAlpha: 0,
+      duration: 3,
+    }
+  );
+
+  thirdHomeTl.fromTo(
+    ".maps-wrap.is-second",
+    {
+      autoAlpha: 0,
+    },
+    {
+      autoAlpha: 1,
+      duration: 3,
+    }
+  );
+
+  thirdHomeTl.to(".melbourne-pin", { opacity: 1, y: 0, duration: 2 });
+
+  thirdHomeTl.fromTo(
+    ".maps-wrap.is-second",
+    {
+      autoAlpha: 1,
+    },
+    {
+      autoAlpha: 0,
+      duration: 3,
+    }
+  );
+
+  thirdHomeTl.fromTo(
+    ".maps-wrap.is-third",
+    {
+      autoAlpha: 0,
+    },
+    {
+      autoAlpha: 1,
+      duration: 3,
+    }
+  );
+
+  thirdHomeTl.to(".london-pin", { opacity: 1, y: 0, duration: 2 });
+  thirdHomeTl.to(".berlin-pin", { opacity: 1, y: 0, duration: 2 });
+  thirdHomeTl.to(".luxem-pin", { opacity: 1, y: 0, duration: 2 });
+
+  thirdHomeTl.fromTo(
+    ".maps-wrap.is-third",
+    {
+      autoAlpha: 1,
+    },
+    {
+      autoAlpha: 0,
+      duration: 3,
+    }
+  );
+
+  thirdHomeTl.fromTo(
+    ".maps-wrap.is-fourth",
+    {
+      autoAlpha: 0,
+    },
+    {
+      autoAlpha: 1,
+      duration: 3,
+    }
+  );
+
+  thirdHomeTl.to(".tokyo-pin", { opacity: 1, y: 0, duration: 2 });
+
+  thirdHomeTl.fromTo(
+    ".maps-wrap.is-fourth",
+    {
+      autoAlpha: 1,
+    },
+    {
+      autoAlpha: 0,
+      duration: 3,
+    }
+  );
+
+  thirdHomeTl.fromTo(
+    ".section-100vh.is-maps",
+    {
+      autoAlpha: 1,
+    },
+    {
+      autoAlpha: 0,
+      duration: 1.5,
+    }
+  );
+
+  thirdHomeTl.fromTo(
+    "#playbook-section",
+    {
+      autoAlpha: 0,
+    },
+    {
+      autoAlpha: 1,
+      duration: 1.5,
+    }
+  );
 
   thirdHomeTl.to(
     "#playbook-content-container",
