@@ -11,22 +11,19 @@ function applyCornerCircleCutoutsV4() {
   const getBoxPaddings = (el) => {
     if (!el) return 0;
     const cs = getComputedStyle(el);
-    // Use max of all sides to keep circles symmetric.
-    const p = Math.max(
+    return Math.max(
       px(parseFloat(cs.paddingTop)),
       px(parseFloat(cs.paddingRight)),
       px(parseFloat(cs.paddingBottom)),
       px(parseFloat(cs.paddingLeft))
     );
-    // If border-box, padding is already inside the box; no special math needed for mask geometry.
-    return p;
   };
 
   const updateOne = (container) => {
     const isChild = container.getAttribute("data-cutout-child") === "true";
     const hasInset = container.getAttribute("data-cutout-inset") === "true";
 
-    // Full cleanup of old artifacts and stale inline styles from other libs
+    // Cleanup old SVG artifacts and mask props (but avoid changing layout-affecting props)
     container.querySelectorAll("svg.cutout-svg").forEach((el) => el.remove());
     container.style.maskImage = "";
     container.style.webkitMaskImage = "";
@@ -36,9 +33,6 @@ function applyCornerCircleCutoutsV4() {
     container.style.webkitMaskSize = "";
     container.style.maskPosition = "";
     container.style.webkitMaskPosition = "";
-    // Remove problematic inline styles a previous lib might have set
-    if (container.style.overflow === "hidden") container.style.overflow = "";
-    if (container.style.height) container.style.height = "";
 
     // Determine base radius and offset
     let radius = parseFloat(
@@ -46,16 +40,31 @@ function applyCornerCircleCutoutsV4() {
     );
     let offset = 0;
 
+    // Restore v1-style ancestor padding accumulation for children
     if (isChild) {
-      // Correct ancestor discovery
-      const base = container.closest('[data-cutout="true"]');
+      let current = container;
+      let totalPadding = 0;
+      let base = null;
+
+      while (current && current !== document.body) {
+        const maybeBase = current.querySelector('[data-cutout="true"]');
+        if (maybeBase) {
+          base = maybeBase;
+          break;
+        }
+        const cs = getComputedStyle(current.parentElement);
+        const pt = parseFloat(cs.paddingTop) || 0;
+        const pl = parseFloat(cs.paddingLeft) || 0;
+        totalPadding += Math.max(pt, pl);
+        current = current.parentElement;
+      }
+
       if (base) {
         const baseRadius = parseFloat(
           base.getAttribute("data-cutout-radius") || "50"
         );
-        const basePad = getBoxPaddings(base);
-        radius = baseRadius + basePad;
-        offset = basePad;
+        radius = baseRadius + totalPadding;
+        offset = totalPadding;
       } else {
         console.warn(
           "No base [data-cutout] ancestor found for child:",
@@ -64,10 +73,10 @@ function applyCornerCircleCutoutsV4() {
       }
     }
 
-    // Use precise measured box (sub-pixel friendly)
+    // Use rounded, pixel-snapped geometry to avoid sub-pixel drift
     const rect = container.getBoundingClientRect();
-    const w = Math.max(1, rect.width);
-    const h = Math.max(1, rect.height);
+    const w = Math.max(1, Math.round(rect.width));
+    const h = Math.max(1, Math.round(rect.height));
 
     // Outer corner bites
     const circlesOuter = [
@@ -92,14 +101,14 @@ function applyCornerCircleCutoutsV4() {
         container.getAttribute("data-inset-padding") || "10"
       );
 
-      const insetTotalWidth = (insetWidthPercent / 100) * w;
+      const insetTotalWidth = Math.round((insetWidthPercent / 100) * w);
       const insetRectWidth = Math.max(0, insetTotalWidth - insetPadding * 2);
       const insetRectHeight = Math.max(0, h - insetPadding * 2);
       const insetX = w - insetRectWidth - insetPadding;
       const insetY = insetPadding;
 
-      // Keep corner roundness logically tied to the base circle + the local inset padding
-      const expandedRadius = Math.max(0, radius + insetPadding);
+      // Tie corner roundness to base radius + local inset padding; snap to px
+      const expandedRadius = Math.max(0, Math.round(radius + insetPadding));
 
       const insetCircleData = [
         [w - insetTotalWidth, 0],
@@ -119,15 +128,15 @@ function applyCornerCircleCutoutsV4() {
     }
 
     const svgMarkup = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-        <defs>
-          <mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="${w}" height="${h}">
-            <rect x="0" y="0" width="${w}" height="${h}" fill="white"/>
-            ${insetPart}
-            ${circlesOuter}
-          </mask>
-        </defs>
-        <rect x="0" y="0" width="${w}" height="${h}" fill="black" mask="url(#m)"/>
-      </svg>`;
+          <defs>
+            <mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="${w}" height="${h}">
+              <rect x="0" y="0" width="${w}" height="${h}" fill="white"/>
+              ${insetPart}
+              ${circlesOuter}
+            </mask>
+          </defs>
+          <rect x="0" y="0" width="${w}" height="${h}" fill="black" mask="url(#m)"/>
+        </svg>`;
 
     const url = `data:image/svg+xml;utf8,${encodeURIComponent(svgMarkup)}`;
 
