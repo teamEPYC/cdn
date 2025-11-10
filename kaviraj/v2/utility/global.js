@@ -124,20 +124,18 @@ export function visualUtility() {
   svgCutouts();
   spriteNoiseMask();
 
-  // Remove Webflow Badge
-  window.onload = function() {
-    setTimeout(function() {
-      try {
-        const badge = document.querySelector(".w-webflow-badge");
-        if (badge) {
-          badge.remove();
-          console.log("Element removed successfully.");
-        } else {
-          console.log("Element not found.");
-        }
-      } catch (error) {
-        console.error("Error removing element:", error);
+  setTimeout(function() {
+    try {
+      const badge = document.querySelector(".w-webflow-badge");
+      if (badge) {
+        badge.remove();
+        console.log("Element removed successfully.");
+      } else {
+        console.log("Element not found.");
       }
-    }, 3000); // 3000 milliseconds = 3 seconds
-  };
+    } catch (error) {
+      console.error("Error removing element:", error);
+    }
+  }, 3000);
+
 }
