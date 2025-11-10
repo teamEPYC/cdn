@@ -115,16 +115,21 @@ export function spriteNoiseMask() {
   };
 
   const initAll = (root = document) => {
-    root.querySelectorAll(SELECTOR).forEach((el) => { void initOne(el); });
+    const els = Array.from(root.querySelectorAll(SELECTOR));
+    const promises = els.map((el) => initOne(el)); // initOne is async
+    return Promise.all(promises);
   };
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => initAll());
+    document.addEventListener("DOMContentLoaded", () => { 
+      window.spriteMasksReady = initAll();
+    });
   } else {
-    initAll();
+    window.spriteMasksReady = initAll();
   }
 
   window.initSpriteMasks = initAll;
+
 })();
 
 }
