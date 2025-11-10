@@ -26,8 +26,8 @@ if (window.innerWidth >= 992) {
 }
 
 async function importUtility() {
-    const { svgCutouts } = await import('http://127.0.0.1:5500/js/utility/svgCutoutsV2.js'); 
-    const { spriteNoiseMask } = await import('http://127.0.0.1:5500/js/utility/spriteNoiseMask.js'); 
+    const { svgCutouts } = await import('https://teamepyc.github.io/cdn/kaviraj/v2/utility/svgCutoutsV2.js'); 
+    const { spriteNoiseMask } = await import('https://teamepyc.github.io/cdn/kaviraj/v2/utility/spriteNoiseMask.js'); 
 }
 
 importUtility();
