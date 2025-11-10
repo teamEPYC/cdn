@@ -1,4 +1,4 @@
-import { FrameDecoder } from "http://127.0.0.1:5500/js/utility/scrollsync/decoder.js";
+import { FrameDecoder } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/scrollsync/decoder.js";
 
 // ---- START OF GRID RESIZE ---- //
 let resizeFrameId;
@@ -38,9 +38,9 @@ window.addEventListener('resize', () => {
 // ----- START OF MAIN CODE ----- //
 async function mainCode(){  
 
-const { heroAnimation } = await import('http://127.0.0.1:5500/js/main/home/hero.js'); 
-const { prologueAnimation } = await import('http://127.0.0.1:5500/js/main/home/prologue.js');
-const { sequenceDecoder } = await import('http://127.0.0.1:5500/js/utility/scrollsync/decoder.js'); 
+const { heroAnimation } = await import('https://teamepyc.github.io/cdn/kaviraj/v2/main/home/hero.js'); 
+const { prologueAnimation } = await import('https://teamepyc.github.io/cdn/kaviraj/v2/main/home/prologue.js');
+const { sequenceDecoder } = await import('https://teamepyc.github.io/cdn/kaviraj/v2/utility/scrollsync/decoder.js'); 
 
 // ---------- START OF DESKTOP ---------- //
 if (window.innerWidth >= 992) {
@@ -50,7 +50,7 @@ document.querySelectorAll(".k-value-intro-text, .k-value-intro-text, .k-cta-head
 });
 
 //START OF SCROLLSYNC & VALUES + CTA ANIMATION
-const VIDEO_URL = "http://127.0.0.1:5500/src/hallway2.mp4";
+const VIDEO_URL = "https://teamepyc.github.io/cdn/kaviraj/v2/videos/hallway2.mp4";
 const canvas = document.getElementById("wc-canvas");
 const ctx = canvas.getContext("2d", { alpha: true });
 function sizeCanvas() {
