@@ -30,7 +30,7 @@ function mainCode() {
 
     (async () => {
       const decoder = new FrameDecoder();
-      await decoder.init(VIDEO_URL);
+      decoder.init(VIDEO_URL);
       let running = true;
 
       //render loop for scrollsync decoder
@@ -150,11 +150,14 @@ function mainCode() {
 }
 
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
     gridResize();
     visualUtility();
-    navigation();
+    if (window.spriteMasksReady) {
+      await window.spriteMasksReady;
+    }
     mainCode();
+    navigation();
     initializeLenis();
 });
 
