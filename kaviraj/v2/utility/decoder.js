@@ -260,9 +260,29 @@ export class FrameDecoder {
 
     const sink = new EncodedPacketSink(videoTrack);
 
+    //loader values
+    let totalPackets = 0;
+    const preloaderProgress = document.querySelector('.k-preloader-progress');
+    preloaderProgress.style.transition = "transform 0.2s ease-out";
+
     for await (const packet of sink.packets()) {
       const chunk = packet.toEncodedVideoChunk();
       this.encodedChunks.push(chunk);
+      
+      // loader logic
+      totalPackets++;
+      const progress = totalPackets / 931 * 100;
+      preloaderProgress.style.transform = `scaleX(${progress / 100})`;
+      //console.log(progress);
+
+      if(parseInt(progress) == 100){
+        setTimeout(() => {
+            document.querySelector('.k-preloader-progress-track').classList.add('hide');
+        }, 250);
+        setTimeout(() => {
+            document.querySelector('.k-preloader .k-stroke-button').classList.remove('hide');
+        }, 1000);
+      }
 
       if (chunk.timestamp <= BUFFER_RANGE) {
         this.decodeChunkAt(this.forwardIndex);
