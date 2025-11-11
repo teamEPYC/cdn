@@ -28,9 +28,9 @@ const heroOutro = gsap.timeline({
 });
 
 heroOutro
-.to(".k-hero-cta:nth-child(6)", {scale: 0.9, filter: "blur(10px)", opacity: 0, duration: 0.5})
+.to(".k-hero-content-wrapper .k-solid-button:nth-child(6)", {scale: 0.9, filter: "blur(10px)", opacity: 0, duration: 0.5})
 .to(subtext.chars, {scale: 0.9, opacity: 0, stagger: 0.01, duration: 1}, "-=1")
-.to(".k-hero-cta:nth-child(4)", {scale: 0.9, filter: "blur(10px)", opacity: 0, duration: 0.5}, "-=1")
+.to(".k-hero-content-wrapper .k-solid-button:nth-child(4)", {scale: 0.9, filter: "blur(10px)", opacity: 0, duration: 0.5}, "-=1")
 .to(heading3.chars, {scale: 0.9, filter: "blur(10px)", scale: 1, opacity: 0, duration: 1, stagger: 0.12}, "-=1")
 .to(heading2.chars, {scale: 0.9, filter: "blur(10px)", scale: 1, opacity: 0, duration: 1, stagger: 0.12}, "-=1.35")
 .to(heading1.chars, {scale: 0.9, filter: "blur(10px)", scale: 1, opacity: 0, duration: 1, stagger: 0.12}, "-=1.35");
