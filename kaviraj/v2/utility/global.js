@@ -117,9 +117,6 @@ export function initializeLenis() {
   if (window.innerWidth >= 992) {
   const lenis = new Lenis({
     useStrict: true,
-    prevent: (node) => {
-        return node.classList.contains('k-values');
-    }
   });
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((time) => { lenis.raf(time * 1500); });
