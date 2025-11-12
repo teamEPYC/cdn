@@ -117,6 +117,9 @@ export function initializeLenis() {
   if (window.innerWidth >= 992) {
   const lenis = new Lenis({
     useStrict: true,
+    prevent: (node) => {
+        return node.classList.contains('k-values');
+    }
   });
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((time) => { lenis.raf(time * 1500); });
@@ -127,10 +130,10 @@ export function initializeLenis() {
 export function visualUtility() {
   svgCutouts();
 
-  if (window.innerWidth >= 992) {
+  //if (window.innerWidth >= 992) {
   spriteNoiseMask();
-  } 
-  
+  //} 
+
   setTimeout(function() {
     try {
       const badge = document.querySelector(".w-webflow-badge");
