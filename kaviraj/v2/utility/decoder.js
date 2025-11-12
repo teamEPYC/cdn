@@ -272,10 +272,10 @@ export class FrameDecoder {
       // loader logic
       totalPackets++;
       const progress = totalPackets / 931 * 100;
-      preloaderProgress.style.transform = `scaleX(${progress / 100})`;
+      preloaderProgress.style.transform = `scaleX(${progress / 30})`;
       //console.log(progress);
 
-      if(parseInt(progress) == 100){
+      if(parseInt(progress) == 30){
         setTimeout(() => {
             document.querySelector('.k-preloader-progress-track').classList.add('hide');
         }, 250);
