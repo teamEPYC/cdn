@@ -37,6 +37,7 @@ export function gridResize() {
 
 
 export function navigation() {
+  if (window.innerWidth >= 992) {
   //Nav open and collapse
   const tlLogo = gsap.timeline({ paused: true, reversed: true });
   const tlMenu = gsap.timeline({ paused: true, reversed: true });
@@ -109,21 +110,27 @@ export function navigation() {
       scrub: true
     }
   });  
+  }
 }
 
 export function initializeLenis() {
+  if (window.innerWidth >= 992) {
   const lenis = new Lenis({
     useStrict: true,
   });
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((time) => { lenis.raf(time * 1500); });
   gsap.ticker.lagSmoothing(0);
+  }
 }
 
 export function visualUtility() {
   svgCutouts();
-  spriteNoiseMask();
 
+  if (window.innerWidth >= 992) {
+  spriteNoiseMask();
+  } 
+  
   setTimeout(function() {
     try {
       const badge = document.querySelector(".w-webflow-badge");
