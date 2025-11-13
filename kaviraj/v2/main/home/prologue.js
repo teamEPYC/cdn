@@ -102,7 +102,7 @@ prologueTimeline.fromTo(prologue1text1.chars,
     {filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.2, duration: 4, ease: "power1.out"}
 ).fromTo(prologue1text2.chars, 
     {filter: "blur(5px)", scale: 1.5, opacity: 0},
-    {filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.2, duration: 4, ease: "power1.out"}, "+=2"
+    {filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.2, duration: 4, ease: "power1.out"}
 ).to([prologue1text1.chars, prologue1text2.chars], 
     {filter: "blur(5px)", scale: 1, opacity: 0, duration: 3, stagger: 0.1}, "+=4"
 ).fromTo(prologue2text1.chars, 
@@ -110,7 +110,7 @@ prologueTimeline.fromTo(prologue1text1.chars,
     {filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.2, duration: 4, ease: "power1.out"}
 ).fromTo(prologue2text2.chars, 
     {filter: "blur(5px)", scale: 1.5, opacity: 0},
-    {filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.2, duration: 4, ease: "power1.out"}, "+=2"
+    {filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.2, duration: 4, ease: "power1.out"}
 ).to([prologue2text1.chars, prologue2text2.chars], 
     {filter: "blur(5px)", scale: 1, opacity: 0, duration: 3, stagger: 0.1}, "+=4"
 ).fromTo(prologue3text1.chars, 
