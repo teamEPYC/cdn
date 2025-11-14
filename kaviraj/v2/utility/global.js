@@ -145,4 +145,35 @@ export function visualUtility() {
     }
   }, 3000);
 
+  strokeButtons.forEach(button => {
+    button.addEventListener('mouseenter', () => {
+      gsap.to(button, { color: "var(--saffron-3)", duration: 0.3});
+      gsap.to(button.querySelectorAll('.k-stroke-cta-content'), { y: '-100%', duration: 0.7, ease: "expo.out"});
+    });
+
+    button.addEventListener('mouseleave', () => {
+      gsap.to(button, { color: "", duration: 0.3});
+      gsap.to(button.querySelectorAll('.k-stroke-cta-content'), { y: '0%', duration: 0.7,  ease: "expo.out" });
+    });
+    });
+
+    const solidButtons = document.querySelectorAll('.k-solid-button');
+
+    solidButtons.forEach(button => {
+      const icons = button.querySelectorAll('.k-solid-button-icon');
+      const text = button.querySelector('.k-solid-button-text');
+    
+      button.addEventListener('mouseenter', () => {
+        gsap.to(icons[0], { scale: 1, duration: 0.5,  ease: "expo.out" });
+        gsap.to(icons[1], { scale: 0, duration: 0.5,  ease: "expo.out" });
+        gsap.to(text, { x: "0.6rem", duration: 0.5,  ease: "expo.out" });
+      });
+    
+      button.addEventListener('mouseleave', () => {
+        gsap.to(icons[0], { scale: 0, duration: 0.5,  ease: "expo.out" });
+        gsap.to(icons[1], { scale: 1, duration: 0.5,  ease: "expo.out" });
+        gsap.to(text, { x: "0rem", duration: 0.5,  ease: "expo.out" });
+      });
+    });
+
 }
