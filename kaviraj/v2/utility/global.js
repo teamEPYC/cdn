@@ -37,7 +37,34 @@ export function gridResize() {
 
 
 export function navigation() {
-  if (window.innerWidth >= 992) {
+  if (window.innerWidth >= 803) {
+     // Menu Toggle
+    const menuTl = gsap.timeline({ 
+      paused: true,
+      defaults: { ease: "expo.out", duration: 1.5 }
+    });
+
+    menuTl.to(".k-menu", {display: "block", duration: 0})
+    .to(".k-menu[data-sprite]", { 
+      onUpdate() {
+        const el = this.targets()[0];
+        el._spriteSetProgress?.(this.progress());
+      }, ease: "expo.out", duration: 1.5
+    });
+
+    // toggle state
+    let open = false;
+
+    document.querySelector(".k-nav-menu-button").addEventListener("click", () => {
+      open = !open;
+      menuTl[open ? "play" : "reverse"]();
+    });
+
+    document.querySelector(".k-menu-close").addEventListener("click", () => {
+      open = !open;
+      menuTl[open ? "play" : "reverse"]();
+    });
+
   //Nav open and collapse
   const tlLogo = gsap.timeline({ paused: true, reversed: true });
   const tlMenu = gsap.timeline({ paused: true, reversed: true });
@@ -111,10 +138,25 @@ export function navigation() {
     }
   });  
   }
+
+  if (window.innerWidth < 803) {
+    // Menu Mobile
+    document.querySelector('.k-nav-menu-button').addEventListener('click', () => {
+      const menu = document.querySelector('.k-menu');
+      const hamIcon = document.querySelector('.k-menu-ham-icon');
+      const hamText = document.querySelector('.k-menu-ham-text');
+
+      menu.classList.toggle('on');
+      hamIcon.classList.toggle('hide');
+
+      hamText.textContent = hamText.textContent.trim() === "Menu" ? "Close" : "Menu";
+    });
+
+  }
 }
 
 export function initializeLenis() {
-  if (window.innerWidth >= 992) {
+  if (window.innerWidth >= 803) {
   const lenis = new Lenis({
     useStrict: true,
   });
@@ -127,7 +169,7 @@ export function initializeLenis() {
 export function visualUtility() {
   svgCutouts();
 
-  //if (window.innerWidth >= 992) {
+  //if (window.innerWidth >= 803) {
   spriteNoiseMask();
   //} 
 
@@ -144,8 +186,10 @@ export function visualUtility() {
       console.error("Error removing element:", error);
     }
   }, 3000);
+  const strokeButtons = document.querySelectorAll('.k-stroke-button');
 
   strokeButtons.forEach(button => {
+
     button.addEventListener('mouseenter', () => {
       gsap.to(button, { color: "var(--saffron-3)", duration: 0.3});
       gsap.to(button.querySelectorAll('.k-stroke-cta-content'), { y: '-100%', duration: 0.7, ease: "expo.out"});
