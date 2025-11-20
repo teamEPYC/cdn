@@ -1,295 +1,223 @@
-// ==== utils (inline) ====
-function assert(condition, message) {
-  if (!condition) {
-    throw new Error(message ?? "Assertion failed");
+import { svgCutouts } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/svgCutouts.js";
+import { spriteNoiseMask } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/spriteNoiseMask.js"; 
+
+export function gridResize() {
+  let resizeFrameId;
+
+  function updateBaseValue() {
+    const columnBlock = document.querySelector('.column-block');
+    const columnWidth = columnBlock.offsetWidth;
+    document.documentElement.style.setProperty('--base', columnWidth);
+    console.log('Updated --base to:', columnWidth);
+  }
+
+  function handleResize() {
+    if (resizeFrameId) {
+      cancelAnimationFrame(resizeFrameId);
+    }
+    resizeFrameId = requestAnimationFrame(updateBaseValue);
+  }
+
+  window.addEventListener('resize', () => {
+    handleResize();
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.shiftKey && event.key.toLowerCase() === "g") {
+      const el = document.querySelector(".grid");
+      if (el) {
+        el.classList.toggle("off");
+      }
+    }
+  });
+
+  updateBaseValue();
+  console.log('Press [Shift + G] for Grids.');
+}
+
+
+export function navigation() {
+  if (window.innerWidth >= 803) {
+     // Menu Toggle
+    const menuTl = gsap.timeline({ 
+      paused: true,
+      defaults: { ease: "expo.out", duration: 1.5 }
+    });
+
+    menuTl.to(".k-menu", {display: "block", duration: 0})
+    .to(".k-menu[data-sprite]", { 
+      onUpdate() {
+        const el = this.targets()[0];
+        el._spriteSetProgress?.(this.progress());
+      }, ease: "expo.out", duration: 1.5
+    });
+
+    // toggle state
+    let open = false;
+
+    document.querySelector(".k-nav-menu-button").addEventListener("click", () => {
+      open = !open;
+      menuTl[open ? "play" : "reverse"]();
+    });
+
+    document.querySelector(".k-menu-close").addEventListener("click", () => {
+      open = !open;
+      menuTl[open ? "play" : "reverse"]();
+    });
+
+  //Nav open and collapse
+  const tlLogo = gsap.timeline({ paused: true, reversed: true });
+  const tlMenu = gsap.timeline({ paused: true, reversed: true });
+
+  tlLogo.fromTo(".k-logo", { width: "2.5rem" }, {
+    width: "1rem",
+    duration: 0.8,
+    ease: "quart.inOut"
+  });
+
+  tlMenu.fromTo(".k-nav-cta-button, .k-nav-menu-button", 
+    { x: "0rem" }, 
+    { x: "2.7rem", duration: 0.8, ease: "quart.inOut" }, 0
+  ).fromTo(".k-nav-menu-button", 
+    {"--nav-border-radius": "0.6rem" }, 
+    {"--nav-border-radius": "0rem", duration: 0.5, ease: "quart.inOut"}, 0.3
+  );
+
+  // 🟡 State tracking
+  let isCollapsed = false;
+  let lastScroll = window.scrollY;
+
+  // 🟡 Scroll-triggered nav collapse/expand
+  ScrollTrigger.create({
+    start: 0,
+    onUpdate: self => {
+      const currentScroll = self.scroll();
+      const scrollingDown = currentScroll > lastScroll;
+      if (scrollingDown && !isCollapsed) {
+        // Collapse nav (scroll down)
+        tlLogo.play();
+        tlMenu.play();
+        isCollapsed = true;
+      } else if (!scrollingDown && isCollapsed) {
+        // Expand nav (scroll up)
+        tlLogo.reverse();
+        tlMenu.reverse();
+        isCollapsed = false;
+      }
+      lastScroll = currentScroll;
+    }
+  });
+
+  // 🟡 Hover effect on .nav-logo (only when collapsed)
+  const navLogo = document.querySelector(".k-logo");
+
+  navLogo.addEventListener("mouseenter", () => {
+    if (isCollapsed) tlLogo.reverse();
+  });
+
+  navLogo.addEventListener("mouseleave", () => {
+    if (isCollapsed) tlLogo.play();
+  });
+
+  const circle = document.querySelector('.scroll-indicator__circle');
+  const radius = circle.r.baseVal.value;
+  const circumference = 2 * Math.PI * radius;
+
+  // setup dash
+  circle.style.strokeDasharray = `${circumference} ${circumference}`;
+  circle.style.strokeDashoffset = circumference; // start empty
+
+  gsap.to(circle, {
+    strokeDashoffset: 0,
+    ease: "none",
+    scrollTrigger: {
+      trigger: "body",
+      start: "top top",
+      end: "bottom bottom",
+      scrub: true
+    }
+  });  
+  }
+
+  if (window.innerWidth < 803) {
+    // Menu Mobile
+    document.querySelector('.k-nav-menu-button').addEventListener('click', () => {
+      const menu = document.querySelector('.k-menu');
+      const hamIcon = document.querySelector('.k-menu-ham-icon');
+      const hamText = document.querySelector('.k-menu-ham-text');
+
+      menu.classList.toggle('on');
+      hamIcon.classList.toggle('hide');
+
+      hamText.textContent = hamText.textContent.trim() === "Menu" ? "Close" : "Menu";
+    });
+
   }
 }
 
-// ==== imports from mediabunny ====
-import { EncodedPacketSink, Input, ALL_FORMATS, UrlSource } from "https://cdn.jsdelivr.net/npm/mediabunny@1.24.2/+esm";
-
-// ==== FrameDecoder ====
-const BUFFER_RANGE = 1_000_000;
-const FORWARD_THRESHOLD_RANGE = 200_000;
-const BACKWARD_THRESHOLD_RANGE = 300_000;
-const BACKWARD_BUFFER_INTERSECT = 8;
-
-export class FrameDecoder {
-  constructor() {
-    this.encodedChunks = [];
-    this.frameBuffer = new Map();
-    this.decoderQueue = new Map();
-    this.decoder = null;
-
-    this.forwardIndex = null;
-    this.backwardIndex = null;
-
-    this.duration = 0;
-    this.onError = null;
-    this.seekQueue = [];
-    this.seeking = false;
-
-    this.currentTimestamp = 0;
-    this.loading = false;
-
-    this.canvas = null;
-    this.ctx = null;
-    this.lastDrawnTimestamp = null;
+export function initializeLenis() {
+  if (window.innerWidth >= 803) {
+  const lenis = new Lenis({
+    useStrict: true,
+  });
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add((time) => { lenis.raf(time * 1500); });
+  gsap.ticker.lagSmoothing(0);
   }
+}
 
-  drawFrame(ctx, width, height) {
-    if (!this.canvas || !this.ctx) return;
-    let minDiff = Infinity;
-    let bestFrame = null;
+export function visualUtility() {
+  svgCutouts();
 
-    for (const [timestamp, frame] of this.frameBuffer) {
-      const diff = Math.abs(timestamp - this.currentTimestamp);
-      if (diff < minDiff) {
-        minDiff = diff;
-        bestFrame = frame;
-      }
-    }
+  //if (window.innerWidth >= 803) {
+  spriteNoiseMask();
+  //} 
 
-    if (bestFrame && bestFrame.timestamp !== this.lastDrawnTimestamp) {
-      this.ctx.drawImage(bestFrame, 0, 0, bestFrame.codedWidth, bestFrame.codedHeight);
-      this.lastDrawnTimestamp = bestFrame.timestamp;
-    }
-
-    ctx.drawImage(this.canvas, 0, 0, width, height);
-  }
-
-  findClosestChunkIndex(timestamp) {
-    let minDiff = Infinity;
-    let bestIndex = 0;
-    for (let i = 0; i < this.encodedChunks.length; i++) {
-      const diff = Math.abs(timestamp - this.encodedChunks[i].timestamp);
-      if (diff < minDiff) {
-        minDiff = diff;
-        bestIndex = i;
-      }
-    }
-    return bestIndex;
-  }
-
-  findClosestKeyFrameIndex(timestamp) {
-    const index = this.findClosestChunkIndex(timestamp);
-    for (let i = index; i >= 0; i--) {
-      if (this.encodedChunks[i].type === "key") return i;
-    }
-    return 0;
-  }
-
-  seek(fraction) {
-    if (this.frameBuffer.size === 0) return;
-    this.seekQueue.push(fraction);
-    if (!this.seeking) this.processQueue();
-  }
-
-  async processQueue() {
+  setTimeout(function() {
     try {
-      this.seeking = true;
-      while (this.seekQueue.length > 0) {
-        const fraction = this.seekQueue.length > 3
-          ? this.seekQueue.pop()
-          : this.seekQueue.shift();
-        if (fraction === undefined) continue;
-        if (this.seekQueue.length > 3) this.seekQueue = [];
-        await this.dequeueSeek(fraction);
-      }
-    } finally {
-      this.seeking = false;
-    }
-  }
-
-  async dequeueSeek(fraction) {
-    const nextTimestamp = Math.floor(this.duration * Math.max(0, Math.min(1, fraction)));
-    const prevTimestamp = this.currentTimestamp;
-    const timestamps = [...this.frameBuffer.keys(), ...this.decoderQueue.keys()];
-    
-    const upperBound = Math.max(...timestamps);
-    const lowerBound = Math.min(...timestamps);
-    const outOfBounds = nextTimestamp < lowerBound || nextTimestamp > upperBound + BUFFER_RANGE / 2;
-    const lowerBoundDiff = nextTimestamp - lowerBound;
-    const upperBoundDiff = upperBound - nextTimestamp;
-    
-    let startIndex = null;
-    let endIndex = null;
-    const promises = [];
-
-    if (outOfBounds) {
-      endIndex = this.findClosestChunkIndex(nextTimestamp + BUFFER_RANGE);
-      startIndex = this.findClosestKeyFrameIndex(nextTimestamp - BUFFER_RANGE);
-      this.decodeChunks(startIndex, endIndex);
-
-      if (this.forwardIndex !== null) {
-        this.forwardIndex = endIndex;
-        this.backwardIndex = null;
-      } else if (this.backwardIndex !== null) {
-        this.backwardIndex = startIndex;
-        this.forwardIndex = null;
-      }
-
-      const closestChunkIndex = this.findClosestChunkIndex(nextTimestamp);
-      const closestChunk = this.encodedChunks[closestChunkIndex];
-      promises.push(this.decoderQueue.get(closestChunk.timestamp)?.promise);
-
-    } else if (nextTimestamp < prevTimestamp && lowerBoundDiff < BACKWARD_THRESHOLD_RANGE && lowerBound > 0) {
-
-      this.forwardIndex = null;
-      startIndex = this.findClosestKeyFrameIndex(nextTimestamp - BUFFER_RANGE);
-
-      if (this.backwardIndex === null) {
-        endIndex = this.findClosestChunkIndex(upperBound) + BACKWARD_BUFFER_INTERSECT;
+      const badge = document.querySelector(".w-webflow-badge");
+      if (badge) {
+        badge.remove();
+        console.log("Element removed successfully.");
       } else {
-        endIndex = this.backwardIndex + BACKWARD_BUFFER_INTERSECT;
+        console.log("Element not found.");
       }
-
-      if (endIndex !== startIndex + BACKWARD_BUFFER_INTERSECT) {
-        this.decodeChunks(startIndex, endIndex);
-        this.backwardIndex = startIndex;
-        promises.push(this.decoderQueue.get(this.encodedChunks[startIndex].timestamp)?.promise);
-      }
-
-    } else if (nextTimestamp > prevTimestamp && upperBoundDiff < FORWARD_THRESHOLD_RANGE && upperBound < this.duration) {
-
-      this.backwardIndex = null;
-      endIndex = this.findClosestChunkIndex(nextTimestamp + BUFFER_RANGE);
-
-      startIndex = this.forwardIndex === null
-        ? this.findClosestKeyFrameIndex(lowerBound)
-        : this.forwardIndex + 1;
-
-      this.decodeChunks(startIndex, endIndex);
-      this.forwardIndex = endIndex;
-
-      const firstChunk = this.encodedChunks[startIndex];
-      if (firstChunk && this.decoderQueue.has(firstChunk.timestamp)) {
-        await this.decoderQueue.get(firstChunk.timestamp)?.promise;
-      }
-
-      if (endIndex === this.encodedChunks.length - 1) {
-        promises.push(this.decoder.flush());
-      }
+    } catch (error) {
+      console.error("Error removing element:", error);
     }
+  }, 3000);
+  const strokeButtons = document.querySelectorAll('.k-stroke-button');
 
-    await Promise.all(promises);
-    this.currentTimestamp = nextTimestamp;
-  }
+  strokeButtons.forEach(button => {
 
-  decodeChunks(startIndex, endIndex) {
-    for (let i = startIndex; i <= endIndex; i++) {
-      this.decodeChunkAt(i);
-    }
-  }
-
-  decodeChunkAt(index) {
-    index = Math.min(Math.max(0, index), this.encodedChunks.length - 1);
-    const chunk = this.encodedChunks[index];
-
-    const promiseObj = {};
-    promiseObj.promise = new Promise(res => promiseObj.resolve = res);
-
-    this.decoderQueue.set(chunk.timestamp, promiseObj);
-    this.decoder.decode(chunk);
-  }
-
-  destroy() {
-    this.frameBuffer.forEach(f => f.close());
-    this.frameBuffer.clear();
-    this.encodedChunks = [];
-    this.decoderQueue.clear();
-    this.decoder.close();
-    this.decoder = null;
-    this.forwardIndex = 0;
-    this.backwardIndex = null;
-    this.lastDrawnTimestamp = null;
-  }
-
-  frameCallback(frame) {
-    const p = this.decoderQueue.get(frame.timestamp);
-    if (p) p.resolve();
-    this.decoderQueue.delete(frame.timestamp);
-
-    const lowerBound = this.currentTimestamp - BUFFER_RANGE;
-    const upperBound = this.currentTimestamp + BUFFER_RANGE;
-
-    for (const f of this.frameBuffer.values()) {
-      if (f.timestamp <= lowerBound || f.timestamp > upperBound) {
-        this.frameBuffer.delete(f.timestamp);
-        f.close();
-      }
-    }
-
-    if (!this.frameBuffer.has(frame.timestamp)) {
-      this.frameBuffer.set(frame.timestamp, frame);
-    } else {
-      frame.close();
-    }
-  }
-
-  async init(url) {
-    if (this.loading) return;
-    this.loading = true;
-
-    const decoder = new VideoDecoder({
-      output: this.frameCallback.bind(this),
-      error: console.error
+    button.addEventListener('mouseenter', () => {
+      gsap.to(button, { color: "var(--saffron-3)", duration: 0.3});
+      gsap.to(button.querySelectorAll('.k-stroke-cta-content'), { y: '-100%', duration: 0.7, ease: "expo.out"});
     });
 
-    const input = new Input({
-      source: new UrlSource(url),
-      formats: ALL_FORMATS
+    button.addEventListener('mouseleave', () => {
+      gsap.to(button, { color: "", duration: 0.3});
+      gsap.to(button.querySelectorAll('.k-stroke-cta-content'), { y: '0%', duration: 0.7,  ease: "expo.out" });
+    });
     });
 
-    const videoTrack = await input.getPrimaryVideoTrack();
-    assert(videoTrack, "No video track found");
+    const solidButtons = document.querySelectorAll('.k-solid-button');
 
-    this.canvas = new OffscreenCanvas(videoTrack.codedWidth, videoTrack.codedHeight);
-    this.ctx = this.canvas.getContext("2d");
+    solidButtons.forEach(button => {
+      const icons = button.querySelectorAll('.k-solid-button-icon');
+      const text = button.querySelector('.k-solid-button-text');
+    
+      button.addEventListener('mouseenter', () => {
+        gsap.to(icons[0], { scale: 1, duration: 0.5,  ease: "expo.out" });
+        gsap.to(icons[1], { scale: 0, duration: 0.5,  ease: "expo.out" });
+        gsap.to(text, { x: "0.6rem", duration: 0.5,  ease: "expo.out" });
+      });
+    
+      button.addEventListener('mouseleave', () => {
+        gsap.to(icons[0], { scale: 0, duration: 0.5,  ease: "expo.out" });
+        gsap.to(icons[1], { scale: 1, duration: 0.5,  ease: "expo.out" });
+        gsap.to(text, { x: "0rem", duration: 0.5,  ease: "expo.out" });
+      });
+    });
 
-    this.duration = Math.floor((await videoTrack.computeDuration()) * 1_000_000);
-
-    const config = await videoTrack.getDecoderConfig();
-    assert(config, "No decoder config found");
-    decoder.configure(config);
-
-    this.decoder = decoder;
-    this.encodedChunks = [];
-    this.forwardIndex = 0;
-    this.backwardIndex = null;
-
-    const sink = new EncodedPacketSink(videoTrack);
-
-    //loader values
-    let totalPackets = 0;
-    const preloaderProgress = document.querySelector('.k-preloader-progress');
-    preloaderProgress.style.transition = "transform 0.2s ease-out";
-
-    for await (const packet of sink.packets()) {
-      const chunk = packet.toEncodedVideoChunk();
-      this.encodedChunks.push(chunk);
-      
-      // loader logic
-      totalPackets++;
-      const progress = totalPackets / 931 * 100;
-      preloaderProgress.style.transform = `scaleX(${progress / 50})`;
-      //console.log(progress);
-
-      if(parseInt(progress) == 50){
-        setTimeout(() => {
-            document.querySelector('.k-preloader-progress-track').classList.add('hide');
-        }, 250);
-        setTimeout(() => {
-            document.querySelector('.k-preloader .k-stroke-button').classList.remove('hide');
-        }, 1000);
-      }
-
-      if (chunk.timestamp <= BUFFER_RANGE) {
-        this.decodeChunkAt(this.forwardIndex);
-        this.forwardIndex++;
-      }
-    }
-
-    this.loading = false;
-  }
 }
