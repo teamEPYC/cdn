@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ICS Creator//AEKA 2026 Save the Date//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:aeka-2026-save-the-date-20251215T132158Z@icscreator
+DTSTAMP:20251215T132158Z
+SUMMARY:AEKA 2026: Save the Date
+DTSTART;VALUE=DATE:20260530
+DTEND;VALUE=DATE:20260601
+LOCATION:The Ritz-Carlton\, Half Moon Bay\, 1 Miramontes Point Rd\, Half Moon Bay\, CA 94019\, USA
+DESCRIPTION:Thank you for confirming your availability for AEKA 2026. Formal agenda and timings to follow in the coming weeks.
+END:VEVENT
+END:VCALENDAR
