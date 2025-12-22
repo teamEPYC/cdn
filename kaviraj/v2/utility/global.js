@@ -44,13 +44,15 @@ export function navigation() {
       defaults: { ease: "expo.out", duration: 1.5 }
     });
 
-    menuTl.to(".k-menu", {display: "block", duration: 0})
+    menuTl
+    .to(".k-menu", {display: "block", duration: 0})
+    .fromTo(".k-menu", {filter: "blur(0px)", opacity: 0}, {filter: "blur(0px)", opacity: 1, duration: 1})
     .to(".k-menu[data-sprite]", { 
       onUpdate() {
         const el = this.targets()[0];
         el._spriteSetProgress?.(this.progress());
-      }, ease: "expo.out", duration: 1.5
-    });
+      }, duration: 1
+    }, "<-=0.2");
 
     // toggle state
     let open = false;
@@ -157,12 +159,16 @@ export function navigation() {
 
 export function initializeLenis() {
   if (window.innerWidth >= 803) {
-  const lenis = new Lenis({
-    useStrict: true,
-  });
-  lenis.on("scroll", ScrollTrigger.update);
-  gsap.ticker.add((time) => { lenis.raf(time * 1500); });
-  gsap.ticker.lagSmoothing(0);
+    window.lenis = new Lenis({
+      useStrict: true,
+      prevent: (node) =>
+      node.classList.contains("company-card-lay-front-content") ||
+      node.classList.contains("ka-timeline-scroll") ||
+      node.closest(".company-card-lay-front-content, .ka-timeline-scroll")
+    });
+    window.lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add((time) => { window.lenis.raf(time * 1500); });
+    gsap.ticker.lagSmoothing(0);
   }
 }
 
@@ -186,6 +192,7 @@ export function visualUtility() {
       console.error("Error removing element:", error);
     }
   }, 3000);
+
   const strokeButtons = document.querySelectorAll('.k-stroke-button');
 
   strokeButtons.forEach(button => {
