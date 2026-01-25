@@ -293,7 +293,13 @@ window.addEventListener('load', async () => {
     if (window.innerWidth < 803) {
       document.querySelector('.k-menu').removeAttribute('data-sprite');
       document.querySelector('.image-sequence').removeAttribute('data-sprite');
-      document.querySelector('.k-background').setAttribute('data-sprite-url', 'https://cdn.prod.website-files.com/6904a418739bb0c76ab91cce/6915dd814981776bd91c2471_spritesheet_mobile.png'); 
+      const el = document.querySelector(".k-background");
+      if (el) {
+        el.removeAttribute("data-sprite");
+        el.removeAttribute("data-sprite-url");
+        el.removeAttribute("data-cols");
+        el.removeAttribute("data-row");
+      }
     }
 
     visualUtility();
