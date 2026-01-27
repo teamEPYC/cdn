@@ -110,6 +110,8 @@ function mainCode() {
       el.style.willChange = "transform, opacity, filter";
     });
 
+    document.querySelector(".k-background").style.willChange = "transform";
+
     const valuesTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: ".k-values",
@@ -147,7 +149,7 @@ function mainCode() {
     .to(video, 
         {duration: 10.35, ease: "none", currentTime: video.duration}, "2")
     .to(".k-background",
-       {duration: 2.23, scale: 1.2, y: "-10%"}, "-=2.23")
+       {duration: 2.23, scale: 1.2, y: "-10%", ease: "none"}, "-=2.23")
     .to(".lake",
        {opacity: 1, duration: 0.1})
     .fromTo(".k-cta-content-block",
@@ -293,13 +295,6 @@ window.addEventListener('load', async () => {
     if (window.innerWidth < 803) {
       document.querySelector('.k-menu').removeAttribute('data-sprite');
       document.querySelector('.image-sequence').removeAttribute('data-sprite');
-      const el = document.querySelector(".k-background");
-      if (el) {
-        el.removeAttribute("data-sprite");
-        el.removeAttribute("data-sprite-url");
-        el.removeAttribute("data-cols");
-        el.removeAttribute("data-row");
-      }
     }
 
     visualUtility();
@@ -311,4 +306,6 @@ window.addEventListener('load', async () => {
     navigation();
 
 });
+
+
 
