@@ -1,4 +1,6 @@
-        const config = {
+if (window.innerWidth >= 803) {
+
+const config = {
             simRes: 1024,         // Resolution of the fluid simulation
             dyeSize: 0.014,      // Brush size
             dissipation: 0.99,  // Drying speed
@@ -442,3 +444,5 @@
 
         // Start the loading process
         window.onload = loadTexturesAndInit;
+
+    }
