@@ -106,137 +106,137 @@ function mainCode() {
 
 
     //[START] VALUES [START]//
+        // keep as-is
+    document
+      .querySelectorAll(
+        ".k-value-intro-text, .k-value-intro-text, .k-cta-headline div, .k-cta-subtext div"
+      )
+      .forEach((el) => {
+        el.style.willChange = "transform, opacity, filter";
+      });
+    
+    // keep as-is (inject video)
+    (() => {
+      const target = document.querySelector(".image-sequence");
+      if (!target) return;
+    
+      // Prevent duplicate injection
+      if (document.getElementById("v0")) return;
+    
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = `
+        <video id="v0" muted playsinline preload="auto">
+          <source src="https://teamepyc.github.io/cdn/kaviraj/v2/videos/hallway1440p.mp4" type="video/mp4">
+        </video>
+      `;
+    
+      target.appendChild(wrapper.firstElementChild);
+    })();
+    
     // keep as-is
-document
-  .querySelectorAll(
-    ".k-value-intro-text, .k-value-intro-text, .k-cta-headline div, .k-cta-subtext div"
-  )
-  .forEach((el) => {
-    el.style.willChange = "transform, opacity, filter";
-  });
-
-// keep as-is (inject video)
-(() => {
-  const target = document.querySelector(".image-sequence");
-  if (!target) return;
-
-  // Prevent duplicate injection
-  if (document.getElementById("v0")) return;
-
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = `
-    <video id="v0" muted playsinline preload="auto">
-      <source src="https://teamepyc.github.io/cdn/kaviraj/v2/videos/hallway1440p.mp4" type="video/mp4">
-    </video>
-  `;
-
-  target.appendChild(wrapper.firstElementChild);
-})();
-
-// keep as-is
-document.querySelector(".k-background").style.willChange = "transform";
-
-// ✅ FIX: build your EXACT same timeline only after video metadata is ready
-(() => {
-  const video = document.querySelector("#v0");
-  if (!video) return;
-
-  const init = () => {
-    // your original code starts here (not changed)
-    const valuesTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".k-values",
-        start: "top bottom",
-        end: "bottom bottom",
-        scrub: true
-      }
-    });
-
-    const kValueIntroText = new SplitText(document.querySelector(".k-value-intro-text"), { type: "chars" });
-    const kValueOutroText = new SplitText(document.querySelector(".k-value-outro-text"), { type: "chars" });
-
-    valuesTimeline
-      .to(".image-sequence[data-sprite]",
-        {
-          ease: "none",
-          duration: 2,
-          onUpdate() {
-            const el = this.targets()[0];
-            el._spriteSetProgress?.(this.progress());
+    document.querySelector(".k-background").style.willChange = "transform";
+    
+    // ✅ FIX: build your EXACT same timeline only after video metadata is ready
+    (() => {
+      const video = document.querySelector("#v0");
+      if (!video) return;
+    
+      const init = () => {
+        // your original code starts here (not changed)
+        const valuesTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".k-values",
+            start: "top bottom",
+            end: "bottom bottom",
+            scrub: true
           }
-        }
-      )
-      .fromTo(
-        kValueIntroText.chars,
-        { filter: "blur(10px)", scale: 1.5, opacity: 0 },
-        { filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.02, duration: 0.5, ease: "power1.out" },
-        "<+=0.5"
-      )
-      .to(
-        [kValueIntroText.chars],
-        { filter: "blur(10px)", scale: 1, opacity: 0, duration: 0.5, stagger: 0.02 }
-      )
-      .fromTo(
-        ".image-sequence",
-        { filter: "contrast(80%)" },
-        { filter: "contrast(100%)", duration: 0.5 },
-        "<"
-      )
-      .fromTo(
-        kValueOutroText.chars,
-        { filter: "blur(10px)", scale: 1.5, opacity: 0 },
-        { filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.01, duration: 0.5, ease: "power1.out" },
-        "8.9"
-      )
-      .fromTo(
-        ".image-sequence",
-        { filter: "contrast(100%)" },
-        { filter: "contrast(80%)", duration: 0.5 },
-        "<-=1"
-      )
-      .to(
-        [kValueOutroText.chars],
-        { filter: "blur(10px)", scale: 1, opacity: 0, duration: 0.4, stagger: 0.01 },
-        "+=0.2"
-      )
-      .fromTo(
-        ".image-sequence",
-        { filter: "contrast(80%)" },
-        { filter: "contrast(100%)", duration: 0.5 },
-        "<"
-      )
-      .to(
-        video,
-        { duration: 10.35, ease: "none", currentTime: video.duration },
-        "2"
-      )
-      .to(
-        ".k-background",
-        { duration: 2.23, scale: 1.2, y: "-10%", ease: "none" },
-        "-=2.23"
-      )
-      .to(".lake", { opacity: 1, duration: 0.1 })
-      .fromTo(
-        ".k-cta-content-block",
-        { opacity: 0 },
-        { opacity: 1, duration: 0.5 },
-        "-=0.5"
-      );
-
-    // helps ScrollTrigger recalc after video injection + SplitText DOM changes
-    if (window.ScrollTrigger) ScrollTrigger.refresh();
-    // your original code ends here (not changed)
-  };
-
-  // wait for metadata so video.duration is valid
-  if (video.readyState >= 1 && Number.isFinite(video.duration) && video.duration > 0) {
-    init();
-  } else {
-    video.addEventListener("loadedmetadata", init, { once: true });
-    video.load();
-  }
-})();
-
+        });
+      
+        const kValueIntroText = new SplitText(document.querySelector(".k-value-intro-text"), { type: "chars" });
+        const kValueOutroText = new SplitText(document.querySelector(".k-value-outro-text"), { type: "chars" });
+      
+        valuesTimeline
+          .to(".image-sequence[data-sprite]",
+            {
+              ease: "none",
+              duration: 2,
+              onUpdate() {
+                const el = this.targets()[0];
+                el._spriteSetProgress?.(this.progress());
+              }
+            }
+          )
+          .fromTo(
+            kValueIntroText.chars,
+            { filter: "blur(10px)", scale: 1.5, opacity: 0 },
+            { filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.02, duration: 0.5, ease: "power1.out" },
+            "<+=0.5"
+          )
+          .to(
+            [kValueIntroText.chars],
+            { filter: "blur(10px)", scale: 1, opacity: 0, duration: 0.5, stagger: 0.02 }
+          )
+          .fromTo(
+            ".image-sequence",
+            { filter: "contrast(80%)" },
+            { filter: "contrast(100%)", duration: 0.5 },
+            "<"
+          )
+          .fromTo(
+            kValueOutroText.chars,
+            { filter: "blur(10px)", scale: 1.5, opacity: 0 },
+            { filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.01, duration: 0.5, ease: "power1.out" },
+            "8.9"
+          )
+          .fromTo(
+            ".image-sequence",
+            { filter: "contrast(100%)" },
+            { filter: "contrast(80%)", duration: 0.5 },
+            "<-=1"
+          )
+          .to(
+            [kValueOutroText.chars],
+            { filter: "blur(10px)", scale: 1, opacity: 0, duration: 0.4, stagger: 0.01 },
+            "+=0.2"
+          )
+          .fromTo(
+            ".image-sequence",
+            { filter: "contrast(80%)" },
+            { filter: "contrast(100%)", duration: 0.5 },
+            "<"
+          )
+          .to(
+            video,
+            { duration: 10.35, ease: "none", currentTime: video.duration },
+            "2"
+          )
+          .to(
+            ".k-background",
+            { duration: 2.23, scale: 1.2, y: "-10%", ease: "none" },
+            "-=2.23"
+          )
+          .to(".lake", { opacity: 1, duration: 0.1 })
+          .fromTo(
+            ".k-cta-content-block",
+            { opacity: 0 },
+            { opacity: 1, duration: 0.5 },
+            "-=0.5"
+          );
+        
+        // helps ScrollTrigger recalc after video injection + SplitText DOM changes
+        if (window.ScrollTrigger) ScrollTrigger.refresh();
+        // your original code ends here (not changed)
+      };
+    
+      // wait for metadata so video.duration is valid
+      if (video.readyState >= 1 && Number.isFinite(video.duration) && video.duration > 0) {
+        init();
+      } else {
+        video.addEventListener("loadedmetadata", init, { once: true });
+        video.load();
+      }
+    })();
+    
     //[END] VALUES [END]//
 
 
@@ -338,24 +338,24 @@ document.querySelector(".k-background").style.willChange = "transform";
       .to(".k-background[data-sprite]", 
           {ease: "none", duration: 4, onUpdate() {const el = this.targets()[0]; el._spriteSetProgress?.(this.progress());}})
       .fromTo(kValueIntroText.chars, 
-          {filter: "blur(5px)", scale: 1.5, opacity: 0},
-          {filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.02, duration: 0.5, ease: "power1.out"}, "<+=2.3")
+          {opacity: 0},
+          {opacity: 1, stagger: 0.02, duration: 0.5, ease: "power1.out"}, "<+=2.3")
       .to([kValueIntroText.chars], 
-          {filter: "blur(5px)", scale: 1, opacity: 0, duration: 0.5, stagger: 0.02}, "+=1")
+          {opacity: 0, duration: 0.5, stagger: 0.02}, "+=1")
       .fromTo(".k-background", 
-          {filter: "contrast(80%)"},
-          {filter: "contrast(100%)", duration: 0.5}, "<")
+          {y: 0},
+          {y: 0, duration: 0.5}, "<")
       .fromTo(kValueOutroText.chars, 
-          {filter: "blur(5px)", scale: 1.5, opacity: 0},
-          {filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.01, duration: 0.5, ease: "power1.out"}, "+=14")
+          {opacity: 0},
+          {opacity: 1, stagger: 0.01, duration: 0.5, ease: "power1.out"}, "+=14")
       .fromTo(".k-background", 
-          {filter: "contrast(100%)"},
-          {filter: "contrast(80%)", duration: 0.5}, "<-=1")
+          {y: 0},
+          {y: 0, duration: 0.5}, "<-=1")
       .to([kValueOutroText.chars], 
-          {filter: "blur(5px)", scale: 1, opacity: 0, duration: 0.4, stagger: 0.01}, "+=1")
+          {scale: 1, opacity: 0, duration: 0.4, stagger: 0.01}, "+=1")
       .fromTo(".k-background", 
-          {filter: "contrast(80%)"},
-          {filter: "contrast(100%)", duration: 0.5}, "<")
+          {y:0 },
+          {y: 0, duration: 0.5}, "<")
       .to({}, {
           duration: 5,
           onUpdate(){ {
@@ -379,8 +379,10 @@ window.addEventListener('load', async () => {
     }
 
     if (window.innerWidth < 803) {
+      //document.querySelector('.k-background').removeAttribute('data-sprite');
       document.querySelector('.k-menu').removeAttribute('data-sprite');
       document.querySelector('.image-sequence').removeAttribute('data-sprite');
+      document.querySelector('.k-background').setAttribute('data-sprite-url', 'https://cdn.prod.website-files.com/6904a418739bb0c76ab91cce/6915dd814981776bd91c2471_spritesheet_mobile.png'); 
     }
 
     visualUtility();
@@ -393,6 +395,3 @@ window.addEventListener('load', async () => {
     navigation();
 
 });
-
-
-
