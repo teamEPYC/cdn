@@ -290,7 +290,10 @@ function mainCode() {
 
 window.addEventListener('load', async () => {
     gridResize();
-    initializeLenis();
+    
+    if (window.innerWidth > 803) {
+      initializeLenis();
+    }
 
     if (window.innerWidth < 803) {
       document.querySelector('.k-menu').removeAttribute('data-sprite');
