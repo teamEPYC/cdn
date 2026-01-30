@@ -160,11 +160,7 @@ export function navigation() {
 export function initializeLenis() {
   if (window.innerWidth >= 803) {
     window.lenis = new Lenis({
-      useStrict: true,
-      prevent: (node) =>
-      node.classList.contains("company-card-lay-front-content") ||
-      node.classList.contains("ka-timeline-scroll") ||
-      node.closest(".company-card-lay-front-content, .ka-timeline-scroll")
+      useStrict: true
     });
     window.lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((time) => { window.lenis.raf(time * 1500); });
