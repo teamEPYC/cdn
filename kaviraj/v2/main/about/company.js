@@ -69,6 +69,10 @@ cards.forEach((card) => {
       { scaleX: 0.491, scaleY: 0.486, xPercent: -25.4, yPercent: -25.7, rotateY: 0 },
       { scaleX: 1, scaleY: 1, xPercent: 0, yPercent: 0, rotateY: 180, duration: 1, ease: "power2.out", transformPerspective: 1000 }
     );
+
+    // reset scroll to top every open
+    cardOverBack.scrollTop = 0;
+    
   });
 });
 
