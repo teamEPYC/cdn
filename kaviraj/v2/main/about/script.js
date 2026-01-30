@@ -28,7 +28,6 @@ document.querySelectorAll(".ka-chapter-transition").forEach((section, i) => {
 });
 
 
-
 // All Timeline Will-Change
 document.querySelectorAll(".k-chapter-body, .k-chapter-lable").forEach(el => {
       el.style.willChange = "transform, opacity, filter";
@@ -101,7 +100,7 @@ document.querySelectorAll(".k-chapter-family-member-frame-parent").forEach((el) 
 
 document.querySelectorAll(".k-chapter-family-member-frame").forEach((el) => {
   gsap.fromTo(el,
-    {x: 20, opacity: 0, filter: "blur(10px)"},
+    {x: 0, opacity: 0, filter: "blur(10px)"},
     {x: 0, opacity: 1, filter: "blur(0px)", duration: 0.5, ease: "none",
       scrollTrigger: {trigger: el, start: "top 80%", end: "top 67%", scrub: true}
     }
