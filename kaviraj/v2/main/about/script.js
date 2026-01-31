@@ -15,7 +15,7 @@ document.querySelectorAll(".ka-chapter-transition").forEach((section, i) => {
   gsap.fromTo(".ka-background-frame-container", 
     {x: `${prev}`},
     {x: `${next}`,
-    ease: "none",
+    ease: "sine.inOut",
     scrollTrigger: {
       trigger: section,
       start: "40% bottom",
@@ -26,6 +26,8 @@ document.querySelectorAll(".ka-chapter-transition").forEach((section, i) => {
 
   gsap.set(".ka-background-frame-container", {x: "0vw"});
 });
+
+
 
 
 // All Timeline Will-Change
