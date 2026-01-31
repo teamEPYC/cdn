@@ -32,7 +32,7 @@
       scrollTrigger: {
         trigger: ".ka-timeline",
         start: "top 100%",
-        end: "top -50%",
+        end: "top 0%",
         scrub: true
       }
     });
@@ -42,14 +42,11 @@
       {scale: 0.9, filter: "blur(10px)", opacity: 0, duration: 0.5})
     .to(heroTextChars, 
       {scale: 0.9, filter: "blur(10px)", scale: 1, opacity: 0, duration: 4, stagger: 0.2}, "<")
-    .fromTo(introText1.chars,
+    .fromTo([introText1.chars, introText2.chars, introText3.chars], 
       {filter: "blur(10px)", scale: 1.5, opacity: 0},
-      {filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.2, duration: 4, ease: "power1.out"}, "+=20")
-    .fromTo([introText2.chars, introText3.chars], 
-      {filter: "blur(10px)", scale: 1.5, opacity: 0},
-      {filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.2, duration: 4, ease: "power1.out"})
-    .to([introText1.chars, introText2.chars, introText3.chars], 
-      {filter: "blur(10px)", scale: 1, opacity: 0, duration: 3, stagger: 0.1}, "+=4")
+      {filter: "blur(0px)", scale: 1, opacity: 1, stagger: 0.2, duration: 4, ease: "power1.out"}, "+=25")
+    //.to([introText1.chars, introText2.chars, introText3.chars], 
+      //{filter: "blur(10px)", scale: 1, opacity: 0, duration: 3, stagger: 0.1}, "+=4")
     
     const Timeline2 = gsap.timeline({
       scrollTrigger: {
@@ -61,6 +58,29 @@
     });
 
     Timeline2.to(video,{ease: "none", currentTime: video.duration })
+
+
+    gsap.fromTo(".ka-background-video", 
+    {x: "0vw"},
+    {x: "-100vw",
+    ease: "sine.inOut",
+    scrollTrigger: {
+      trigger: ".ka-chapter-transition._0",
+      start: "40% bottom",
+      end: "160% bottom",
+      scrub: true,
+    }
+    });
+
+    gsap.to([introText1.chars, introText2.chars, introText3.chars], 
+    {filter: "blur(10px)", scale: 1, opacity: 0, duration: 3, stagger: 0.1, 
+    scrollTrigger: {
+      trigger: ".ka-chapter-transition._0",
+      start: "40% bottom",
+      end: "110% bottom",
+      scrub: true,
+    }
+    });
 
 
     if (window.ScrollTrigger) ScrollTrigger.refresh();
