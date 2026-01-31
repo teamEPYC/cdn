@@ -15,7 +15,7 @@ document.querySelectorAll(".ka-chapter-transition").forEach((section, i) => {
   gsap.fromTo(".ka-background-frame-container", 
     {x: `${prev}`},
     {x: `${next}`,
-    ease: "sine.inOut",
+    ease: "none",
     scrollTrigger: {
       trigger: section,
       start: "40% bottom",
