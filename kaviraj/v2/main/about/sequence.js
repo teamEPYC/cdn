@@ -57,13 +57,20 @@
       }
     });
 
-    Timeline2.to(video,{ease: "none", currentTime: video.duration })
+    Timeline2
+    .to(video,
+      {ease: "none", currentTime: video.duration, duration: 10 }
+    ).fromTo(".image-sequence-fader", 
+      {opacity: 0}, 
+      {opacity: 1}, "-=0.5"
+    )
+
 
 
     gsap.fromTo(".ka-background-video", 
     {x: "0vw"},
     {x: "-100vw",
-    ease: "none",
+    ease: "sine.inOut",
     scrollTrigger: {
       trigger: ".ka-chapter-transition._0",
       start: "40% bottom",
