@@ -1,3 +1,4 @@
+if (window.innerWidth >= 803) {
 (() => {
   const target = document.querySelector(".image-about-sequence");
   if (!target) return;
@@ -101,3 +102,5 @@
   }
 
 })();
+
+}
