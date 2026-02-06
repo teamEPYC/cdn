@@ -28,12 +28,27 @@ function colorModeToggle() {
   }
 
   let darkColors = {};
+
   cssVariables.split(",").forEach(function (item) {
-    let lightValue = computed.getPropertyValue(`--color--${item}`);
-    let darkValue = computed.getPropertyValue(`--dark--${item}`);
+    // Clean up the variable name - remove "var(" and ")" and trim whitespace
+    let cleanedItem = item
+      .trim()
+      .replace(/^var\(/, "")
+      .replace(/\)$/, "");
+
+    // Extract the variable name (e.g., "--polygon-v3---color--primary")
+    let lightVarName = cleanedItem;
+
+    // Create dark variable name by replacing "--color--" with "--dark--"
+    // Adjust this based on your actual CSS variable naming convention
+    let darkVarName = cleanedItem.replace("---color--", "---dark--");
+
+    let lightValue = computed.getPropertyValue(lightVarName);
+    let darkValue = computed.getPropertyValue(darkVarName);
+
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
-      darkColors[`--color--${item}`] = darkValue;
+      darkColors[lightVarName] = darkValue;
     }
   });
 
@@ -62,10 +77,9 @@ function colorModeToggle() {
     setColors(darkColors, false);
   }
 
-  // Force dark mode immediately - ignore user preferences
+  // Force dark mode immediately
   forceDarkMode();
 
-  // Also ensure dark mode is set after DOM is fully loaded
   window.addEventListener("DOMContentLoaded", (event) => {
     forceDarkMode();
   });
