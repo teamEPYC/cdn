@@ -1,26 +1,14 @@
 if (window.innerWidth >= 803) {
-(() => {
-  const target = document.querySelector(".image-about-sequence");
-  if (!target) return;
 
-  if (document.getElementById("v0")) return;
-
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = `
-    <video id="v0" muted playsinline preload="auto">
-      <source src="https://teamepyc.github.io/cdn/kaviraj/v2/videos/ffmpeg.mp4" type="video/mp4">
-    </video>
-  `;
-
-  target.appendChild(wrapper.firstElementChild);
-})();
-
-(() => {
-  const video = document.querySelector("#v0");
-  if (!video) return;
-
-  const init = () => {
-
+    const scrollyVideo = new ScrollyVideo({
+        scrollyVideoContainer: 'scrolly-video-container',
+        src: 'https://teamepyc.github.io/cdn/kaviraj/v2/videos/ffmpeg.mp4',
+        trackScroll: false, 
+        cover: true,
+        sticky: false,
+        full: true
+    });
+    
     // code comes here
     console.log("code comes here");
     const heroText = new SplitText(document.querySelector(".ka-hero-heading"), { type: "chars" });
@@ -59,8 +47,13 @@ if (window.innerWidth >= 803) {
     });
 
     Timeline2
-    .to(video,
-      {ease: "none", currentTime: video.duration, duration: 10 }
+    .to({},
+      {ease: "none", duration: 10, 
+        onUpdate(){ {
+            const f = this.progress();
+            scrollyVideo.setTargetTimePercent(f);
+        }}, 
+      }
     ).fromTo(".image-sequence-fader", 
       {opacity: 0}, 
       {opacity: 1}, "-=0.5"
@@ -92,15 +85,4 @@ if (window.innerWidth >= 803) {
 
 
     if (window.ScrollTrigger) ScrollTrigger.refresh();
-  };
-
-  if (video.readyState >= 1 && Number.isFinite(video.duration) && video.duration > 0) {
-    init();
-  } else {
-    video.addEventListener("loadedmetadata", init, { once: true });
-    video.load();
-  }
-
-})();
-
 }
