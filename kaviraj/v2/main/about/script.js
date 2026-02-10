@@ -140,7 +140,7 @@ gsap.set(".ka-teams", { marginTop: "-100vh" });
 gsap.fromTo(
   ".ka-teams-container",
   { x: "100vw" },
-  { x: "-270vw", ease: "none",
+  { x: "-220vw", ease: "none",
     scrollTrigger: {
       trigger: ".ka-team-scroller",
       start: "top bottom", 
