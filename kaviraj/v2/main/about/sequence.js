@@ -93,8 +93,8 @@ if (window.innerWidth >= 803) {
       {opacity: 0}, 
       {opacity: 1}, "-=0.5"
     )
-
-
+  
+    
 
     gsap.fromTo(".ka-background-video", 
     {x: "0vw"},
@@ -126,14 +126,14 @@ if (window.innerWidth >= 803) {
         gsap.to(".k-preloader[data-sprite]", 
           {ease: "none", duration: 2, 
             onUpdate() {const el = this.targets()[0]; el._spriteSetProgress?.((this.progress()));},
-            onComplete: () => {document.querySelector(".k-preloader")?.remove();}
+            onComplete: () => {document.querySelector(".k-preloader")?.remove(); gsap.set(".ka-background-frame-container", {x: "0vw"});}  
           }
         );
       }, 1000);
 
-    if (window.ScrollTrigger) ScrollTrigger.refresh();
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
   }
-  loadVideo(VIDEO_URL);
+  loadVideo(VIDEO_URL); 
 }
 
 
