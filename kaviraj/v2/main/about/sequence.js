@@ -126,7 +126,7 @@ if (window.innerWidth >= 803) {
         gsap.to(".k-preloader[data-sprite]", 
           {ease: "none", duration: 2, 
             onUpdate() {const el = this.targets()[0]; el._spriteSetProgress?.((this.progress()));},
-            //onComplete: () => {document.querySelector(".k-preloader")?.remove();}
+            onComplete: () => {document.querySelector(".k-preloader")?.remove();}
           }
         );
       }, 1000);
