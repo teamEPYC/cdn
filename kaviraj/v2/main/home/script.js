@@ -115,30 +115,66 @@ function mainCode() {
       });
     
     document.querySelector(".k-background").style.willChange = "transform";
-    
-    const scrollyVideo = new ScrollyVideo({
-        scrollyVideoContainer: 'scrolly-video-container',
-        src: 'https://teamepyc.github.io/cdn/kaviraj/v2/videos/hallway1440p.mp4',
-        trackScroll: false, 
-        cover: false,
-        sticky: false,
-        full: false,
-        frameThreshold: 0.005
-    });
 
-    const valuesTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".k-values",
-        start: "top bottom",
-        end: "bottom bottom",
-        scrub: true
-      }
-    });
-  
-    const kValueIntroText = new SplitText(document.querySelector(".k-value-intro-text"), { type: "chars" });
-    const kValueOutroText = new SplitText(document.querySelector(".k-value-outro-text"), { type: "chars" });
-  
-    valuesTimeline
+    const VIDEO_URL = 'https://teamepyc.github.io/cdn/kaviraj/v2/videos/hallway1440p.mp4';
+    const loaderFill = document.getElementById('loader-bar-fill');
+    const loaderText = document.getElementById('loader-text');
+
+    // Fetching Video
+    async function loadVideo(url) {
+        try {
+            const response = await fetch(url);
+            const reader = response.body.getReader();
+            const contentLength = +response.headers.get('Content-Length');
+            let receivedLength = 0;
+            let chunks = []; 
+            while(true) {
+                const {done, value} = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                receivedLength += value.length;
+                
+                // Update Loader UI
+                const progress = (receivedLength / contentLength) * 100;
+                loaderFill.style.width = `${progress}%`;
+                loaderText.innerText = `${Math.round(progress)}%`;
+            }
+            const blob = new Blob(chunks, { type: 'video/mp4' });
+            const blobUrl = URL.createObjectURL(blob);
+            initExperience(blobUrl);
+        } catch (error) {
+            console.error("Video load failed:", error);
+            // Fallback: hide loader anyway if something goes wrong
+            //loaderOverlay.style.display = 'none';
+            //lenis.start();
+        }
+    }
+    
+    //initialising after successful fetch
+    function initExperience(videoSource) {
+      const scrollyVideo = new ScrollyVideo({
+          scrollyVideoContainer: 'scrolly-video-container',
+          src: videoSource,
+          trackScroll: false, 
+          cover: false,
+          sticky: false,
+          full: false,
+          frameThreshold: 0.005
+      });
+
+      const valuesTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".k-values",
+          start: "top bottom",
+          end: "bottom bottom",
+          scrub: true
+        }
+      });
+    
+      const kValueIntroText = new SplitText(document.querySelector(".k-value-intro-text"), { type: "chars" });
+      const kValueOutroText = new SplitText(document.querySelector(".k-value-outro-text"), { type: "chars" });
+    
+      valuesTimeline
       .to(".image-sequence[data-sprite]",
         {
           ease: "none",
@@ -210,10 +246,17 @@ function mainCode() {
         { opacity: 1, duration: 0.5 },
         "-=0.5"
       );
-  
-    if (window.ScrollTrigger) ScrollTrigger.refresh();
 
-    
+      setTimeout(() => {
+        document.querySelector('.k-preloader-progress-track').classList.add('hide');
+      }, 250);
+      setTimeout(() => {
+        document.querySelector('.k-preloader .k-stroke-button').classList.remove('hide');
+      }, 1000);
+      
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
+    }
+    loadVideo(VIDEO_URL);
     //[END] VALUES [END]//
 
 
