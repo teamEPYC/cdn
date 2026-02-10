@@ -1,12 +1,47 @@
 if (window.innerWidth >= 803) {
 
+  const VIDEO_URL = 'https://teamepyc.github.io/cdn/kaviraj/v2/videos/ffmpeg.mp4';
+  const loaderFill = document.getElementById('loader-bar-fill');
+  const loaderText = document.getElementById('loader-text');
+
+  async function loadVideo(url) {
+    try {
+        const response = await fetch(url);
+        const reader = response.body.getReader();
+        const contentLength = +response.headers.get('Content-Length');
+        let receivedLength = 0;
+        let chunks = []; 
+        while(true) {
+            const {done, value} = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            receivedLength += value.length;
+            
+            // Update Loader UI
+            const progress = (receivedLength / contentLength) * 100;
+            loaderFill.style.width = `${progress}%`;
+            loaderText.innerText = `${Math.round(progress)}%`;
+        }
+        const blob = new Blob(chunks, { type: 'video/mp4' });
+        const blobUrl = URL.createObjectURL(blob);
+        initExperience(blobUrl);
+    } catch (error) {
+        console.error("Video load failed:", error);
+        // Fallback: hide loader anyway if something goes wrong
+        //loaderOverlay.style.display = 'none';
+        //lenis.start();
+    }
+  }
+
+  function initExperience(videoSource) {
     const scrollyVideo = new ScrollyVideo({
         scrollyVideoContainer: 'scrolly-video-container',
-        src: 'https://teamepyc.github.io/cdn/kaviraj/v2/videos/ffmpeg.mp4',
+        src: videoSource,
         trackScroll: false, 
         cover: true,
         sticky: false,
-        full: true
+        full: true,
+        frameThreshold: 0.005
     });
     
     // code comes here
@@ -83,6 +118,22 @@ if (window.innerWidth >= 803) {
     }
     });
 
+    setTimeout(() => {
+        document.querySelector('.k-preloader-progress-track').classList.add('hide');
+      }, 250);
+      setTimeout(() => {
+        //document.querySelector('.k-preloader .k-stroke-button').classList.remove('hide');
+        gsap.to(".k-preloader[data-sprite]", 
+          {ease: "none", duration: 2, 
+            onUpdate() {const el = this.targets()[0]; el._spriteSetProgress?.((this.progress()));},
+            //onComplete: () => {document.querySelector(".k-preloader")?.remove();}
+          }
+        );
+      }, 1000);
 
     if (window.ScrollTrigger) ScrollTrigger.refresh();
+  }
+  loadVideo(VIDEO_URL);
 }
+
+
