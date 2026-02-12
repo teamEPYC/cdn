@@ -73,7 +73,6 @@
             if (value && !checkbox.checked) {
               setTimeout(() => {
                 checkbox.click();
-                console.log("[+] Checkbox Clicked");
               }, 0);
             }
           } else if (field.type === "radio") {
@@ -89,7 +88,6 @@
         }
       });
       const customSelect = this.form.querySelectorAll('[fs-selectcustom-element="select"]');
-      console.log("[+] CUSTOM SELECT", customSelect);
       if (customSelect && window.FsAttributes && window.FsAttributes.selectcustom) {
         window.FsAttributes.selectcustom.destroy();
         window.FsAttributes.selectcustom.init();
@@ -207,9 +205,6 @@
       const requriedFields = currentStep.querySelectorAll(
         "[required]"
       );
-      console.log("====================================");
-      console.log("[+] FIELD FOR VALIDATION", fields, requriedFields);
-      console.log("====================================");
       const visibleFields = Array.from(fields).filter(this.isVisible);
       const visibleRequriedFields = Array.from(requriedFields).filter(this.isVisible);
       const finalMap = {};
@@ -224,7 +219,6 @@
         finalMap[fieldKeyName] = inputField;
       });
       const results = Array.from([...Object.values(finalMap)]);
-      console.log("[+] VISIBLE FIELD FOR VALIDATION", results);
       return results;
     }
     //
@@ -234,7 +228,6 @@
     addEventListenerToButtons(type, callback) {
       const buttonSelector = this.getButtonSelectorByType(type);
       if (!buttonSelector) {
-        console.error(`Unknown button type: "${type}"`);
         return;
       }
       this.form.querySelectorAll(buttonSelector).forEach((button) => {
@@ -244,7 +237,6 @@
     removeEventListenersFromButtons(type, callback) {
       const buttonSelector = this.getButtonSelectorByType(type);
       if (!buttonSelector) {
-        console.error(`Unknown button type: "${type}"`);
         return;
       }
       this.form.querySelectorAll(buttonSelector).forEach((button) => {
@@ -424,15 +416,12 @@
       this.clearFieldError(field);
       const errorContainer = this.getErrorContainer(field);
       const keyName = field.name || field.dataset.group || "";
-      console.log("[+] CHECKING ERROR FIELD", keyName);
       if (errorContainer && this.errors[keyName]) {
-        console.log("%c[+] SHOWING ERROR FIELD", "color:red", keyName);
         errorContainer.textContent = this.errors[keyName];
         errorContainer.style.display = "block";
       }
     }
     clearStepErrors() {
-      console.log("[+] Clearing Step Errors");
       const errorContainers = this.form.querySelectorAll(this.errorSelector);
       if (errorContainers && errorContainers.length > 0) {
         errorContainers.forEach((container) => {
@@ -443,7 +432,6 @@
     }
     clearFieldError(field) {
       const errorContainer = this.getErrorContainer(field);
-      console.log("[+] Clearing Error Field");
       if (errorContainer) {
         errorContainer.textContent = "";
         errorContainer.style.display = "none";
@@ -470,7 +458,6 @@
         const parent = field.closest(".onb-form-field-comp");
         element = parent?.querySelector(this.errorSelector);
       }
-      console.log("[+] ERROR CONTAINER", field.name || field.dataset.group, element);
       return element;
     }
   };
@@ -882,17 +869,13 @@
     const colorFn = source_default[colors[colorIndex]];
     return {
       log: (...args) => {
-        console.log(colorFn(`[${label}]`), ...args);
       },
       // If you like, add log variants like info, warn, error below
       info: (...args) => {
-        console.info(colorFn(`[${label} INFO]`), ...args);
       },
       warn: (...args) => {
-        console.warn(colorFn(`[${label} WARN]`), ...args);
       },
       error: (...args) => {
-        console.error(colorFn(`[${label} ERROR]`), ...args);
       }
     };
   }
@@ -2076,7 +2059,7 @@
       }, this.options = Object.assign(Object.assign(Object.assign({}, this.defaultOptions), e3), { authorizationParams: Object.assign(Object.assign({}, this.defaultOptions.authorizationParams), e3.authorizationParams) }), "undefined" != typeof window && (() => {
         if (!w()) throw new Error("For security reasons, `window.crypto` is required to run `auth0-spa-js`.");
         if (void 0 === w().subtle) throw new Error("\n      auth0-spa-js must run on a secure origin. See https://github.com/auth0/auth0-spa-js/blob/main/FAQ.md#why-do-i-get-auth0-spa-js-must-run-on-a-secure-origin for more information.\n    ");
-      })(), e3.cache && e3.cacheLocation && console.warn("Both `cache` and `cacheLocation` options have been specified in the Auth0Client configuration; ignoring `cacheLocation` and using `cache`."), e3.cache) i3 = e3.cache;
+      })(), e3.cache && e3.cacheLocation && void 0, e3.cache) i3 = e3.cache;
       else {
         if (t3 = e3.cacheLocation || "memory", !q(t3)) throw new Error(`Invalid cache location "${t3}"`);
         i3 = q(t3)();
@@ -2367,6 +2350,7 @@
       domain: ENV.AUTHO_DOMAIN,
       clientId: ENV.AUTHO_CLIENT_ID,
       cacheLocation: "localstorage",
+      useRefreshTokens: true,
       authorizationParams: {
         audience: `https://${ENV.AUTHO_DOMAIN}/api/v2/`,
         redirect_uri: ROUTES.POST_LOGIN,
@@ -2449,7 +2433,6 @@
       i3._log("error", ...t3);
     }, critical: function() {
       for (var t3 = arguments.length, i4 = new Array(t3), r3 = 0; r3 < t3; r3++) i4[r3] = arguments[r3];
-      console.error(e3, ...i4);
     }, uninitializedWarning: (e4) => {
       i3.error("You must initialize PostHog before calling ".concat(e4));
     }, createLogger: (t3) => N2("".concat(e3, " ").concat(t3)) };
@@ -6671,7 +6654,6 @@
     return ENV.isProduction ? "production" : "development";
   }
   var initPosthog = () => {
-    console.log("[+] Posthog - Enabled");
     yo.init("phc_KVCoqlB74IOeDIEbB3R1muP7XfmZTEi0G9WyfT1Y1av", {
       api_host: "https://ph-proxy.seedtoscale.com",
       person_profiles: "identified_only"
@@ -6711,7 +6693,6 @@
         ...getValuesFromUser(user)
       };
       yo.identify(userId, userOptions);
-      console.log("[+] Posthog - User Identified", userId);
     }
   };
   var captureExceptions = (error) => {
@@ -6986,9 +6967,6 @@
     }
     async render() {
       const imgUrl = this.getAttribute("src") || "";
-      console.log("Image URL:", imgUrl);
-      console.log("Image URL:", imgUrl);
-      console.log("Image URL:", imgUrl);
       const username = this.getAttribute("username") || "User";
       const initials = username.split(" ").map((n3) => n3[0]).join("").toUpperCase();
       const isValid = await this.imageExists(imgUrl);
@@ -7018,7 +6996,6 @@
     async imageExists(url) {
       try {
         const res = await fetch(url, { method: "HEAD" });
-        console.log("Image exists:", res.ok, url);
         return res.ok;
       } catch {
         return false;
@@ -7096,7 +7073,6 @@
           };
           this.showUserDetailsOnScreen(userData);
         } catch (error) {
-          console.error("UNABLE TO SHOW", error);
         }
       });
     }
@@ -7143,7 +7119,6 @@
         } else {
           element.innerHTML = finalString;
         }
-        console.log("[+] FINAL STRING", finalString);
       });
       this.handleDataShowIfCondition(user);
     }
@@ -7398,7 +7373,6 @@
           user = { ...user, ...details };
           logger5.log("getLocationDetails", user);
         } catch (error) {
-          console.log("[+] Error in fetching location details", error);
         }
         user = await User.getUserIfMetadataMissing(user);
       }
@@ -7459,7 +7433,6 @@
         element.addEventListener("click", (e3) => {
           e3.preventDefault();
           if (isProtectedContentRoute()) {
-            console.log("[+] writeArticleLinkForPostLogin");
             writeArticleLinkForPostLogin();
           }
           auth0Client.loginWithRedirect();
@@ -7500,7 +7473,6 @@
       this.cookieName = config.cookieName;
       this.delay = config.delay;
       if (!this.element) {
-        console.error("Nudge element not found.");
         return;
       }
       this.init();
@@ -7508,7 +7480,6 @@
     // Initialize the nudge behavior
     init() {
       if (this.getCookie(this.cookieName)) {
-        console.log("Nudge dismissed previously. It will not appear.");
         return;
       }
       setTimeout(() => {
@@ -7670,7 +7641,6 @@
   // src/content/phonenumber-input.js
   var run2 = () => {
     if (typeof window.intlTelInput === "undefined") {
-      console.log("[+] Error intlTelInput library is not loaded.");
       return;
     }
     const input = document.querySelector("#Whatsapp-Number");
