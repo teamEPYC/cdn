@@ -1,5 +1,4 @@
 import { gridResize, navigation, initializeLenis, visualUtility } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/global.js";
-import { FrameDecoder } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/decoder.js";
 
 
 function mainCode() {  
