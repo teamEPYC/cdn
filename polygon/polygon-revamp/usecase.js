@@ -8,7 +8,6 @@ function initMosaicEffect() {
     const pixelContainer = card.querySelector(".uc-grandient-bg");
     const buttonWrap = card.querySelector(".uc-button-wrap");
 
-    // Cleanup existing
     if (card._mosaicCleanup) {
       card._mosaicCleanup();
       card._mosaicCleanup = null;
@@ -48,6 +47,10 @@ function initMosaicEffect() {
     const shuffled = [...pixels].sort(() => Math.random() - 0.5);
 
     const onEnter = () => {
+      const isDark = document.documentElement.classList.contains("dark-mode");
+      const greyColor = isDark ? "#a0a1a6" : "#888a91";
+
+      gsap.killTweensOf(detailCard);
       gsap.to(detailCard, {
         duration: 0.3,
         opacity: 1,
@@ -60,11 +63,7 @@ function initMosaicEffect() {
         marginLeft: "auto",
         ease: "power1.out",
       });
-      gsap.to(heading, {
-        duration: 0.3,
-        color: "var(--swatch--grey-200-dark)",
-        ease: "power1.out",
-      });
+      gsap.to(heading, { duration: 0.3, color: greyColor, ease: "power1.out" });
       gsap.to(shuffled, {
         opacity: 1,
         duration: 0.05,
@@ -74,12 +73,13 @@ function initMosaicEffect() {
     };
 
     const onLeave = () => {
-      gsap.to(detailCard, {
-        duration: 0.3,
-        opacity: 0,
-        visibility: "hidden",
-        ease: "power1.in",
-      });
+      const isDark = document.documentElement.classList.contains("dark-mode");
+      const headingColor = isDark ? "white" : "#07060d";
+
+      gsap.killTweensOf(detailCard);
+      gsap.killTweensOf(shuffled);
+      gsap.set(detailCard, { opacity: 0, visibility: "hidden" });
+      gsap.set(shuffled, { opacity: 0 });
       gsap.to(headingWrap, {
         duration: 0.3,
         gap: "0.556vw",
@@ -92,14 +92,8 @@ function initMosaicEffect() {
       });
       gsap.to(heading, {
         duration: 0.3,
-        color: "var(--color--primary)",
+        color: headingColor,
         ease: "power1.in",
-      });
-      gsap.to(shuffled, {
-        opacity: 0,
-        duration: 0.05,
-        stagger: 0.01,
-        ease: "power2.in",
       });
     };
 
@@ -121,12 +115,32 @@ function initMosaicEffect() {
       card.removeEventListener("mouseenter", onEnter);
       card.removeEventListener("mouseleave", onLeave);
       card.removeEventListener("mousemove", onMove);
+      gsap.killTweensOf([
+        ...pixels,
+        detailCard,
+        headingWrap,
+        buttonWrap,
+        heading,
+      ]);
       pixels.forEach((p) => p.remove());
       pixelContainer.style.cssText = "";
     };
   });
 }
 
-// Init and re-init on resize
 initMosaicEffect();
-window.addEventListener("resize", initMosaicEffect);
+
+let resizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(initMosaicEffect, 200);
+});
+
+const themeObserver = new MutationObserver(() => {
+  initMosaicEffect();
+});
+
+themeObserver.observe(document.documentElement, {
+  attributes: true,
+  attributeFilter: ["class"],
+});
