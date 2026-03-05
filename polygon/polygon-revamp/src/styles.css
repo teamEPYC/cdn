@@ -1,0 +1,18 @@
+body {
+  font-family: sans-serif;
+}
+
+/* Show on hover */
+.nav-link:hover .p-icon {
+  display: block;
+}
+
+/* Show on first by default */
+.nav-link:first-child .p-icon {
+  display: block;
+}
+
+/* Hide first when hovering OTHER nav-links */
+.nav-menu:has(.nav-link:not(:first-child):hover) .nav-link:first-child .p-icon {
+  display: none;
+}
