@@ -1,6 +1,9 @@
 // gsap.registerPlugin(ScrambleTextPlugin);
 
 function setButtonWidths() {
+  // Only run on desktop/tablet
+  if (window.innerWidth <= 767) return;
+
   document.querySelectorAll(".btn").forEach((btn) => {
     const computedWidth = btn.getBoundingClientRect().width;
     const widthInVw = (computedWidth / window.innerWidth) * 100;
@@ -8,7 +11,10 @@ function setButtonWidths() {
   });
 }
 
-window.addEventListener("load", () => {
+function initScrambleEffect() {
+  // Only run on desktop/tablet
+  if (window.innerWidth <= 767) return;
+
   document
     .querySelectorAll(".btn, .slider-button, .footer-links-wrap a")
     .forEach((btn) => {
@@ -20,7 +26,8 @@ window.addEventListener("load", () => {
         btn.style.gridColumnGap = "0";
       }
 
-      btn.addEventListener("mouseenter", () => {
+      // Store handlers so we can remove them later if needed
+      const handleMouseEnter = () => {
         gsap.to(textEl, {
           duration: 0.6,
           scrambleText: {
@@ -29,14 +36,20 @@ window.addEventListener("load", () => {
             speed: 0.8,
           },
         });
-      });
+      };
 
-      btn.addEventListener("mouseleave", () => {
+      const handleMouseLeave = () => {
         gsap.killTweensOf(textEl);
         textEl.textContent = originalText;
-      });
-    });
+      };
 
+      btn.addEventListener("mouseenter", handleMouseEnter);
+      btn.addEventListener("mouseleave", handleMouseLeave);
+    });
+}
+
+window.addEventListener("load", () => {
+  initScrambleEffect();
   setButtonWidths();
 });
 
