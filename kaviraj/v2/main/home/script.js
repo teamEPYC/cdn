@@ -5,6 +5,7 @@ function mainCode() {
 
   // --- DESKTOP ---//
   if (window.innerWidth >= 803) {
+    window.lenis?.stop();
 
     //[START] LOAD SEQUENCE [START]//
     document.querySelectorAll(".k-hero, .k-hero-heading, .k-hero-subtext, .k-hero-cta").forEach(el => {
@@ -32,6 +33,8 @@ function mainCode() {
     ).fromTo(loaderPrelude.chars, 
       { opacity: 0, filter: "blur(10px)" },
       { opacity: 1, filter: "blur(0px)", duration: 1, ease: "power1.out", stagger: 0.1}
+    ).call(() => 
+      {window.lenis?.start(); window.lenis.scrollTo(0, { immediate: true });}
     ).fromTo(".k-preloader-prelude", 
       {opacity: 1}, 
       {opacity: 0, duration: 1}, "+=0.5"
@@ -60,7 +63,7 @@ function mainCode() {
       {y: "0rem", opacity: 1, duration: 0.5}, "-=1.5"
     ).fromTo(".k-hero-content-wrapper .k-solid-button:nth-child(6)",
       {y: "0.1rem", opacity: 0},
-      {y: "0rem", opacity: 1, duration: 0.5, onComplete: () => {console.log("loadDone")}}, "<+=0.5"
+      {y: "0rem", opacity: 1, duration: 0.5, onComplete: () => {console.log("loadDone"); heroOutro.scrollTrigger.enable(); ScrollTrigger.refresh();}}, "<+=0.5"
     )
 
     document.querySelector(".k-preloader .k-stroke-button")?.addEventListener("click", () => {
@@ -84,7 +87,7 @@ function mainCode() {
         trigger: ".k-services",
         start: "0% 100%",
         end: "0% 20%",
-        scrub: 1,
+        scrub: 1
       }
     });
 
@@ -95,6 +98,8 @@ function mainCode() {
     .to(heading3Chars, {scale: 0.9, filter: "blur(10px)", scale: 1, opacity: 0, duration: 1, stagger: 0.12}, "-=1")
     .to(heading2Chars, {scale: 0.9, filter: "blur(10px)", scale: 1, opacity: 0, duration: 1, stagger: 0.12}, "-=1.35")
     .to(heading1Chars, {scale: 0.9, filter: "blur(10px)", scale: 1, opacity: 0, duration: 1, stagger: 0.12}, "-=1.35");
+    
+    heroOutro.scrollTrigger.disable();
     //[END] HERO OUTRO [END]//
 
 
