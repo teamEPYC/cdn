@@ -121,19 +121,52 @@ if (window.innerWidth >= 803) {
     setTimeout(() => {
         document.querySelector('.k-preloader-progress-track').classList.add('hide');
       }, 250);
-      setTimeout(() => {
-        //document.querySelector('.k-preloader .k-stroke-button').classList.remove('hide');
-        gsap.to(".k-preloader[data-sprite]", 
-          {ease: "none", duration: 2, 
-            onUpdate() {const el = this.targets()[0]; el._spriteSetProgress?.((this.progress()));},
-            onComplete: () => {document.querySelector(".k-preloader")?.remove(); gsap.set(".ka-background-frame-container", {x: "0vw"});}  
-          }
-        );
-      }, 1000);
+    setTimeout(() => {
+      document.querySelector('.k-preloader .k-stroke-button').classList.remove('hide');
+    }, 1000);
 
-      if (window.ScrollTrigger) ScrollTrigger.refresh();
+    
+    //[START] AUDIO [START]//
+    const audio = new Audio('https://teamepyc.github.io/cdn/kaviraj/v2/sound.mp3');
+    audio.preload = 'auto'; 
+    audio.loop = true;
+    let isPlaying = false;
+
+    function toggleSound() {
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        soundToggleButton.classList.add('paused');
+      } else {
+        audio.play();
+        isPlaying = true;
+        soundToggleButton.classList.remove('paused');
+      }
+    }
+    const soundToggleButton = document.querySelector('.k-nav-sound');
+    soundToggleButton.addEventListener('click', () => {
+      toggleSound();
+    });
+
+    const loaderButton = document.querySelector('.k-stroke-button.loader');
+    loaderButton.addEventListener('click', () => {
+      toggleSound();
+      gsap.to(".k-preloader[data-sprite]", 
+        {ease: "none", duration: 2, 
+          onUpdate() {const el = this.targets()[0]; el._spriteSetProgress?.((this.progress()));},
+          onComplete: () => {document.querySelector(".k-preloader")?.remove(); gsap.set(".ka-background-frame-container", {x: "0vw"});}  
+        }
+      );
+    });
+    //[END] AUDIO [END]//
+
+
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+
   }
+
+
   loadVideo(VIDEO_URL); 
+
+
 }
-
-
