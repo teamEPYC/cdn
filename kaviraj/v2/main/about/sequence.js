@@ -1,5 +1,6 @@
 if (window.innerWidth >= 803) {
-
+  window.lenis?.stop();
+  
   const VIDEO_URL = 'https://teamepyc.github.io/cdn/kaviraj/v2/videos/ffmpeg.mp4';
   const loaderFill = document.getElementById('loader-bar-fill');
   const loaderText = document.getElementById('loader-text');
@@ -148,10 +149,16 @@ if (window.innerWidth >= 803) {
       toggleSound();
     });
 
+    const heroOutro = gsap.timeline({});
+
     const loaderButton = document.querySelector('.k-stroke-button.loader');
     loaderButton.addEventListener('click', () => {
       toggleSound();
-      gsap.to(".k-preloader[data-sprite]", 
+
+      heroOutro
+      .call(() => 
+      {window.lenis?.start(); window.lenis.scrollTo(0, { immediate: true });}
+      ).to(".k-preloader[data-sprite]", 
         {ease: "none", duration: 2, 
           onUpdate() {const el = this.targets()[0]; el._spriteSetProgress?.((this.progress()));},
           onComplete: () => {document.querySelector(".k-preloader")?.remove(); gsap.set(".ka-background-frame-container", {x: "0vw"});}  
