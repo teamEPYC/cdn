@@ -100,7 +100,7 @@ if (window.innerWidth >= 803) {
     gsap.fromTo(".ka-background-video", 
     {x: "0vw"},
     {x: "-100vw",
-    ease: "sine.inOut",
+    ease: "none",
     scrollTrigger: {
       trigger: ".ka-chapter-transition._0",
       start: "40% bottom",
