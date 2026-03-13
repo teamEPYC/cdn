@@ -1,5 +1,4 @@
 import { gridResize, navigation, initializeLenis, visualUtility } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/global.js";
-import { FrameDecoder } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/decoder.js";
 
 
 function mainCode() {  
@@ -15,7 +14,7 @@ document.querySelectorAll(".ka-chapter-transition").forEach((section, i) => {
   gsap.fromTo(".ka-background-frame-container", 
     {x: `${prev}`},
     {x: `${next}`,
-    ease: "sine.inOut",
+    ease: "none",
     scrollTrigger: {
       trigger: section,
       start: "40% bottom",
@@ -26,9 +25,6 @@ document.querySelectorAll(".ka-chapter-transition").forEach((section, i) => {
 
   gsap.set(".ka-background-frame-container", {x: "0vw"});
 });
-
-
-
 
 // All Timeline Will-Change
 document.querySelectorAll(".k-chapter-body, .k-chapter-lable").forEach(el => {
@@ -135,6 +131,7 @@ gsap.fromTo(
   }
 );
 
+/*
 document.querySelector(".ka-teams-container").style.willChange = "transform";
 gsap.set(".ka-teams", { marginTop: "-100vh" });
 gsap.fromTo(
@@ -162,7 +159,7 @@ gsap.to(
     }
   }
 );
-
+*/
 /*
 document.querySelectorAll(".ka-chapter.last, .ka-background").forEach(el => {
       el.style.willChange = "transform";
