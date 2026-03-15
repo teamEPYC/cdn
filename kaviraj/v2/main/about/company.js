@@ -1,4 +1,6 @@
+if (window.innerWidth >= 803) {
 // fetch shared elements
+
 const cards = document.querySelectorAll(".c-card");
 const cardOverWrapper = document.querySelector(".c-card-over-wrapper");
 const cardOverParent = document.querySelector(".c-card-over-parent");
@@ -123,3 +125,98 @@ function closeCard() {
 closeButtons.forEach((btn) => {
   btn.addEventListener("click", closeCard);
 });
+}
+
+
+
+if (window.innerWidth < 803) {
+  const cards = document.querySelectorAll(".c-card");
+  const wrapper = document.querySelector(".c-card-over-wrapper");
+  const parent = document.querySelector(".c-card-over-parent");
+  const closer = document.querySelector(".c-card-over-closer");
+  const closeButtons = document.querySelectorAll(".card-closer-button");
+  const cardOverBack = document.querySelector(".c-card-over-back");
+  const cardOverBackTitle = document.querySelector(".c-card-over-back .c-card-title");
+  const cardOverBackContent = document.querySelector(".c-card-over-back .c-card-over-content");
+
+  gsap.set(wrapper, { display: "none" });
+  gsap.set(parent, { opacity: 0, y: "5%" });
+
+  function openOverlay() {
+    gsap.killTweensOf(parent);
+
+    gsap.set(wrapper, { display: "flex" });
+
+    gsap.to(parent, {
+      opacity: 1,
+      y: "0%",
+      duration: 0.35,
+      ease: "power2.out"
+    });
+  }
+
+  function closeOverlay() {
+    gsap.killTweensOf(parent);
+
+    gsap.to(parent, {
+      opacity: 0,
+      y: "5%",
+      duration: 0.2,
+      ease: "power2.out",
+      onComplete: () => {
+        wrapper.style.display = "none";
+      }
+    });
+  }
+
+  cards.forEach((card) => {
+    card.addEventListener("click", (e) => {
+      e.preventDefault();
+      openOverlay();
+    });
+  });
+
+  if (closer) {
+    closer.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeOverlay();
+    });
+  }
+
+  closeButtons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeOverlay();
+    });
+  });
+
+
+  cards.forEach((card) => {
+  card.addEventListener("click", () => {
+
+    // background color sync
+    const bgColor = window.getComputedStyle(card).backgroundColor;
+    cardOverBack.style.backgroundColor = bgColor;
+
+    // copy titles
+    const sourceTitle = card.querySelector(".c-card-title");
+    if (sourceTitle) {
+      cardOverBackTitle.innerHTML = sourceTitle.innerHTML;
+    }
+
+    // copy content (back)
+    const sourceContent = card.querySelector(".c-card-over-content");
+    if (sourceContent) {
+      cardOverBackContent.innerHTML = sourceContent.innerHTML;
+    }
+
+    // reset scroll to top every open
+    cardOverBack.scrollTop = 0;
+    
+  });
+});
+
+
+}
