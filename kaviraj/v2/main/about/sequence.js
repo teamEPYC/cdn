@@ -1,5 +1,3 @@
-import {toggleSound } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/global.js";
-
 if (window.innerWidth >= 803) {
   window.lenis?.stop();
   
@@ -129,6 +127,39 @@ if (window.innerWidth >= 803) {
     }, 1000);
 
 
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+
+  }
+
+
+  loadVideo(VIDEO_URL); 
+
+
+}
+
+//[START] AUDIO [START]//
+    const audio = new Audio('https://teamepyc.github.io/cdn/kaviraj/v2/sound-v2.mp3');
+    audio.preload = 'auto'; 
+    audio.loop = true;
+    let isPlaying = false;
+
+    function toggleSound() {
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        soundToggleButton.classList.add('paused');
+      } else {
+        audio.play();
+        isPlaying = true;
+        soundToggleButton.classList.remove('paused');
+      }
+    }
+    const soundToggleButton = document.querySelector('.k-nav-sound');
+    
+    soundToggleButton.addEventListener('click', () => {
+      toggleSound();
+    });
+
     const heroOutro = gsap.timeline({});
 
     const loaderButton = document.querySelector('.k-stroke-button.loader');
@@ -145,15 +176,4 @@ if (window.innerWidth >= 803) {
         }
       );
     });
-    
-
-
-    if (window.ScrollTrigger) ScrollTrigger.refresh();
-
-  }
-
-
-  loadVideo(VIDEO_URL); 
-
-
-}
+    //[END] AUDIO [END]//
