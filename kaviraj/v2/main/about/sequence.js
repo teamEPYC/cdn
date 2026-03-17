@@ -1,3 +1,5 @@
+import {toggleSound } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/global.js";
+
 if (window.innerWidth >= 803) {
   window.lenis?.stop();
   
@@ -125,6 +127,7 @@ if (window.innerWidth >= 803) {
     setTimeout(() => {
       document.querySelector('.k-preloader .k-stroke-button').classList.remove('hide');
     }, 1000);
+
 
     const heroOutro = gsap.timeline({});
 
