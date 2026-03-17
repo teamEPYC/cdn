@@ -139,12 +139,7 @@ export function navigation() {
       end: "bottom bottom",
       scrub: true
     }
-  });  
-
-  //[START] AUDIO [START]//
-  const soundToggleButton = document.querySelector('.k-nav-sound');
-  soundToggleButton?.addEventListener('click', toggleSound);
-  //[END] AUDIO [END]//
+  }); 
 
 
   if (window.innerWidth < 803) {
