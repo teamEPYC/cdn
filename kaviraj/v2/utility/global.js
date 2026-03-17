@@ -120,6 +120,7 @@ export function navigation() {
   navLogo.addEventListener("mouseleave", () => {
     if (isCollapsed) tlLogo.play();
   });
+  }
 
   const circle = document.querySelector('.scroll-indicator__circle');
   const radius = circle.r.baseVal.value;
@@ -139,7 +140,35 @@ export function navigation() {
       scrub: true
     }
   });  
-  }
+
+  //[START] AUDIO [START]//
+    const audio = new Audio('https://teamepyc.github.io/cdn/kaviraj/v2/sound.mp3');
+    audio.preload = 'auto'; 
+    audio.loop = true;
+    let isPlaying = false;
+
+    function toggleSound() {
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        soundToggleButton.classList.add('paused');
+      } else {
+        audio.play();
+        isPlaying = true;
+        soundToggleButton.classList.remove('paused');
+      }
+    }
+    const soundToggleButton = document.querySelector('.k-nav-sound');
+    soundToggleButton.addEventListener('click', () => {
+      toggleSound();
+    });
+
+    const loaderButton = document.querySelector('.k-stroke-button.loader');
+    loaderButton.addEventListener('click', () => {
+      toggleSound();
+    });
+    //[END] AUDIO [END]//
+    
 
   if (window.innerWidth < 803) {
     // Menu Mobile
@@ -158,19 +187,21 @@ export function navigation() {
 }
 
 export function initializeLenis() {
+
   if (window.innerWidth >= 803) {
     window.lenis = new Lenis({
-      useStrict: true
+      useStrict: true,
     });
+
     window.lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((time) => { window.lenis.raf(time * 1500); });
     gsap.ticker.lagSmoothing(0);
   }
 }
 
+
 export function visualUtility() {
   svgCutouts();
-
   //if (window.innerWidth >= 803) {
   spriteNoiseMask();
   //} 
