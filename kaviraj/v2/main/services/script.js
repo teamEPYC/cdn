@@ -1,4 +1,4 @@
-import { gridResize, navigation, initializeLenis, visualUtility } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/global.js";
+import { gridResize, toggleSound, navigation, initializeLenis, visualUtility } from "https://teamepyc.github.io/cdn/kaviraj/v2/global.js";
 
 
 function mainCode() {  
@@ -45,6 +45,7 @@ window.addEventListener('load', async () => {
     gridResize();
     if (window.innerWidth < 803) {
       document.querySelector('.k-menu').removeAttribute('data-sprite');
+      document.querySelector('.k-background').setAttribute('data-sprite-url', 'https://cdn.prod.website-files.com/6904a418739bb0c76ab91cce/6915dd814981776bd91c2471_spritesheet_mobile.png'); 
     }
     visualUtility();
     if (window.spriteMasksReady) {
@@ -56,3 +57,6 @@ window.addEventListener('load', async () => {
     if(navigator.userAgentData?.platform == "macOS"){initializeLenis();}
     
 });
+
+const soundToggleButton = document.querySelector('.k-nav-sound');
+soundToggleButton?.addEventListener('click', toggleSound);
