@@ -1,4 +1,4 @@
-import { gridResize, navigation, initializeLenis, visualUtility } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/global.js";
+import { gridResize, toggleSound, navigation, initializeLenis, visualUtility } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/global.js";
 import { prologueAnimationDesktop, prologueAnimationMobile } from "https://teamepyc.github.io/cdn/kaviraj/v2/main/home/prologue.js"; 
 
 function mainCode() {  
@@ -296,11 +296,12 @@ function mainCode() {
     );
     //[END] CTA [END]//
 
+    
     const loaderButton = document.querySelector('.k-stroke-button.loader');
     loaderButton.addEventListener('click', () => {
       toggleSound();
     });
-    
+
   }
   // --- [END] DESKTOP [END] ---//
 
