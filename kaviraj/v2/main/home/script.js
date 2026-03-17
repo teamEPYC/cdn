@@ -397,4 +397,5 @@ window.addEventListener('load', async () => {
     navigation();
 });
 
-
+const soundToggleButton = document.querySelector('.k-nav-sound');
+soundToggleButton?.addEventListener('click', toggleSound);
