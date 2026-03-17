@@ -162,13 +162,8 @@ export function navigation() {
     soundToggleButton.addEventListener('click', () => {
       toggleSound();
     });
+  //[END] AUDIO [END]//
 
-    const loaderButton = document.querySelector('.k-stroke-button.loader');
-    loaderButton.addEventListener('click', () => {
-      toggleSound();
-    });
-    //[END] AUDIO [END]//
-    
 
   if (window.innerWidth < 803) {
     // Menu Mobile
