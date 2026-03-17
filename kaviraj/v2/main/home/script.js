@@ -296,6 +296,11 @@ function mainCode() {
     );
     //[END] CTA [END]//
 
+    const loaderButton = document.querySelector('.k-stroke-button.loader');
+    loaderButton.addEventListener('click', () => {
+      toggleSound();
+    });
+    
   }
   // --- [END] DESKTOP [END] ---//
 
