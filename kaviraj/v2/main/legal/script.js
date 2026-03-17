@@ -1,4 +1,4 @@
-import { gridResize, navigation, initializeLenis, visualUtility } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/global.js";
+import { gridResize, toggleSound, navigation, initializeLenis, visualUtility } from "https://teamepyc.github.io/cdn/kaviraj/v2/utility/global.js";
 
 
 function mainCode() {  
@@ -19,6 +19,12 @@ window.addEventListener('load', async () => {
     mainCode();
     navigation();
 });
+
+
+const soundToggleButton = document.querySelector('.k-nav-sound');
+soundToggleButton?.addEventListener('click', toggleSound);
+
+
 
 
 
