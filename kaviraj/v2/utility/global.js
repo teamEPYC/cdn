@@ -142,26 +142,8 @@ export function navigation() {
   });  
 
   //[START] AUDIO [START]//
-    const audio = new Audio('https://teamepyc.github.io/cdn/kaviraj/v2/sound.mp3');
-    audio.preload = 'auto'; 
-    audio.loop = true;
-    let isPlaying = false;
-
-    function toggleSound() {
-      if (isPlaying) {
-        audio.pause();
-        isPlaying = false;
-        soundToggleButton.classList.add('paused');
-      } else {
-        audio.play();
-        isPlaying = true;
-        soundToggleButton.classList.remove('paused');
-      }
-    }
-    const soundToggleButton = document.querySelector('.k-nav-sound');
-    soundToggleButton.addEventListener('click', () => {
-      toggleSound();
-    });
+  const soundToggleButton = document.querySelector('.k-nav-sound');
+  soundToggleButton?.addEventListener('click', toggleSound);
   //[END] AUDIO [END]//
 
 
@@ -180,6 +162,27 @@ export function navigation() {
 
   }
 }
+
+const audio = new Audio('https://teamepyc.github.io/cdn/kaviraj/v2/sound.mp3');
+audio.preload = 'auto';
+audio.loop = true;
+
+let isPlaying = false;
+
+export function toggleSound() {
+  const soundToggleButton = document.querySelector('.k-nav-sound');
+
+  if (isPlaying) {
+    audio.pause();
+    isPlaying = false;
+    soundToggleButton?.classList.add('paused');
+  } else {
+    audio.play();
+    isPlaying = true;
+    soundToggleButton?.classList.remove('paused');
+  }
+}
+
 
 export function initializeLenis() {
 
