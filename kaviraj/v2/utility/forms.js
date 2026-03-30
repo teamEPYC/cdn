@@ -39,6 +39,10 @@ document.querySelectorAll('[data-form="true"]').forEach(trigger => {
       `${targetForm} input[type="submit"]`
     );
 
+    const closeButtonMobile = document.querySelector(
+      `${targetForm} .k-form-close-button-mobile`,
+    );
+
     const tl = gsap.timeline({
       onComplete: () => (isAnimating = false)
     });
@@ -81,6 +85,15 @@ document.querySelectorAll('[data-form="true"]').forEach(trigger => {
         { opacity: 0, y: '0.3rem' },
         { opacity: 1, y: '0rem', duration: 0.35, ease: 'power2.out' },
         '-=0.1'
+      );
+    }
+
+    // Close Button Show
+    if (closeButtonMobile) {
+      tl.fromTo(
+        closeButtonMobile,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3, ease: "power3.out" },
       );
     }
   });
