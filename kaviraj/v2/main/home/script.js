@@ -311,6 +311,12 @@ function mainCode() {
 
   // --- MOBILE ---//
   if (window.innerWidth < 803) {
+  if (window.__STOP_ALL_OTHER_JS__) {
+    return;
+  }
+
+
+
     prologueAnimationMobile();
 
     document.querySelectorAll('.k-value-frame').forEach(el => {
@@ -384,6 +390,10 @@ window.addEventListener('load', async () => {
     }
 
     if (window.innerWidth < 803) {
+        if (window.__STOP_ALL_OTHER_JS__) {
+          return;
+        }
+
       //document.querySelector('.k-background').removeAttribute('data-sprite');
       document.querySelector('.k-menu').removeAttribute('data-sprite');
       document.querySelector('.image-sequence').removeAttribute('data-sprite');
