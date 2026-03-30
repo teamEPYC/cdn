@@ -11,13 +11,16 @@ function mainCode() {
       el.style.willChange = "transform, opacity, filter";
     });
 
-    const loaderPrelude = new SplitText(".k-preloader-prelude .k-preloader-prelude-text", { type: "chars" });
+    const loaderPrelude = new SplitText(
+      ".k-preloader-prelude .k-preloader-prelude-text",
+      { type: "words, chars" },
+    );
 
     const heroHeadings = document.querySelectorAll(".k-hero-heading");
     const Lheading1 = new SplitText(heroHeadings[0], { type: "chars" });
     const Lheading2 = new SplitText(heroHeadings[1], { type: "chars" });
     const Lheading3 = new SplitText(heroHeadings[2], { type: "chars" });
-    const Lsubtext = new SplitText(".k-hero-subtext", { type: "chars" });
+    const Lsubtext = new SplitText(".k-hero-subtext", { type: "words, chars" });
 
     const loadSequence = gsap.timeline({
       paused: true
