@@ -7,10 +7,10 @@ document.querySelectorAll(".k-hero, .k-hero-heading, .k-hero-subtext, .k-hero-ct
 
 if (window.innerWidth >= 992) {
 ScrollTrigger.create({trigger: ".k-hero", start: "0%", end: "100%", pin: true, pinSpacing: false});
-const heading1 = new SplitText(".k-hero-heading:nth-child(1)", { type: "chars" });
-const heading2 = new SplitText(".k-hero-heading:nth-child(2)", { type: "chars" });
-const heading3 = new SplitText(".k-hero-heading:nth-child(3)", { type: "chars" });
-const subtext = SplitText.create(".k-hero-subtext", { type: "chars" });
+const heading1 = new SplitText(".k-hero-heading:nth-child(1)", { type: "words, chars" });
+const heading2 = new SplitText(".k-hero-heading:nth-child(2)", { type: "words, chars" });
+const heading3 = new SplitText(".k-hero-heading:nth-child(3)", { type: "words, chars" });
+const subtext = SplitText.create(".k-hero-subtext", { type: "words, chars" });
 
 heading1.chars.reverse();
 heading2.chars.reverse();

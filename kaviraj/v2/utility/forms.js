@@ -12,14 +12,16 @@ document.querySelectorAll('[data-form="true"]').forEach(trigger => {
 
     let targetForm = '.k-contact-form-grandparent.contact';
 
-    if (formType === 'institutional-broking') {
-      targetForm = '.k-contact-form-grandparent.institutional-broking';
-    } else if (formType === 'wealth-management') {
-      targetForm = '.k-contact-form-grandparent.wealth-management';
-    } else if (formType === 'mutual-fund') {
-      targetForm = '.k-contact-form-grandparent.mututal-fund';
-    } else if (formType === 'kaviraj-reserve') {
-      targetForm = '.k-contact-form-grandparent.kaviraj-reserve';
+    if (formType === "institutional-broking") {
+      targetForm = ".k-contact-form-grandparent.institutional-broking";
+    } else if (formType === "wealth-management") {
+      targetForm = ".k-contact-form-grandparent.wealth-management";
+    } else if (formType === "mutual-fund") {
+      targetForm = ".k-contact-form-grandparent.mutual-fund";
+    } else if (formType === "kaviraj-reserve") {
+      targetForm = ".k-contact-form-grandparent.kaviraj-reserve";
+    } else if (formType === "careers") {
+      targetForm = ".k-contact-form-grandparent.careers";
     }
 
     activeForm = targetForm;
@@ -125,7 +127,7 @@ function closeForm() {
 
 
 // ---------- CLOSE BUTTONS ----------
-document.querySelectorAll('.k-form-close, .k-contact-form-closer, .k-form-close-button-mobile').forEach(btn => {
+document.querySelectorAll('.k-form-close, .k-contact-form-closer, .k-form-close-button-mobile, [data-form-close]').forEach(btn => {
   btn.addEventListener('click', closeForm);
 });
 

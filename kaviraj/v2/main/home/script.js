@@ -63,9 +63,9 @@ function mainCode() {
     );
 
     const heroHeadings = document.querySelectorAll(".k-hero-heading");
-    const Lheading1 = new SplitText(heroHeadings[0], { type: "chars" });
-    const Lheading2 = new SplitText(heroHeadings[1], { type: "chars" });
-    const Lheading3 = new SplitText(heroHeadings[2], { type: "chars" });
+    const Lheading1 = new SplitText(heroHeadings[0], { type: "words, chars" });
+    const Lheading2 = new SplitText(heroHeadings[1], { type: "words, chars" });
+    const Lheading3 = new SplitText(heroHeadings[2], { type: "words, chars" });
     const Lsubtext = new SplitText(".k-hero-subtext", { type: "words, chars" });
 
     const loadSequence = gsap.timeline({
@@ -224,8 +224,8 @@ function mainCode() {
         }
       });
     
-      const kValueIntroText = new SplitText(document.querySelector(".k-value-intro-text"), { type: "chars" });
-      const kValueOutroText = new SplitText(document.querySelector(".k-value-outro-text"), { type: "chars" });
+      const kValueIntroText = new SplitText(document.querySelector(".k-value-intro-text"), { type: "words, chars" });
+      const kValueOutroText = new SplitText(document.querySelector(".k-value-outro-text"), { type: "words, chars" });
     
       valuesTimeline
       .to(".image-sequence[data-sprite]",
@@ -315,8 +315,8 @@ function mainCode() {
 
 
     //[START] CTA [START]//
-    const kCtaHeadline = new SplitText(document.querySelector(".k-cta-headline"), { type: "chars" });
-    const kCtaSubtext = new SplitText(document.querySelector(".k-cta-subtext"), { type: "chars" });
+    const kCtaHeadline = new SplitText(document.querySelector(".k-cta-headline"), { type: "words, chars" });
+    const kCtaSubtext = new SplitText(document.querySelector(".k-cta-subtext"), { type: "words, chars" });
     const kCTA = gsap.timeline({
       scrollTrigger: {
         trigger: ".k-values",
@@ -387,8 +387,8 @@ function mainCode() {
       }
     });
 
-    const kValueIntroText = new SplitText(document.querySelector(".k-value-intro-text"), { type: "chars" });
-    const kValueOutroText = new SplitText(document.querySelector(".k-value-outro-text"), { type: "chars" });
+    const kValueIntroText = new SplitText(document.querySelector(".k-value-intro-text"), { type: "words, chars" });
+    const kValueOutroText = new SplitText(document.querySelector(".k-value-outro-text"), { type: "words, chars" });
 
     mobileImageSequence
       .to(".k-background[data-sprite]", 
