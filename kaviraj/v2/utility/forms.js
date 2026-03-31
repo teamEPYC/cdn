@@ -21,8 +21,10 @@ document.querySelectorAll('[data-form="true"]').forEach(trigger => {
     } else if (formType === "kaviraj-reserve") {
       targetForm = ".k-contact-form-grandparent.kaviraj-reserve";
     } else if (formType === "careers") {
-      targetForm = ".k-contact-form-grandparent.careers";
+      targetForm = "#careers";
     }
+
+    console.log(targetForm);
 
     activeForm = targetForm;
     isAnimating = true;
