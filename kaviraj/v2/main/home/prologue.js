@@ -25,15 +25,15 @@ document.querySelectorAll(".k-prologue-content, .k-prologue-text, .k-prologue-su
 gsap.set(".k-prologue-speed-controller", {height: "300vh"});
 
 // initializing elements before timeline
-const prologue1text1 = new SplitText(prologueContents[0].querySelectorAll(".k-prologue-text-container:nth-child(1) .k-prologue-text"), { type: "chars" });
-const prologue1text2 = new SplitText(prologueContents[0].querySelectorAll(".k-prologue-text-container:nth-child(2) .k-prologue-text"), { type: "chars" });
-const prologue2text1 = new SplitText(prologueContents[1].querySelectorAll(".k-prologue-text-container:nth-child(1) .k-prologue-text"), { type: "chars" });
-const prologue2text2 = new SplitText(prologueContents[1].querySelectorAll(".k-prologue-text-container:nth-child(2) .k-prologue-text"), { type: "chars" });
-const prologue3text1 = new SplitText(prologueContents[2].querySelectorAll(".k-prologue-text-container:nth-child(1) .k-prologue-subtext"), { type: "chars" });
-const prologue3text2 = new SplitText(prologueContents[2].querySelector(".k-prologue-grandfather-container .k-prologue-grandfathers-name:nth-of-type(1)"), { type: "chars" });
-const prologue3text3 = new SplitText(prologueContents[2].querySelector(".k-prologue-gi .k-prologue-grandfathers-name"), { type: "chars" });
+const prologue1text1 = new SplitText(prologueContents[0].querySelectorAll(".k-prologue-text-container:nth-child(1) .k-prologue-text"), { type: "words, chars" });
+const prologue1text2 = new SplitText(prologueContents[0].querySelectorAll(".k-prologue-text-container:nth-child(2) .k-prologue-text"), { type: "words, chars" });
+const prologue2text1 = new SplitText(prologueContents[1].querySelectorAll(".k-prologue-text-container:nth-child(1) .k-prologue-text"), { type: "words, chars" });
+const prologue2text2 = new SplitText(prologueContents[1].querySelectorAll(".k-prologue-text-container:nth-child(2) .k-prologue-text"), { type: "words, chars" });
+const prologue3text1 = new SplitText(prologueContents[2].querySelectorAll(".k-prologue-text-container:nth-child(1) .k-prologue-subtext"), { type: "words, chars" });
+const prologue3text2 = new SplitText(prologueContents[2].querySelector(".k-prologue-grandfather-container .k-prologue-grandfathers-name:nth-of-type(1)"), { type: "words, chars" });
+const prologue3text3 = new SplitText(prologueContents[2].querySelector(".k-prologue-gi .k-prologue-grandfathers-name"), { type: "words, chars" });
 const prologue3image = prologueContents[2].querySelector(".k-prologue-gi-mask .noise");
-const prologue3text4 = new SplitText(prologueContents[2].querySelectorAll(".k-prologue-text-container:nth-child(3) .k-prologue-subtext"), { type: "chars" });
+const prologue3text4 = new SplitText(prologueContents[2].querySelectorAll(".k-prologue-text-container:nth-child(3) .k-prologue-subtext"), { type: "words, chars" });
 
 //Prologue Timline Initialization with  scrollTrigger
 const prologueTimeline = gsap.timeline({

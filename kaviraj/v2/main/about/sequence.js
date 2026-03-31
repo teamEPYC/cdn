@@ -47,7 +47,7 @@ if (window.innerWidth >= 803) {
     
     // code comes here
     console.log("code comes here");
-    const heroText = new SplitText(document.querySelector(".ka-hero-heading"), { type: "chars" });
+    const heroText = new SplitText(document.querySelector(".ka-hero-heading"), { type: "words, chars" });
     const heroTextChars = [...heroText.chars].reverse();
     const introText1 = new SplitText(document.querySelector(".ka-timeline-intro-txt:nth-child(1)"), { type: "words, chars" });
     const introText2 = new SplitText(document.querySelector(".ka-timeline-intro-txt:nth-child(2)"), { type: "words, chars" });
