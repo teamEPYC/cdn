@@ -111,6 +111,14 @@ function initMosaicEffect() {
     card.addEventListener("mouseleave", onLeave);
     card.addEventListener("mousemove", onMove);
 
+    // On theme change, update heading color instantly to match new mode
+    const isDark = document.documentElement.classList.contains("dark-mode");
+    if (card.matches(":hover")) {
+      gsap.set(heading, { color: isDark ? "#a0a1a6" : "#888a91" });
+    } else {
+      gsap.set(heading, { color: isDark ? "white" : "#07060d" });
+    }
+
     card._mosaicCleanup = () => {
       card.removeEventListener("mouseenter", onEnter);
       card.removeEventListener("mouseleave", onLeave);
@@ -136,11 +144,11 @@ window.addEventListener("resize", () => {
   resizeTimer = setTimeout(initMosaicEffect, 200);
 });
 
-const themeObserver = new MutationObserver(() => {
+const textNewObserver = new MutationObserver(() => {
   initMosaicEffect();
 });
 
-themeObserver.observe(document.documentElement, {
+textNewObserver.observe(document.documentElement, {
   attributes: true,
   attributeFilter: ["class"],
 });
