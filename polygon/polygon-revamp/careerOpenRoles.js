@@ -11,6 +11,10 @@ document.addEventListener("DOMContentLoaded", function () {
         card.setAttribute("fs-list-element", "item");
         card.href = job.applyLink;
 
+        // Open job link in new tab
+        card.setAttribute("target", "_blank");
+        card.setAttribute("rel", "noopener noreferrer");
+
         const eyebrow = card.querySelector(".career-or-eyebrow div");
         eyebrow.textContent = String(i + 1).padStart(2, "0");
 
