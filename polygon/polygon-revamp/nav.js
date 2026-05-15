@@ -1,21 +1,21 @@
-// Check which nav system we're using
 const isPolygonNav = document.querySelector('[class*="polygon-v3--"]') !== null;
 const prefix = isPolygonNav ? "polygon-v3--" : "";
+const isCapped =
+  document.querySelector('.nav-wrapper[data-wf--navbar--variant="capped"]') !==
+  null;
 
 if (window.innerWidth >= 992) {
-  const sectionEls = document.querySelectorAll(`.${prefix}nav-popup`);
-  const navLinkEls = document.querySelectorAll(`.${prefix}nav-link`);
-  const popoverEl = document.querySelector(`.${prefix}nav-popover-wrap`);
-  const contentEl = document.querySelector(`.${prefix}nav-content`);
-
-  console.log({ sectionEls });
+  const sectionEls = document.querySelectorAll(".nav-popup");
+  const navLinkEls = document.querySelectorAll(".nav-link");
+  const popoverEl = document.querySelector(".nav-popover-wrap");
+  const contentEl = document.querySelector(".nav-content");
 
   const dimensions = {
-    products: { widthVw: 57 },
-    solutions: { widthVw: 23 },
-    developers: { widthVw: 20 },
-    company: { widthVw: 20 },
-    "use-company": { widthVw: 20 },
+    products: { widthVw: 57, widthPx: 820 },
+    solutions: { widthVw: 23, widthPx: 330 },
+    developers: { widthVw: 20, widthPx: 288 },
+    company: { widthVw: 20, widthPx: 288 },
+    "use-company": { widthVw: 20, widthPx: 288 },
   };
 
   let activeSection = null;
@@ -27,10 +27,16 @@ if (window.innerWidth >= 992) {
     return (vw * window.innerWidth) / 100;
   }
 
+  function getWidth(section) {
+    return isCapped
+      ? dimensions[section].widthPx
+      : vwToPx(dimensions[section].widthVw);
+  }
+
   function getXPosition(navLink, section) {
     const navRect = navLink.getBoundingClientRect();
     const popoverRect = popoverEl.getBoundingClientRect();
-    const dropdownWidth = vwToPx(dimensions[section].widthVw);
+    const dropdownWidth = getWidth(section);
 
     let x = navRect.left - popoverRect.left;
     if (x < 0) x = 0;
@@ -47,24 +53,21 @@ if (window.innerWidth >= 992) {
     activeSection = section;
     activeNavLink = navLink;
 
-    // Update active class on nav links
     navLinkEls.forEach((el) => {
-      el.classList.remove(`${prefix}is-active`);
-      // Hide all icons
-      const icon = el.querySelector(`.${prefix}p-icon`);
+      el.classList.remove("is-active");
+      const icon = el.querySelector(".p-icon");
       if (icon) icon.style.display = "none";
     });
 
-    navLink.classList.add(`${prefix}is-active`);
-    // Show active icon
-    const activeIcon = navLink.querySelector(`.${prefix}p-icon`);
+    navLink.classList.add("is-active");
+    const activeIcon = navLink.querySelector(".p-icon");
     if (activeIcon) activeIcon.style.display = "block";
 
-    popoverEl.classList.add(`open`);
+    popoverEl.classList.add("open");
     popoverEl.style.opacity = "1";
     popoverEl.style.pointerEvents = "auto";
 
-    const widthPx = vwToPx(dimensions[section].widthVw);
+    const widthPx = getWidth(section);
     const xPos = getXPosition(navLink, section);
 
     contentEl.style.width = widthPx + "px";
@@ -72,16 +75,14 @@ if (window.innerWidth >= 992) {
 
     requestAnimationFrame(() => {
       sectionEls.forEach((el) => {
-        el.classList.remove(`active`);
+        el.classList.remove("active");
         el.style.opacity = "";
         el.style.display = "";
       });
 
-      const targetSection = document.querySelector(
-        `.${prefix}nav-${section}-popup`
-      );
+      const targetSection = document.querySelector(`.nav-${section}-popup`);
       if (targetSection) {
-        targetSection.classList.add(`${prefix}active`);
+        targetSection.classList.add("active");
         targetSection.style.opacity = "1";
         targetSection.style.display = "block";
       }
@@ -89,24 +90,24 @@ if (window.innerWidth >= 992) {
   }
 
   function hidePopover() {
-    popoverEl.classList.remove(`open`);
+    popoverEl.classList.remove("open");
     popoverEl.style.opacity = "";
     popoverEl.style.pointerEvents = "";
 
     sectionEls.forEach((el) => {
-      el.classList.remove(`active`);
+      el.classList.remove("active");
       el.style.opacity = "";
       el.style.display = "";
     });
 
     navLinkEls.forEach((el) => {
-      el.classList.remove(`${prefix}is-active`);
-      const icon = el.querySelector(`.${prefix}p-icon`);
+      el.classList.remove("is-active");
+      const icon = el.querySelector(".p-icon");
       if (icon) icon.style.display = "none";
     });
 
-    navLinkEls[0].classList.add(`${prefix}is-active`);
-    const firstIcon = navLinkEls[0].querySelector(`.${prefix}p-icon`);
+    navLinkEls[0].classList.add("is-active");
+    const firstIcon = navLinkEls[0].querySelector(".p-icon");
     if (firstIcon) firstIcon.style.display = "block";
 
     activeSection = null;
@@ -153,14 +154,13 @@ if (window.innerWidth >= 992) {
   contentEl.addEventListener("mouseenter", () => {
     isOverPopover = true;
   });
-
   contentEl.addEventListener("mouseleave", () => {
     isOverPopover = false;
     checkAndHide();
   });
 
   window.addEventListener("resize", debounce(recalculatePosition, 100));
-  navLinkEls[0].classList.add(`${prefix}is-active`);
+  navLinkEls[0].classList.add("is-active");
 }
 
 //tablet
