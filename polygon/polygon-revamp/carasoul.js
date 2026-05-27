@@ -1,3 +1,4 @@
+
 gsap.registerPlugin(Draggable, InertiaPlugin, Observer, ScrollTrigger);
 
 function init3dImageCarousel() {
@@ -11,12 +12,13 @@ function init3dImageCarousel() {
   const wraps = document.querySelectorAll("[data-3d-carousel-wrap]");
   if (!wraps.length) return;
 
-  const calcRadius = () => {
-    if (window.innerWidth < 768) {
-      radius = window.innerWidth * 0.5; // Increase this for more gap on mobile
-    } else {
-      radius = window.innerWidth * 0.2;
-    }
+  // Calculate radius based on actual panel width and count (proper geometry)
+  const calcRadius = (panels) => {
+    const panelWidth = panels[0].offsetWidth;
+    const count = panels.length;
+    const gap = window.innerWidth < 768 ? 1.4 : 1.15; // spacing multiplier
+    // Formula: radius = (panelWidth / 2) / tan(π / count)
+    radius = (panelWidth / 2) / Math.tan(Math.PI / count) * gap;
   };
 
   const destroy = () => {
@@ -34,8 +36,6 @@ function init3dImageCarousel() {
   };
 
   const create = () => {
-    calcRadius();
-
     const allPanels = [];
     const allContent = [];
     const proxy = document.createElement("div");
@@ -43,9 +43,9 @@ function init3dImageCarousel() {
     const dragDistance = window.innerWidth * 3;
     let startProg;
 
-    // UPDATED: Function to update visibility with FADE
+    // Update visibility with fade for both carousels
     const updateVisibility = () => {
-      const fadeRange = 10; // Adjust this for smoother/sharper fade
+      const fadeRange = 10;
 
       wraps.forEach((wrap) => {
         const panels = wrap.querySelectorAll("[data-3d-carousel-panel]");
@@ -63,21 +63,16 @@ function init3dImageCarousel() {
             shouldShow = normalizedRotation > 90 && normalizedRotation < 270;
 
             if (shouldShow) {
-              // Calculate fade
               if (normalizedRotation < 90 + fadeRange) {
-                // Fade in near 90°
                 opacity = (normalizedRotation - 90) / fadeRange;
               } else if (normalizedRotation > 270 - fadeRange) {
-                // Fade out near 270°
                 opacity = (270 - normalizedRotation) / fadeRange;
               } else {
-                // Fully visible
                 opacity = 1;
               }
             }
           } else {
-            // Front carousel is handled by CSS backface-visibility
-            // But we can add fade here too for smoother transition
+            // Front carousel
             shouldShow = normalizedRotation < 90 || normalizedRotation > 270;
 
             if (shouldShow) {
@@ -85,25 +80,20 @@ function init3dImageCarousel() {
                 normalizedRotation > 270 &&
                 normalizedRotation < 270 + fadeRange
               ) {
-                // Fade in near 270°
                 opacity = (normalizedRotation - 270) / fadeRange;
               } else if (
                 normalizedRotation > 0 &&
                 normalizedRotation < 90 &&
                 normalizedRotation > 90 - fadeRange
               ) {
-                // Fade out near 90°
                 opacity = (90 - normalizedRotation) / fadeRange;
               } else {
-                // Fully visible
                 opacity = 1;
               }
             }
           }
 
-          // Clamp opacity
           opacity = Math.max(0, Math.min(1, opacity));
-
           gsap.set(panel, { autoAlpha: opacity });
         });
       });
@@ -116,6 +106,9 @@ function init3dImageCarousel() {
 
       allPanels.push(...panels);
       allContent.push(...content);
+
+      // Calculate radius based on this wrap's actual panels
+      calcRadius(panels);
 
       // Position panels in 3D space
       panels.forEach((p) => (p.style.transformOrigin = `50% 50% ${-radius}px`));
@@ -263,6 +256,7 @@ function init3dImageCarousel() {
   );
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// Use window load to ensure panel images/widths are measured correctly
+window.addEventListener("load", () => {
   init3dImageCarousel();
 });
