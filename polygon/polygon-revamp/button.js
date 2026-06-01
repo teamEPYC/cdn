@@ -1,32 +1,30 @@
+<!-- Code to handle button widths and scramble text effects -->
 // gsap.registerPlugin(ScrambleTextPlugin);
 
-function setButtonWidths() {
-  // Only run on desktop/tablet
-  if (window.innerWidth <= 767) return;
 
+function setButtonWidths() {
+  if (window.innerWidth <= 767) return;
   document.querySelectorAll(".btn").forEach((btn) => {
     const computedWidth = btn.getBoundingClientRect().width;
-    const widthInVw = (computedWidth / window.innerWidth) * 100;
-    btn.style.width = widthInVw + "vw";
+    if (btn.classList.contains("btn-new")) {
+      btn.style.width = computedWidth + "px";
+    } else {
+      btn.style.width = (computedWidth / window.innerWidth) * 100 + "vw";
+    }
   });
 }
 
 function initScrambleEffect() {
-  // Only run on desktop/tablet
   if (window.innerWidth <= 767) return;
-
   document
-    .querySelectorAll(".btn, .slider-button, .footer-links-wrap a")
+    .querySelectorAll(".btn, .btn-new, .slider-button, .footer-links-wrap a")
     .forEach((btn) => {
       const textEl = btn.querySelector("div") || btn;
       const originalText = textEl.textContent;
-
-      if (btn.classList.contains("btn")) {
+      /*if (btn.classList.contains("btn") || btn.classList.contains("btn-new")) {
         btn.style.gridRowGap = "0";
         btn.style.gridColumnGap = "0";
-      }
-
-      // Store handlers so we can remove them later if needed
+      }*/
       const handleMouseEnter = () => {
         gsap.to(textEl, {
           duration: 0.6,
@@ -37,12 +35,10 @@ function initScrambleEffect() {
           },
         });
       };
-
       const handleMouseLeave = () => {
         gsap.killTweensOf(textEl);
         textEl.textContent = originalText;
       };
-
       btn.addEventListener("mouseenter", handleMouseEnter);
       btn.addEventListener("mouseleave", handleMouseLeave);
     });
@@ -53,7 +49,6 @@ window.addEventListener("load", () => {
   setButtonWidths();
 });
 
-// Debounced resize handler
 let buttonResizeTimeout;
 window.addEventListener("resize", () => {
   clearTimeout(buttonResizeTimeout);
