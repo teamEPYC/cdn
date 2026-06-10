@@ -1,14 +1,14 @@
-// =========================================================================
+    // =========================================================================
     // SECTION 1: GLOBAL DEFAULTS
     // =========================================================================
  
     const LINEGRID_DEFAULTS = {
       // All values in rem — 1rem = 50px baseline
       colRem:      2.2,    // column width  (110px @ 50px/rem)
-      gapRem:      0.2,    // column gap    (10px)
-      lineGapRem:  0.2,    // line gap      (10px)
+      gapRem:      0.1,    // column gap    (5px)
+      lineGapRem:  0.1,    // line gap      (5px)
       minHRem:     0.02,   // min foreground line height (1px)
-      maxHRem:     0.12,   // max foreground line height (6px)
+      maxHRem:     0.06,   // max foreground line height (3px)
       radiusRem:   0.4,    // rounded corner radius (20px)
       bgOpacity:   0.15,   // ← manually set (unitless, no rem conversion)
       sizeRatio:   0.38,   // cube size relative to canvas height (ratio, no rem)
