@@ -1,4 +1,4 @@
-    // =========================================================================
+// =========================================================================
     // SECTION 1: GLOBAL DEFAULTS
     // =========================================================================
  
@@ -712,8 +712,8 @@
         const rem  = this._rem || 50;
         const color = `rgb(${this.LINE_COLOR})`;
         const ARC_R      = GLOBE_R + rem * 0.56;
-        const ARC_STROKE = rem * 0.12;
-        const TICK_SPAN  = rem * 0.2;
+        const ARC_STROKE = rem * 0.06;  // 3px (was 6px)
+        const TICK_SPAN  = rem * 0.1;   // 5px (was 10px)
  
         // Laurel arcs — reveal bottom→top via clip mask
         if (this.arcReveal > 0) {
@@ -750,9 +750,9 @@
           const PLINTH_GAP    = rem * 0.44;
           const PLINTH_Y      = sCY + GLOBE_R + PLINTH_GAP;
           const PLINTH_W      = GLOBE_R * 1.2 * this.plinthReveal;
-          const PLINTH_H      = rem * 0.36;
+          const PLINTH_H      = rem * 0.18;  // 9px (was 18px)
           const PLINTH_STEP_W = GLOBE_R * 0.85 * this.plinthReveal;
-          const PLINTH_STEP_H = rem * 0.22;
+          const PLINTH_STEP_H = rem * 0.11;  // 5.5px (was 11px)
  
           fCtx.fillStyle = color;
           fCtx.fillRect(sCX - PLINTH_STEP_W/2, PLINTH_Y,                  PLINTH_STEP_W, PLINTH_STEP_H);
@@ -1067,6 +1067,6 @@
     // Canvas 4 — background + hover only
     new LineGrid('#section-4', {
       foregroundType: null,
-      bgColor:        '--dark',
-      lineColor:      '--white',
+      bgColor:        '--white',
+      lineColor:      '--dark',
     });
