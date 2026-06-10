@@ -1,12 +1,12 @@
-    // =========================================================================
+// =========================================================================
     // SECTION 1: GLOBAL DEFAULTS
     // =========================================================================
  
     const LINEGRID_DEFAULTS = {
       // All values in rem — 1rem = 50px baseline
       colRem:      0.2,    // column width  (10px @ 50px/rem) — fine grid mode
-      gapRem:      0.2,    // column gap    (10px)
-      lineGapRem:  0.2,    // line gap      (10px)
+      gapRem:      0.1,    // column gap    (5px)
+      lineGapRem:  0.1,    // line gap      (5px)
       minHRem:     0.02,   // min foreground line height (1px)
       maxHRem:     0.2,    // max foreground line height (10px) — taller for thin columns
       radiusRem:   0.04,   // rounded corner radius (2px) — scaled for thin columns
