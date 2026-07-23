@@ -1,8 +1,8 @@
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 const videoUrl = isSafari
-  ? "https://teamepyc.github.io/cdn/polygon/videos/polygon-revamp/Asset_wireChain_SAFARI (1).mp4"
-  : "https://teamepyc.github.io/cdn/polygon/videos/polygon-revamp/Asset_wireChain_CHROME (1).webm";
+  ? "https://polytech-assets.polygon.technology/videos/polygon-revamp/Asset_wireChain_SAFARI (1).mp4"
+  : "https://polytech-assets.polygon.technology/videos/polygon-revamp/Asset_wireChain_CHROME (1).webm";
 
 // Preload the video
 const link = document.createElement("link");
@@ -30,8 +30,8 @@ videoElement.load();
         const isDark = document.documentElement.classList.contains("dark-mode");
         const video = document.querySelector(".h-coin-video-container video");
         const newSrc = isDark
-          ? "https://teamepyc.github.io/cdn/polygon/videos/polygon-revamp/Asset_Coin_Dark (1).webm"
-          : "https://teamepyc.github.io/cdn/polygon/videos/polygon-revamp/Asset_Coin_Light (1).webm";
+          ? "https://polytech-assets.polygon.technology/videos/polygon-revamp/Asset_Coin_Dark (1).webm"
+          : "https://polytech-assets.polygon.technology/videos/polygon-revamp/Asset_Coin_Light (1).webm";
 
         if (video && newSrc !== currentSrc) {
           currentSrc = newSrc;
