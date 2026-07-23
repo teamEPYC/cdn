@@ -178,9 +178,9 @@ document
 
   const videoMap = {
     ".agent-hero-video":
-      "https://teamepyc.github.io/cdn/polygon/videos/polygon-revamp/agent%20hero%20safari.mov",
+      "https://polytech-assets.polygon.technology/videos/polygon-revamp/agent%20hero%20safari.mov",
     ".agent-section-video":
-      "https://teamepyc.github.io/cdn/polygon/videos/polygon-revamp/agent%20full%20safari%20video.mov",
+      "https://polytech-assets.polygon.technology/videos/polygon-revamp/agent%20full%20safari%20video.mov",
   };
 
   Object.entries(videoMap).forEach(([selector, src]) => {
