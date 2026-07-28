@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;800&display=swap');
+
+/* NORMALIZE */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+/* NORMALIZE */
+
+body {
+    background: #121212;
+    color: #F1F1F1;
+    font: 500 normal 22px/1.3 'Inter', sans-serif;
+}
+.mwg_effect108 {
+    padding: 50vh 0;
+    overflow: hidden;
+    position: relative;
+}
+.mwg_effect108 p {
+    text-align: center;
+    font-size: 22px;
+    padding: 0 0 3vw;
+}
+.mwg_effect108 ul {
+    font-size: 6vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.mwg_effect108 ul li {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+.mwg_effect108 .media {
+    width: 8vw;
+    aspect-ratio: 1/1;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.mwg_effect108 .media:nth-child(8) {z-index: 1;}
+.mwg_effect108 .media:nth-child(7) {z-index: 2;}
+.mwg_effect108 .media:nth-child(6) {z-index: 3;}
+.mwg_effect108 .media:nth-child(5) {z-index: 4;}
+
+.mwg_effect108 .media img {
+    /* Images are stacked, only the active line is visible */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0.3vw;
+    object-fit: cover;
+    opacity: 0;
+}
+.mwg_effect108 ul li span {
+    display: block;
+    line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+    .mwg_effect108 p {
+        font-size: 18px;
+    }
+    .mwg_effect108 ul {
+        font-size: 8vw;
+    }
+    .mwg_effect108 .media {
+        width: 12vw;
+    }
+    .mwg_effect108 .media img {
+        border-radius: 0.5vw;
+    }
+}
