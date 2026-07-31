@@ -2350,7 +2350,6 @@
       domain: ENV.AUTHO_DOMAIN,
       clientId: ENV.AUTHO_CLIENT_ID,
       cacheLocation: "localstorage",
-      useRefreshTokens: true,
       authorizationParams: {
         audience: `https://${ENV.AUTHO_DOMAIN}/api/v2/`,
         redirect_uri: ROUTES.POST_LOGIN,
@@ -7346,7 +7345,7 @@
   };
   var setAuthenticatedCookie = function(status, logMessage = "Not Set") {
     logger5.log("[+] setAuthenticatedCookie LOG", logMessage);
-    document.cookie = `isAuthenticated=${status}; Path=/;`;
+    document.cookie = `isAuthenticated=${status}; Path=/; Secure; SameSite=Lax`;
   };
   var getCurrentUser = async (auth0Client) => {
     try {
@@ -7517,7 +7516,7 @@
     setCookie(name, value, days) {
       const date = /* @__PURE__ */ new Date();
       date.setTime(date.getTime() + days * 24 * 60 * 60 * 1e3);
-      document.cookie = `${name}=${value}; expires=${date.toUTCString()}; path=/`;
+      document.cookie = `${name}=${value}; expires=${date.toUTCString()}; path=/; Secure; SameSite=Lax`;
     }
   };
 
