@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,7 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 html{font-size:50px;scroll-behavior:smooth;}
 body{background:#191919;color:#eee;font:14px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;overflow-x:hidden;}
-nav{position:fixed;left:0;top:0;bottom:0;width:250px;overflow:auto;background:#111;padding:18px 12px;z-index:50;font-size:12px;border-right:1px solid #2a2a2a;}
+nav{position:fixed;left:0;top:0;bottom:0;width:250px;background:#111;z-index:50;font-size:12px;border-right:1px solid #2a2a2a;display:flex;flex-direction:column;}nav>ul{flex:1 1 auto;overflow:auto;padding:18px 12px;margin:0;}.navrem{flex:0 0 auto;border-top:1px solid #2a2a2a;background:#0d0d0d;padding:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}.navrem label{color:var(--pavegreen);font-weight:600;flex:0 0 100%;margin-bottom:2px;}.navrem input[type=range]{flex:1 1 auto;min-width:80px;accent-color:var(--pavegreen);}.navrem .v{color:#eee;font-variant-numeric:tabular-nums;min-width:24px;text-align:right;}.navrem .btn{flex:0 0 auto;padding:3px 9px;font-size:11px;}
 nav ul{list-style:none;}
 nav a{text-decoration:none;display:block;padding:3px 0;}
 nav li.lv1>a{color:#fff;font-weight:700;font-size:12.5px;margin-top:12px;}
@@ -86,7 +87,7 @@ section.module{margin:26px 0 60px;border:1px solid #2c2c2c;border-radius:12px;ov
 .btn:hover{border-color:var(--pavegreen);}
 .tone-light .ppwrap .btn{background:#222;color:#f5f5f5;}
 </style></head><body>
-<nav><ul><li class="lv1"><a href="#homepage">Homepage</a><ul><li class="lv2"><a href="#hero">Hero</a><ul><li class="lv3"><a href="#m-hero">Hero — Globe</a></li></ul></li><li class="lv2"><a href="#products">Products Section</a><ul><li class="lv3"><a href="#m-bank">Bank Accounts</a></li><li class="lv3"><a href="#m-dam">Digital Asset Management</a></li><li class="lv3"><a href="#m-pnet">PaveNet</a></li><li class="lv3"><a href="#m-trade">Trading & Markets</a></li><li class="lv3"><a href="#m-treasury">Treasury Management</a></li><li class="lv3"><a href="#m-infra">Programmable Infrastructure</a></li></ul></li><li class="lv2"><a href="#trust-sec">Trust & Operations Section</a><ul><li class="lv3"><a href="#m-trust">Trust & Operations</a></li></ul></li><li class="lv2"><a href="#footer">Footer</a><ul><li class="lv3"><a href="#m-footer">Footer — Dot Field</a></li></ul></li></ul></li><li class="lv1"><a href="#legal-h">Legal</a><ul><li class="lv3"><a href="#m-legal">Legal — Section Sign</a></li><li class="lv3"><a href="#m-book">Legal — Flipping Book</a></li></ul></li><li class="lv1"><a href="#open-h">Open Account</a><ul><li class="lv3"><a href="#m-pavepath">Open Account — PavePath</a></li></ul></li><li class="lv1"><a href="#pb-h">Private Banking</a><ul><li class="lv3"><a href="#m-disc">Disc Carousel</a></li><li class="lv3"><a href="#m-aperture">Vault Aperture</a></li><li class="lv3"><a href="#m-gem">Faceted Gem</a></li></ul></li><li class="lv1"><a href="#ff-h">404 Page</a><ul><li class="lv3"><a href="#m-ff">404 — Dimensional</a></li></ul></li></ul></nav>
+<nav><ul><li class="lv1"><a href="#homepage">Homepage</a><ul><li class="lv2"><a href="#hero">Hero</a><ul><li class="lv3"><a href="#m-hero">Hero — Globe</a></li></ul></li><li class="lv2"><a href="#products">Products Section</a><ul><li class="lv3"><a href="#m-bank">Bank Accounts</a></li><li class="lv3"><a href="#m-dam">Digital Asset Management</a></li><li class="lv3"><a href="#m-pnet">PaveNet</a></li><li class="lv3"><a href="#m-trade">Trading & Markets</a></li><li class="lv3"><a href="#m-treasury">Treasury Management</a></li><li class="lv3"><a href="#m-infra">Programmable Infrastructure</a></li></ul></li><li class="lv2"><a href="#trust-sec">Trust & Operations Section</a><ul><li class="lv3"><a href="#m-trust">Trust & Operations</a></li></ul></li><li class="lv2"><a href="#footer">Footer</a><ul><li class="lv3"><a href="#m-footer">Footer — Dot Field</a></li></ul></li></ul></li><li class="lv1"><a href="#legal-h">Legal</a><ul><li class="lv3"><a href="#m-legal">Legal — Section Sign</a></li><li class="lv3"><a href="#m-book">Legal — Flipping Book</a></li><li class="lv3"><a href="#m-col">Legal — Fluted Column</a></li></ul></li><li class="lv1"><a href="#open-h">Open Account</a><ul><li class="lv3"><a href="#m-pavepath">Open Account — PavePath</a></li></ul></li><li class="lv1"><a href="#pb-h">Private Banking</a><ul><li class="lv3"><a href="#m-disc">Disc Carousel</a></li><li class="lv3"><a href="#m-aperture">Vault Aperture</a></li><li class="lv3"><a href="#m-gem">Faceted Gem</a></li></ul></li><li class="lv1"><a href="#ff-h">404 Page</a><ul><li class="lv3"><a href="#m-ff">404 — Dimensional</a></li></ul></li></ul><div class="navrem"><label>base rem</label><input id="g_rem2" type="range" min="16" max="80" value="50"><span class="v" id="g_rem2v">50</span><button type="button" class="btn" id="g_rem2reset">reset</button></div></nav>
 <main>
 <div class="introrow">
 <p style="color:#8a8a8a;max-width:660px;">Pave Bank visual library. Homepage / Trust visuals run on the
@@ -164,7 +165,32 @@ scrub bottom-centre, play/pause bottom-right. rem = 50px.</p>
     <div class="r"><label>curl</label><input id="book_curl" type="range" min="0" max="60" value="60"><span class="v" id="book_curlv"></span></div>
     <div class="r"><label>contrast</label><input id="book_con" type="range" min="50" max="400" value="180"><span class="v" id="book_conv"></span></div>
     <div class="r"><label>tone min</label><input id="book_tmin" type="range" min="0" max="70" value="0"><span class="v" id="book_tminv"></span></div>
-    <div class="r"><label>dot min sz</label><input id="book_smin" type="range" min="0" max="80" value="80"><span class="v" id="book_sminv"></span></div><div class="r reset"><button type="button" class="btn rst" data-panel="book">reset controls</button></div></div><div class="scrubbar"><label>scrub</label><input id="book_scrub" type="range" min="0" max="1000" value="0"><span class="v" id="book_scrubv">0.00</span></div><div class="ppwrap"><button class="btn dl" data-mod="book" title="Download this frame as PNG">download</button><button class="btn pp" data-mod="book">play</button></div></div></section><h1 id="open-h">Open Account</h1><section class="module tone-light" id="m-pavepath" data-mod="pavepath">
+    <div class="r"><label>dot min sz</label><input id="book_smin" type="range" min="0" max="80" value="80"><span class="v" id="book_sminv"></span></div><div class="r reset"><button type="button" class="btn rst" data-panel="book">reset controls</button></div></div><div class="scrubbar"><label>scrub</label><input id="book_scrub" type="range" min="0" max="1000" value="0"><span class="v" id="book_scrubv">0.00</span></div><div class="ppwrap"><button class="btn dl" data-mod="book" title="Download this frame as PNG">download</button><button class="btn pp" data-mod="book">play</button></div></div></section><section class="module tone-dark" id="m-col" data-mod="col"><div class="modhead"><h3>Legal — Fluted Column</h3><button type="button" class="btn invbtn" data-mod="col" title="Invert bg / dots">invert</button><div class="resbox"><label>res</label><input type="number" class="resw" data-mod="col" step="20" min="120"><span class="x">x</span><input type="number" class="resh" data-mod="col" step="20" min="120"><button type="button" class="btn resfit" data-mod="col">fit</button></div></div><div class="visouter"><div class="vis"><div class="canvasbox" id="col_box">
+  <canvas id="col_stage" class="stagebox"></canvas>
+  
+
+
+</div></div><div class="hud" data-panel="col">
+    
+    <div class="r"><label>width</label><input id="col_width" type="range" min="20" max="400" value="255"><span class="v" id="col_widthv"></span></div>
+    <div class="r"><label>vert pos</label><input id="col_vpos" type="range" min="20" max="80" value="26"><span class="v" id="col_vposv"></span></div>
+    <div class="r"><label>horiz pos</label><input id="col_hpos" type="range" min="20" max="80" value="50"><span class="v" id="col_hposv"></span></div>
+    <div class="r"><label>height</label><input id="col_height" type="range" min="200" max="640" value="536"><span class="v" id="col_heightv"></span></div>
+    <div class="r"><label>flutes</label><input id="col_flutes" type="range" min="0" max="16" value="7"><span class="v" id="col_flutesv"></span></div>
+    <div class="r"><label>flute depth</label><input id="col_flutedepth" type="range" min="0" max="80" value="50"><span class="v" id="col_flutedepthv"></span></div>
+    <div class="r"><label>round</label><input id="col_round" type="range" min="20" max="100" value="100"><span class="v" id="col_roundv"></span></div>
+    <div class="r"><label>entasis</label><input id="col_entasis" type="range" min="0" max="30" value="15"><span class="v" id="col_entasisv"></span></div>
+    <div class="r"><label>cap width</label><input id="col_capw" type="range" min="0" max="90" value="40"><span class="v" id="col_capwv"></span></div>
+    <div class="r"><label>cap height</label><input id="col_caph" type="range" min="0" max="60" value="60"><span class="v" id="col_caphv"></span></div>
+    <div class="r"><label>base width</label><input id="col_basew" type="range" min="0" max="90" value="29"><span class="v" id="col_basewv"></span></div>
+    <div class="r"><label>base height</label><input id="col_baseh" type="range" min="0" max="70" value="54"><span class="v" id="col_basehv"></span></div>
+    <div class="r"><label>light dir</label><input id="col_lightx" type="range" min="-100" max="100" value="-100"><span class="v" id="col_lightxv"></span></div>
+    <div class="r"><label>contrast</label><input id="col_con" type="range" min="60" max="300" value="300"><span class="v" id="col_conv"></span></div>
+    <div class="r"><label>tone min</label><input id="col_tmin" type="range" min="0" max="70" value="0"><span class="v" id="col_tminv"></span></div>
+    <div class="r"><label>shimmer</label><input id="col_shim" type="range" min="0" max="50" value="0"><span class="v" id="col_shimv"></span></div>
+    <div class="r"><label>shimmer (s)</label><input id="col_shims" type="range" min="20" max="160" value="80"><span class="v" id="col_shimsv"></span></div>
+    <div class="r"><label>rotate (s)</label><input id="col_rot" type="range" min="0" max="600" value="134"><span class="v" id="col_rotv"></span></div>
+    <div class="r"><label>dot min sz</label><input id="col_smin" type="range" min="0" max="80" value="38"><span class="v" id="col_sminv"></span></div><div class="r reset"><button type="button" class="btn rst" data-panel="col">reset controls</button></div></div><div class="scrubbar"><label>scrub</label><input id="col_scrub" type="range" min="0" max="1000" value="0"><span class="v" id="col_scrubv">0.00</span></div><div class="ppwrap"><button class="btn dl" data-mod="col" title="Download this frame as PNG">download</button><button class="btn pp" data-mod="col">play</button></div></div></section><h1 id="open-h">Open Account</h1><section class="module tone-light" id="m-pavepath" data-mod="pavepath">
 <div class="modhead"><h3>Open Account — PavePath</h3><button type="button" class="btn invbtn" data-mod="pavepath" title="Invert bg / dots">invert</button><div class="resbox"><label>res</label><input type="number" class="resw" data-mod="pavepath" step="20" min="120"><span class="x">x</span><input type="number" class="resh" data-mod="pavepath" step="20" min="120"><button type="button" class="btn resfit" data-mod="pavepath">fit</button></div></div>
 <div class="visouter">
 <div class="vis"><div class="canvasbox" id="pavepath_box">
@@ -4027,13 +4053,19 @@ document.querySelectorAll('section.module').forEach(s=>io.observe(s));
 
 // ── global: base rem ───────────────────────────────────────────────────────
 (()=>{
-  const el=document.getElementById('g_rem'), out=document.getElementById('g_remv');
-  const rs=document.getElementById('g_remreset');
-  const apply=()=>{ document.documentElement.style.fontSize=el.value+'px'; out.textContent=el.value;
+  const el=document.getElementById('g_rem'),   out=document.getElementById('g_remv');
+  const el2=document.getElementById('g_rem2'), out2=document.getElementById('g_rem2v');
+  const rs=document.getElementById('g_remreset'), rs2=document.getElementById('g_rem2reset');
+  const applyVal=(v)=>{ v=Math.max(16,Math.min(80,+v));
+    document.documentElement.style.fontSize=v+'px';
+    if(el){el.value=v;} if(out)out.textContent=v;
+    if(el2){el2.value=v;} if(out2)out2.textContent=v;
     for(const id in GRIDS){ const g=GRIDS[id](); if(g){ try{g.resize();}catch(e){} } }
     window.dispatchEvent(new Event('resize')); syncRes(); };
-  el.addEventListener('input',apply);
-  rs.addEventListener('click',()=>{ el.value=50; apply(); });
+  if(el)  el.addEventListener('input', ()=>applyVal(el.value));
+  if(el2) el2.addEventListener('input',()=>applyVal(el2.value));
+  if(rs)  rs.addEventListener('click', ()=>applyVal(50));
+  if(rs2) rs2.addEventListener('click',()=>applyVal(50));
 })();
 // ── global: invert / play / pause all ──────────────────────────────────────
 
@@ -4454,4 +4486,182 @@ const GLYPHS={
 
 })(); }catch(e){ console.error('[ff]',e); __fail('ff',e); }
 (()=>{const _s=document.getElementById('ff_scrub'),_o=document.getElementById('ff_scrubv');if(!_s)return;_s.addEventListener('input',()=>{const C=__CFG['ff']; if(!C)return;C.scrubOn=1; C.scrubU=+_s.value/1000; _o.textContent=C.scrubU.toFixed(2);__USERPAUSED['ff']=true; __setPlay('ff',true); setPP('ff',false);});})();
+
+try{ (()=>{
+
+(() => {
+  const cv=document.getElementById('col_stage'), ctx=cv.getContext('2d');
+  const DPR=Math.min(window.devicePixelRatio||1,2);
+  const css=getComputedStyle(document.documentElement);
+  let WHITE=(css.getPropertyValue('--white').trim()||'#f5f5f5');
+  let DARK =(css.getPropertyValue('--dark').trim() ||'#222222');
+  let LINE_RGB=hexToRgb(WHITE);
+  function hexToRgb(h){ h=h.replace('#',''); if(h.length===3)h=h.split('').map(c=>c+c).join(''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+
+  const STEP_REM=0.14, FG_MAX_REM=0.1, PIXEL_REM=0.024, BG_OPACITY=0.35, THRESHOLD=0.5;
+
+  const CFG = {
+    widthRem:  2.55,   // shaft width (× rem)
+    centerYf:  0.26,
+    centerXf:  0.50,
+    heightRem: 5.36,   // shaft height (× rem)
+    flutes:    7,      // number of vertical flutes (0 = smooth column)
+    fluteDepth:0.50,   // how dark the flute grooves cut (0..1)
+    round:     1.00,   // cylindrical roundness of the cross-section shading
+    entasis:   0.15,   // subtle mid-bulge / taper of the shaft profile
+    capWFrac:  0.40,   // capital overhang beyond shaft each side (× shaft half-width)
+    capHRem:   0.60,   // capital height (× rem)
+    baseWFrac: 0.29,   // base overhang
+    baseHRem:  0.54,   // base height
+    lightX:   -1.00,   // horizontal light direction (-1 left … 1 right)
+    contrast:  3.00,
+    toneMin:   0.00,
+    toneMax:   1.0,
+    shimmer:   0.00,
+    shimmerS:  8.0,
+    rotS:      13.4, scrubOn:0, scrubU:0,   // seconds per full turn (0 = static)
+    sizeMin:   0.38,
+    sizeMax:   1.0,
+    opacMin:   0.42,
+  };
+
+  let W=0,H=0,rem=16,colX=[],rowY=[],COLS=0,ROWS=0,STEP=0,FG_MAX=0,PIXEL_SIZE=0;
+  function resize(){
+    W=cv.parentElement.clientWidth; H=cv.parentElement.clientHeight;
+    cv.style.width=W+'px'; cv.style.height=H+'px'; cv.width=W*DPR; cv.height=H*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    rem=parseFloat(getComputedStyle(document.documentElement).fontSize)||16;
+    STEP=rem*STEP_REM; FG_MAX=rem*FG_MAX_REM; PIXEL_SIZE=rem*PIXEL_REM;
+    COLS=Math.floor((W+STEP+0.5)/STEP); ROWS=Math.floor((H+STEP+0.5)/STEP);
+    colX=[]; rowY=[];
+    for(let c=0;c<COLS;c++) colX.push(c*STEP);
+    for(let r=0;r<ROWS;r++) rowY.push(r*STEP);
+  }
+  window.addEventListener('resize',resize);
+
+  // Instead of 3D geometry, we shade the column ANALYTICALLY per dot cell:
+  // for a given grid cell, decide if it's inside the shaft / capital / base,
+  // and compute its brightness from the cylindrical curve + flute grooves.
+  // Vertical grooves + a smooth left→right cylinder gradient read cleanly in a
+  // vertical dot grid — no rotating geometry, no merging facets.
+  function frame(now){
+    if(!W||!H){ resize(); __SCHED('col',frame); return; }
+    const t=now/1000;
+    ctx.fillStyle=DARK; ctx.fillRect(0,0,W,H);
+    const half=STEP/2,[lr,lg,lb]=LINE_RGB;
+
+    // background dot field
+    ctx.fillStyle=`rgba(${lr},${lg},${lb},${BG_OPACITY})`;
+    for(let c=0;c<COLS;c++){ const x=colX[c]+half; for(let r=0;r<ROWS;r++){ const y=rowY[r]+half; ctx.fillRect(x-PIXEL_SIZE/2,y-PIXEL_SIZE/2,PIXEL_SIZE,PIXEL_SIZE); } }
+
+    const S=rem;
+    const halfW=S*CFG.widthRem/2;
+    const shaftH=S*CFG.heightRem;
+    const cx=W*CFG.centerXf, cyc=H*CFG.centerYf;
+    const capH=S*CFG.capHRem, baseH=S*CFG.baseHRem;
+    const capOver=halfW*CFG.capWFrac, baseOver=halfW*CFG.baseWFrac;
+
+    const shaftTop=cyc-shaftH/2+capH, shaftBot=cyc+shaftH/2-baseH;
+    const capTop=cyc-shaftH/2, baseBot=cyc+shaftH/2;
+    const lightN=CFG.lightX;   // -1 lit from left
+    const sh=1 + Math.sin((t/CFG.shimmerS)*Math.PI*2)*CFG.shimmer;
+    const spin=CFG.scrubOn ? CFG.scrubU*Math.PI*2 : (CFG.rotS>0 ? (t/CFG.rotS)*Math.PI*2 : 0);
+
+    // shade a horizontal position u∈[-1,1] across a rounded element of the given
+    // half-width, with optional flutes. returns 0..1 brightness (pre-tone-remap).
+    function shadeAt(u, withFlutes, spin){
+      // u = horizontal position across the visible face (-1 left … 1 right).
+      // Map it to an angle on the cylinder: the visible front spans a=-π/2..π/2.
+      const a=Math.asin(Math.max(-1,Math.min(1,u)));   // surface angle (front)
+      // world normal of this surface point, then spin the SHADING is fixed in
+      // view space (light doesn't rotate), so lambert uses the un-spun normal:
+      const nx=Math.sin(a), nz=Math.cos(a);            // toward viewer at a=0
+      const lx=lightN, lz=0.72, ll=Math.hypot(lx,lz);
+      let lam=(nx*lx+nz*lz)/ll; lam=0.5+lam*0.5;       // 0..1
+      let bright=(1-CFG.round)*0.7 + CFG.round*lam;
+      if(withFlutes && CFG.flutes>0){
+        // flutes are carved into the stone, so they ROTATE with the shaft:
+        // groove pattern indexed by (surface angle + spin).
+        const g=Math.cos((a+spin)*CFG.flutes);          // ridge/groove ripple
+        const groove=(g*0.5+0.5);
+        bright*= (1-CFG.fluteDepth) + CFG.fluteDepth*groove;
+        // foreshorten grooves toward the silhouette edges (they compress as the
+        // surface turns away) — sharpen contrast near |u|→1 for a rounded read
+        const edge=Math.pow(1-Math.abs(u),0.35);
+        bright=bright*(0.55+0.45*edge)+ (1-edge)*0.04;
+      }
+      bright=Math.max(0,Math.min(1, 0.5+(bright-0.5)*CFG.contrast));
+      return bright*sh;
+    }
+
+    // profile half-width at a given vertical position (entasis: slight bulge)
+    function shaftHalfWidth(yFrac){
+      // yFrac 0 top … 1 bottom of shaft; bulge peaks around 0.35
+      const bulge=Math.sin(yFrac*Math.PI)*CFG.entasis;
+      return halfW*(1+bulge);
+    }
+
+    for(let c=0;c<COLS;c++){
+      const x=colX[c]+half;
+      for(let r=0;r<ROWS;r++){
+        const y=rowY[r]+half;
+        let bright=-1;
+
+        if(y>=capTop && y<shaftTop){
+          // CAPITAL slab
+          const hw=halfW+capOver;
+          const u=(x-cx)/hw;
+          if(Math.abs(u)<=1) bright=shadeAt(u,false,spin)*0.96;
+        } else if(y>=shaftTop && y<=shaftBot){
+          // SHAFT (fluted)
+          const yFrac=(y-shaftTop)/(shaftBot-shaftTop);
+          const hw=shaftHalfWidth(yFrac);
+          const u=(x-cx)/hw;
+          if(Math.abs(u)<=1) bright=shadeAt(u,true,spin);
+        } else if(y>shaftBot && y<=baseBot){
+          // BASE slab
+          const hw=halfW+baseOver;
+          const u=(x-cx)/hw;
+          if(Math.abs(u)<=1) bright=shadeAt(u,false,spin)*0.9;
+        }
+
+        if(bright<0) continue;
+        const shade=CFG.toneMin+Math.max(0,Math.min(1,bright))*(CFG.toneMax-CFG.toneMin);
+        const sz=FG_MAX*(CFG.sizeMin+(CFG.sizeMax-CFG.sizeMin)*shade);
+        const op=CFG.opacMin+(1-CFG.opacMin)*shade;
+        ctx.fillStyle=`rgba(${lr},${lg},${lb},${op})`;
+        ctx.fillRect(colX[c]+half-sz/2, rowY[r]+half-sz/2, sz, sz);
+      }
+    }
+    __SCHED('col',frame);
+  }
+  resize();
+  __SCHED('col',frame);
+
+  const bind=(id,valId,fn,fmt)=>{ const el=document.getElementById(id),out=document.getElementById(valId); if(!el)return; const s=()=>{fn(+el.value);if(out)out.textContent=fmt(+el.value);}; el.addEventListener('input',s); s(); };
+  bind('col_width','col_widthv',    v=>CFG.widthRem=v/100,  v=>(v/100).toFixed(2));
+  bind('col_vpos','col_vposv',      v=>CFG.centerYf=v/100,  v=>(v/100).toFixed(2));
+  bind('col_hpos','col_hposv',      v=>CFG.centerXf=v/100,  v=>(v/100).toFixed(2));
+  bind('col_height','col_heightv',  v=>CFG.heightRem=v/100, v=>(v/100).toFixed(2));
+  bind('col_flutes','col_flutesv',  v=>CFG.flutes=v,        v=>String(v));
+  bind('col_flutedepth','col_flutedepthv',v=>CFG.fluteDepth=v/100,v=>(v/100).toFixed(2));
+  bind('col_round','col_roundv',    v=>CFG.round=v/100,     v=>(v/100).toFixed(2));
+  bind('col_entasis','col_entasisv',v=>CFG.entasis=v/100,   v=>(v/100).toFixed(2));
+  bind('col_capw','col_capwv',      v=>CFG.capWFrac=v/100,  v=>(v/100).toFixed(2));
+  bind('col_caph','col_caphv',      v=>CFG.capHRem=v/100,   v=>(v/100).toFixed(2));
+  bind('col_basew','col_basewv',    v=>CFG.baseWFrac=v/100, v=>(v/100).toFixed(2));
+  bind('col_baseh','col_basehv',    v=>CFG.baseHRem=v/100,  v=>(v/100).toFixed(2));
+  bind('col_lightx','col_lightxv',  v=>CFG.lightX=v/100,    v=>(v/100).toFixed(2));
+  bind('col_con','col_conv',        v=>CFG.contrast=v/100,  v=>(v/100).toFixed(2));
+  bind('col_tmin','col_tminv',      v=>CFG.toneMin=v/100,   v=>(v/100).toFixed(2));
+  bind('col_shim','col_shimv',      v=>CFG.shimmer=v/100,   v=>(v/100).toFixed(2));
+  bind('col_shims','col_shimsv',    v=>CFG.shimmerS=v/10,   v=>(v/10).toFixed(1)+'s');
+  bind('col_rot','col_rotv',        v=>CFG.rotS=v/10,       v=>v==0?'static':(v/10).toFixed(1)+'s');
+  bind('col_smin','col_sminv',      v=>CFG.sizeMin=v/100,   v=>(v/100).toFixed(2));
+
+  try{ __CFG['col']=CFG; CFG.__invert=function(){ const t=WHITE; WHITE=DARK; DARK=t; LINE_RGB=hexToRgb(WHITE); }; }catch(e){}
+})();
+
+})(); }catch(e){ console.error('[col]',e); __fail('col',e); }
+(()=>{const _s=document.getElementById('col_scrub'),_o=document.getElementById('col_scrubv');if(!_s)return;_s.addEventListener('input',()=>{const C=__CFG['col']; if(!C)return;C.scrubOn=1; C.scrubU=+_s.value/1000; _o.textContent=C.scrubU.toFixed(2);__USERPAUSED['col']=true; __setPlay('col',true); setPP('col',false);});})();
 </script></body></html>
