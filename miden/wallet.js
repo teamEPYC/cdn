@@ -867,12 +867,12 @@
 
 // twitter
 
-
+<!-- Code to handle Bread wallet ticket share button click on X -->
 document.addEventListener('DOMContentLoaded', function () {
   const CONFIG = {
     buttonSelector: '.bread-btn.bread-btn-1',
     ticketSelector: '.bread-tk-no',
-    shareTextTemplate: "Got my ticket for early access to Bread wallet on Miden mainnet 🍞\n\nSelf-custodial, with privacy baked in.\n",
+    shareTextTemplate: "Got my ticket for early access to Bread wallet on Miden mainnet 🍞\n\nSelf-custodial, with privacy baked in.\n\n",
     shareBaseUrl: 'https://www.miden.xyz/bread?utm_source=bread&utm_medium=x&utm_campaign=bread_brand_reveal&utm_content=share_button&ref=ticket',
     popupWidth: 550,
     popupHeight: 420
@@ -893,7 +893,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const ticketNumber = ticketEl.textContent.replace(/\D/g, '').padStart(4, '0');
     const shareUrl = `${CONFIG.shareBaseUrl}${ticketNumber}`;
-    const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(CONFIG.shareTextTemplate)}&url=${encodeURIComponent(shareUrl)}`;
+    const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(CONFIG.shareTextTemplate + shareUrl)}`;
 
     const left = (window.screen.width - CONFIG.popupWidth) / 2;
     const top = (window.screen.height - CONFIG.popupHeight) / 2;
