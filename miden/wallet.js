@@ -1,3 +1,4 @@
+
 // resets the widget on Back so a repeat attempt gets a fresh, unused token
 (() => {
   'use strict';
@@ -42,12 +43,30 @@
   }
   if (!form) console.warn('[bread] no native form found inside .bread-face; submission will be skipped');
 
+  // Gate the form's native submit so it only ever fires from the one
+  // deliberate call inside doReveal(). Without this, tear being
+  // type="submit" inside the form lets Enter-in-an-input (or any other
+  // implicit submit) bypass our JS/animation flow and submit early.
+  let allowSubmit = false;
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      if (!allowSubmit) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    });
+  }
+
   const rand = (a, b) => a + Math.random() * (b - a);
   const fmt = (n) => (n === null ? 'No. —' : 'No. ' + n.toLocaleString('en-US'));
   let phase = 'ready';
 
   let ticketAnimating = false;
   const HEIGHT_BUFFER = 40;
+
+  // How long to wait for Webflow's .w-form-done / .w-form-fail to appear
+  // before treating the submission as failed.
+  const SUBMIT_VERIFY_TIMEOUT_MS = 15000;
 
   // ---------------------------------------------------------------------
   // Ticket counter: reflects real form submissions via a Cloudflare Worker.
@@ -394,7 +413,12 @@
   }
   tear.addEventListener('pointerup', endTear);
   tear.addEventListener('pointercancel', endTear);
-  tear.addEventListener('click', () => {
+  tear.addEventListener('click', (e) => {
+    // tear is type="submit" inside the form — its native click would
+    // submit immediately. Block that; the one real submit happens later,
+    // gated behind allowSubmit, from doReveal() once the tear animation
+    // finishes.
+    e.preventDefault();
     if (phase === 'armed' && validate()) autoTear();
   });
   tear.addEventListener('keydown', (e) => {
@@ -431,14 +455,76 @@
     requestAnimationFrame(step);
   }
 
+  // Locates the Webflow success/fail markers around a given form.
+  // Webflow's own runtime toggles .w-form-done / .w-form-fail visibility
+  // once its AJAX submission resolves — there's no JS event to await,
+  // so we watch for that DOM change instead.
+  function getWForm(formEl) {
+    const wrapper = formEl.closest('.w-form') || formEl.parentElement;
+    const scope = wrapper || document;
+    const doneEl = scope.querySelector('.w-form-done');
+    const failEl = scope.querySelector('.w-form-fail');
+    return { wrapper, doneEl, failEl };
+  }
+
   function doReveal() {
-    if (form) {
+    if (!form) {
+      completeReveal();
+      return;
+    }
+
+    const wf = getWForm(form);
+    if (!wf.wrapper || (!wf.doneEl && !wf.failEl)) {
+      // No Webflow success/fail markers found on this page — nothing to
+      // verify against, so submit and proceed as before.
+      allowSubmit = true;
       try {
         if (form.requestSubmit) form.requestSubmit();
         else form.submit();
       } catch (_) {}
+      allowSubmit = false;
+      completeReveal();
+      return;
     }
 
+    let settled = false;
+    const isVisible = (el) => !!el && el.offsetParent !== null && getComputedStyle(el).display !== 'none';
+
+    const observer = new MutationObserver(check);
+    const timer = setTimeout(() => finish(false), SUBMIT_VERIFY_TIMEOUT_MS);
+
+    function finish(ok) {
+      if (settled) return;
+      settled = true;
+      observer.disconnect();
+      clearTimeout(timer);
+      if (ok) completeReveal();
+      else failReveal();
+    }
+
+    function check() {
+      if (isVisible(wf.failEl)) finish(false);
+      else if (isVisible(wf.doneEl)) finish(true);
+    }
+
+    observer.observe(wf.wrapper, { attributes: true, attributeFilter: ['style', 'class'], subtree: true });
+
+    allowSubmit = true;
+    try {
+      if (form.requestSubmit) form.requestSubmit();
+      else form.submit();
+    } catch (_) {
+      allowSubmit = false;
+      finish(false);
+      return;
+    }
+    allowSubmit = false;
+
+    // Catch the case Webflow already flipped visibility synchronously.
+    check();
+  }
+
+  function completeReveal() {
     window.scrollTo({ top: 0, behavior: RM ? 'auto' : 'smooth' });
 
     // Optimistic display only — the real, authoritative count is incremented
@@ -475,6 +561,24 @@
       },
       RM ? 0 : 180,
     );
+  }
+
+  function failReveal(msg) {
+    // Submission didn't succeed — undo the tear visually and let the
+    // person try again instead of showing a false success state.
+    phase = 'armed';
+    setTearTouchAction();
+    ticket.style.transition = RM ? 'none' : 'clip-path .34s cubic-bezier(.22,1.4,.36,1), transform .34s cubic-bezier(.22,1.4,.36,1)';
+    applyTear(0, 1);
+    ticket.style.clipPath = 'none';
+    setTimeout(
+      () => {
+        ticket.style.transition = '';
+      },
+      RM ? 0 : 360,
+    );
+    shake();
+    say(msg || 'Something went wrong — pull the tab to try again');
   }
 
   function updateRevealTexts(n, nameOverride) {
@@ -634,6 +738,8 @@
   }
 })();
 
+
+
   //scroll
   (() => {
     'use strict';
@@ -758,7 +864,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const CONFIG = {
     buttonSelector: '.bread-btn.bread-btn-1',
     ticketSelector: '.bread-tk-no',
-    shareTextTemplate: "Got my ticket for Bread Early Access on the upcoming Miden mainnet 😎🍞\n\nBread Wallet by Miden is a self-custodial wallet. Privacy baked in.\n\nGet your ticket too!",
+    shareTextTemplate: "Got my ticket for early access to Bread wallet on Miden mainnet🍞\n\nSelf-custodial, with privacy baked in.",
     shareBaseUrl: 'https://www.miden.xyz/bread?utm_source=bread&utm_medium=x&utm_campaign=bread_brand_reveal&utm_content=share_button&ref=ticket',
     popupWidth: 550,
     popupHeight: 420
