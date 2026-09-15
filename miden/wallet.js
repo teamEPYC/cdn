@@ -36,6 +36,8 @@
   const nameEl = pick(['Name'], 'name');
   const emailEl = pick(['Email', 'Email-2', 'Email Address'], 'email');
   const tgEl = pick(['Telegram', 'Field'], 'field');
+  const tkNumEl = pick(['Ticket number'], 'ticket-number');
+  if (!tkNumEl) console.warn('[bread] Ticket number field not found — check its name/id attribute');
 
   if (!machine || !handle || !ticket || !face || !tear) {
     console.warn('[bread] machine parts missing — check the .bread-* classes are intact');
@@ -473,6 +475,14 @@
       return;
     }
 
+    // populate reveal texts (incl. .bread-p-no) before submit so we can read the number from it
+    updateRevealTexts(pending);
+
+    if (tkNumEl) {
+      const match = pNo ? pNo.textContent.match(/\d+/) : null;
+      tkNumEl.value = match ? match[0] : (pending === null ? '' : String(pending));
+    }
+
     const wf = getWForm(form);
     if (!wf.wrapper || (!wf.doneEl && !wf.failEl)) {
       // No Webflow success/fail markers found on this page — nothing to
@@ -738,8 +748,6 @@
   }
 })();
 
-
-
   //scroll
   (() => {
     'use strict';
@@ -864,7 +872,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const CONFIG = {
     buttonSelector: '.bread-btn.bread-btn-1',
     ticketSelector: '.bread-tk-no',
-    shareTextTemplate: "Got my ticket for early access to Bread wallet on Miden mainnet🍞\n\nSelf-custodial, with privacy baked in.\n",
+    shareTextTemplate: "Got my ticket for early access to Bread wallet on Miden mainnet🍞\n\n Self-custodial, with privacy baked in.\n\n",
     shareBaseUrl: 'https://www.miden.xyz/bread?utm_source=bread&utm_medium=x&utm_campaign=bread_brand_reveal&utm_content=share_button&ref=ticket',
     popupWidth: 550,
     popupHeight: 420
