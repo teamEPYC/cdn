@@ -859,12 +859,11 @@
 
 // twitter
 
-
 document.addEventListener('DOMContentLoaded', function () {
   const CONFIG = {
     buttonSelector: '.bread-btn.bread-btn-1',
     ticketSelector: '.bread-tk-no',
-    shareTextTemplate: "Got my ticket for early access to Bread wallet on Miden mainnet🍞\n\nSelf-custodial, with privacy baked in.\n",
+    shareTextTemplate: "Got my ticket for early access to Bread wallet on Miden mainnet🍞\n\n Self-custodial, with privacy baked in.\n\n ",
     shareBaseUrl: 'https://www.miden.xyz/bread?utm_source=bread&utm_medium=x&utm_campaign=bread_brand_reveal&utm_content=share_button&ref=ticket',
     popupWidth: 550,
     popupHeight: 420
