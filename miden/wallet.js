@@ -478,9 +478,9 @@
     // populate reveal texts (incl. .bread-p-no) before submit so we can read the number from it
     updateRevealTexts(pending);
 
-    if (tkNumEl) {
-      const match = pNo ? pNo.textContent.match(/\d+/) : null;
-      tkNumEl.value = match ? match[0] : (pending === null ? '' : String(pending));
+   if (tkNumEl) {
+      const digits = pNo ? pNo.textContent.replace(/\D/g, '') : '';
+      tkNumEl.value = digits || (pending === null ? '' : String(pending));
     }
 
     const wf = getWForm(form);
