@@ -1,0 +1,88 @@
+/* Optional. You style the UI in Webflow.
+   Scripts also apply the critical animation styles.
+   Paste this only if you want hidden scrollbars + brand vars. */
+
+:root {
+  --background: #fbf8f3;
+  --foreground: #222222;
+  --primary: #ff3621;
+}
+
+html,
+body {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+[data-featured-stage] {
+  position: relative;
+  overflow: hidden;
+  perspective: 1400px;
+}
+
+[data-featured-strips] {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+[data-featured-overlay] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(255, 54, 33, 0.55);
+}
+
+[data-featured-book] {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: auto;
+  transform-style: preserve-3d;
+  transform-origin: center;
+}
+
+[data-book] {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+}
+
+[data-book-hint] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  white-space: nowrap;
+}
+
+/* Library row — the script and the book need these; sizes stay in Webflow. */
+[data-library-book] {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-library-overlay] {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Cube mosaic — the canvas is placed by the script. */
+[data-cube-scope] {
+  position: relative;
+  overflow: hidden;
+}
