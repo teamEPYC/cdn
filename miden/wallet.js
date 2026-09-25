@@ -1,4 +1,4 @@
-
+<!-- Code for the Bread wallet ticket widget, hero scroll stacking, and X share button (indentation fixed, honeypot check included) -->
 // resets the widget on Back so a repeat attempt gets a fresh, unused token
 (() => {
   'use strict';
@@ -38,6 +38,8 @@
   const tgEl = pick(['Telegram', 'Field'], 'field');
   const tkNumEl = pick(['Ticket number'], 'ticket-number');
   if (!tkNumEl) console.warn('[bread] Ticket number field not found — check its name/id attribute');
+  const honeypotEl = pick(['Instagram'], 'instagram');
+  const isBot = () => !!(honeypotEl && honeypotEl.value.trim());
 
   if (!machine || !handle || !ticket || !face || !tear) {
     console.warn('[bread] machine parts missing — check the .bread-* classes are intact');
@@ -49,10 +51,11 @@
   // deliberate call inside doReveal(). Without this, tear being
   // type="submit" inside the form lets Enter-in-an-input (or any other
   // implicit submit) bypass our JS/animation flow and submit early.
+  // Also always blocks when the honeypot field has been filled.
   let allowSubmit = false;
   if (form) {
     form.addEventListener('submit', (e) => {
-      if (!allowSubmit) {
+      if (!allowSubmit || isBot()) {
         e.preventDefault();
         e.stopImmediatePropagation();
       }
@@ -475,10 +478,18 @@
       return;
     }
 
+    // Honeypot filled: skip the real submission and show a fake success
+    // so the bot doesn't retry
+    if (isBot()) {
+      console.warn('[bread] honeypot filled, submission blocked');
+      completeReveal();
+      return;
+    }
+
     // populate reveal texts (incl. .bread-p-no) before submit so we can read the number from it
     updateRevealTexts(pending);
 
-   if (tkNumEl) {
+    if (tkNumEl) {
       const digits = pNo ? pNo.textContent.replace(/\D/g, '') : '';
       tkNumEl.value = digits || (pending === null ? '' : String(pending));
     }
@@ -748,126 +759,125 @@
   }
 })();
 
-  //scroll
-  (() => {
-    'use strict';
-  
-    // Code to prevent the browser from restoring scroll position on reload,
-    // which was causing ScrollTrigger to compute stale start/end offsets
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-    window.scrollTo(0, 0);
-  
-    gsap.registerPlugin(ScrollTrigger);
-    ScrollTrigger.config({ ignoreMobileResize: true });
-  
-    const CONFIG = {
-      heroSelector: '._w-hero',
-      scaleTo: 0.9,
-      opacityTo: 0,
-      pinDistance: '+=80%',
-      // Code for the breakpoint below which the stacking effect is disabled
-      desktopMinWidth: '(min-width: 768px)',
+//scroll
+(() => {
+  'use strict';
+
+  // Code to prevent the browser from restoring scroll position on reload,
+  // which was causing ScrollTrigger to compute stale start/end offsets
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
+
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  const CONFIG = {
+    heroSelector: '._w-hero',
+    scaleTo: 0.9,
+    opacityTo: 0,
+    pinDistance: '+=80%',
+    // Code for the breakpoint below which the stacking effect is disabled
+    desktopMinWidth: '(min-width: 768px)',
+  };
+
+  const hero = document.querySelector(CONFIG.heroSelector);
+  const nextSection = hero?.nextElementSibling;
+  if (!hero || !nextSection) return;
+
+  const mm = gsap.matchMedia();
+
+  // Code to hold a reference to the active ScrollTrigger instance so the
+  // ticket-active/ticket-done listeners outside matchMedia can pause/resume it
+  let activeST = null;
+
+  // Code to build the pin/scale/fade timeline only when the desktop media
+  // query matches; matchMedia auto-reverts everything (kills the
+  // ScrollTrigger, clears inline styles) when the query stops matching,
+  // e.g. on resize/rotate across the breakpoint
+  mm.add(CONFIG.desktopMinWidth, () => {
+    const stackTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: hero,
+        start: '160% 160%',
+        end: CONFIG.pinDistance,
+        scrub: true,
+        pin: true,
+        pinSpacing: false,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    stackTimeline.to(hero, {
+      scale: CONFIG.scaleTo,
+      opacity: CONFIG.opacityTo,
+      ease: 'none',
+    });
+
+    activeST = stackTimeline.scrollTrigger;
+
+    // Code to re-measure the pin's start/end whenever the hero's own
+    // height changes (ticket expanding/collapsing inside it), batched to
+    // one ScrollTrigger.refresh() per animation frame
+    let refreshQueued = false;
+    const queueRefresh = () => {
+      if (refreshQueued) return;
+      refreshQueued = true;
+      requestAnimationFrame(() => {
+        refreshQueued = false;
+        ScrollTrigger.refresh();
+      });
     };
-  
-    const hero = document.querySelector(CONFIG.heroSelector);
-    const nextSection = hero?.nextElementSibling;
-    if (!hero || !nextSection) return;
-  
-    const mm = gsap.matchMedia();
-  
-    // Code to hold a reference to the active ScrollTrigger instance so the
-    // ticket-active/ticket-done listeners outside matchMedia can pause/resume it
-    let activeST = null;
-  
-    // Code to build the pin/scale/fade timeline only when the desktop media
-    // query matches; matchMedia auto-reverts everything (kills the
-    // ScrollTrigger, clears inline styles) when the query stops matching,
-    // e.g. on resize/rotate across the breakpoint
-    mm.add(CONFIG.desktopMinWidth, () => {
-      const stackTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: hero,
-          start: '160% 160%',
-          end: CONFIG.pinDistance,
-          scrub: true,
-          pin: true,
-          pinSpacing: false,
-          invalidateOnRefresh: true,
-        },
-      });
-  
-      stackTimeline.to(hero, {
-        scale: CONFIG.scaleTo,
-        opacity: CONFIG.opacityTo,
-        ease: 'none',
-      });
-  
-      activeST = stackTimeline.scrollTrigger;
-  
-      // Code to re-measure the pin's start/end whenever the hero's own
-      // height changes (ticket expanding/collapsing inside it), batched to
-      // one ScrollTrigger.refresh() per animation frame
-      let refreshQueued = false;
-      const queueRefresh = () => {
-        if (refreshQueued) return;
-        refreshQueued = true;
-        requestAnimationFrame(() => {
-          refreshQueued = false;
-          ScrollTrigger.refresh();
-        });
-      };
-  
-      let ro = null;
-      if ('ResizeObserver' in window) {
-        ro = new ResizeObserver(queueRefresh);
-        ro.observe(hero);
-      }
-      window.addEventListener('load', queueRefresh);
-  
-      // Code to clean up the observer and the shared reference when matchMedia
-      // reverts this context (i.e. viewport crosses back below the breakpoint)
-      return () => {
-        if (ro) ro.disconnect();
-        activeST = null;
-      };
-    });
-  
-    // Code to disable the pin the instant the ticket opens, so the growing
-    // ticket isn't fighting a pinned/scaling hero while it expands. No scroll
-    // manipulation here — bread-widget.js owns scrolling the ticket into view,
-    // and calling scrollTo from both scripts at once is what caused the
-    // visible scroll-jump / layout shift on click.
-    document.addEventListener('bread:ticket-active', () => {
-      if (!activeST) return;
-      activeST.disable(true);
-    });
-  
-    // Code to recompute the pin's start/end and re-enable it only once the
-    // ticket has actually finished expanding (bread-widget.js fires this after
-    // its own max-height transition ends) — refreshing any earlier measures
-    // the pre-expansion height and produces a second, conflicting refresh
-    // moments later, which is what caused the jump.
-    document.addEventListener('bread:ticket-expanded', () => {
-      if (!activeST) return;
-      void document.body.offsetHeight;
-      ScrollTrigger.refresh();
-      activeST.enable();
-    });
-  
-    document.addEventListener('bread:ticket-done', () => {
-      if (!activeST) return;
-      // Code to force a reflow so the ticket's collapsed height is measured
-      // correctly before refreshing trigger boundaries back to normal
-      void document.body.offsetHeight;
-      ScrollTrigger.refresh();
-    });
-  })();
+
+    let ro = null;
+    if ('ResizeObserver' in window) {
+      ro = new ResizeObserver(queueRefresh);
+      ro.observe(hero);
+    }
+    window.addEventListener('load', queueRefresh);
+
+    // Code to clean up the observer and the shared reference when matchMedia
+    // reverts this context (i.e. viewport crosses back below the breakpoint)
+    return () => {
+      if (ro) ro.disconnect();
+      activeST = null;
+    };
+  });
+
+  // Code to disable the pin the instant the ticket opens, so the growing
+  // ticket isn't fighting a pinned/scaling hero while it expands. No scroll
+  // manipulation here — bread-widget.js owns scrolling the ticket into view,
+  // and calling scrollTo from both scripts at once is what caused the
+  // visible scroll-jump / layout shift on click.
+  document.addEventListener('bread:ticket-active', () => {
+    if (!activeST) return;
+    activeST.disable(true);
+  });
+
+  // Code to recompute the pin's start/end and re-enable it only once the
+  // ticket has actually finished expanding (bread-widget.js fires this after
+  // its own max-height transition ends) — refreshing any earlier measures
+  // the pre-expansion height and produces a second, conflicting refresh
+  // moments later, which is what caused the jump.
+  document.addEventListener('bread:ticket-expanded', () => {
+    if (!activeST) return;
+    void document.body.offsetHeight;
+    ScrollTrigger.refresh();
+    activeST.enable();
+  });
+
+  document.addEventListener('bread:ticket-done', () => {
+    if (!activeST) return;
+    // Code to force a reflow so the ticket's collapsed height is measured
+    // correctly before refreshing trigger boundaries back to normal
+    void document.body.offsetHeight;
+    ScrollTrigger.refresh();
+  });
+})();
 
 // twitter
 
-<!-- Code to handle Bread wallet ticket share button click on X -->
 document.addEventListener('DOMContentLoaded', function () {
   const CONFIG = {
     buttonSelector: '.bread-btn.bread-btn-1',
