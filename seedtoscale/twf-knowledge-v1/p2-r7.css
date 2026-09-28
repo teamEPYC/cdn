@@ -1,0 +1,543 @@
+/* Working Knowledge detail page — page-scoped alignment with the main microsite */
+.main-wrapper.is-twfa,.twfa_hero-body,.twfa_hero-byline,.twfa_hero-bar,.twk2_content,.twk2_next,.twk2_card-copy,.twk2_author-name,.twk2_eyebrow,.twk2_framework-copy,.twfa_dl-note,.twk2_modal,.twk2_field-label,.twk2_field{font-family:"Ppfragment - Sans",Georgia,sans-serif!important}
+.twk2_title,.twk2_card-title,.twk2_quote-text,.twk2_quote-mark,.twk2_author-initials,.twk2_closing,.twk2_modal-title{font-family:"Ppfragment - Glare",Georgia,sans-serif}
+
+/* One cream system behind every light reveal: no grey flash between cards. */
+.twk2_content,.twk2_playbook-grid,.twk2_framework-grid,.twk2_playbook-card,.twk2_framework-card,.twk2_next,.twk2_modal-panel{background:#f0eee5!important}
+
+/* Editorial type scale aligned to the main Working Knowledge page. */
+.twk2_title{font-size:60px!important;line-height:.98!important}
+.twk2_quote-text{font-size:50px!important;line-height:1.04!important;max-width:760px!important}
+.twk2_modal-title{font-size:46px!important;line-height:.98!important}
+.twfa_dl-title{font-size:60px!important;line-height:.98!important}
+
+/* Restore the author split: quieter quote, materially larger visual. */
+.twk2_author{grid-template-columns:minmax(0,58fr) minmax(0,42fr)!important}
+.twk2_quote{padding:72px 64px!important}
+.twk2_author-art{min-height:560px!important}
+.twk2_author-initials{width:230px!important;height:310px!important;font-size:92px!important}
+
+/* Use the exact main-page button structure and arrow on all Page 2 CTAs. */
+.twk2_cta-system{overflow:hidden!important}
+.twfa_hero-bar-cta.twk2_cta-system{width:auto!important}
+.twk2_notify.twk2_cta-system{width:220px!important}
+.twk2_cta-system .twf_btn-inner{width:100%}
+@media (hover:hover){
+  .twk2_cta-system.is-twf-light:hover{background:#222!important;color:#f0eee5!important}
+  .twk2_cta-system:hover img{filter:brightness(0) invert(1)}
+}
+
+/* Keep the dialog above the site nav, compact, and internally scrollable. */
+.twk2_modal{z-index:100000!important;padding:20px!important;align-items:center!important}
+.twk2_modal-panel{width:min(620px,100%)!important;max-height:min(680px,calc(100dvh - 40px))!important;overflow-y:auto!important;padding:40px 46px 32px!important;overscroll-behavior:contain}
+.twk2_modal-copy{margin-bottom:22px!important}
+.twk2_textarea{min-height:84px!important;resize:vertical}
+
+@media (max-width:991px){
+  .twk2_playbook-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .twk2_playbook-card{min-height:300px!important}
+  .twk2_author{grid-template-columns:1fr!important}
+  .twk2_author-art{min-height:420px!important;border-top:1px solid #5a5a5a!important;border-left:0!important}
+  .twk2_quote{padding:64px 48px!important}
+  .twk2_quote-text{font-size:42px!important}
+  .twk2_title{font-size:50px!important}
+  .twfa_dl-title{font-size:52px!important}
+  .twk2_next{grid-template-columns:1fr!important;align-items:start!important}
+}
+@media (max-width:767px){
+  .twk2_content{border-left:0!important;border-right:0!important}
+  .twk2_section{padding:52px 20px!important}
+  .twk2_playbook-grid,.twk2_framework-grid{grid-template-columns:1fr!important}
+  .twk2_playbook-card,.twk2_framework-card{min-height:0!important;padding:28px 22px!important}
+  .twk2_author{min-height:0!important}
+  .twk2_quote{padding:52px 20px!important}
+  .twk2_quote-text{font-size:34px!important}
+  .twk2_author-meta{align-items:flex-start!important;flex-direction:column!important}
+  .twk2_author-art{min-height:320px!important}
+  .twk2_title{font-size:40px!important}
+  .twk2_card-title{font-size:27px!important;line-height:1.04!important}
+  .twk2_closing{font-size:30px!important}
+  .twfa_hero-title{font-size:42px!important;line-height:.98!important}
+  .twfa_dl-title{font-size:40px!important}
+  .twk2_modal{padding:12px!important;align-items:flex-start!important}
+  .twk2_modal-panel{max-height:calc(100dvh - 24px)!important;padding:30px 20px 24px!important}
+  .twk2_modal-title{font-size:36px!important}
+  .twk2_modal-copy{margin-bottom:18px!important}
+  .twk2_textarea{min-height:72px!important}
+  .twk2_next{grid-template-columns:1fr!important;gap:32px!important;padding:52px 20px!important;border-left:0!important;border-right:0!important}
+  .twk2_notify.twk2_cta-system{width:100%!important}
+}
+@media (max-width:479px){
+  .twk2_quote-text{font-size:32px!important}
+  .twk2_author-art{min-height:270px!important}
+  .twk2_author-initials{width:150px!important;height:200px!important;font-size:62px!important}
+  .twk2_title{font-size:38px!important}
+  .twfa_hero-title{font-size:40px!important}
+}
+@media (prefers-reduced-motion:reduce){
+  .twk2_content *,.twk2_next *{animation:none!important;transition:none!important}
+}
+
+/* Footer reveal, matching page 1. This block used to force position:relative
+   and z-index:0, which cancels the sticky reveal that .is-twf-reveal provides.
+   That was invisible for as long as page 2 had no .twf_footer-pull element at
+   all; once the container was added, it showed up as a footer that just sits
+   there. Page 1 measured: footer sticky / bottom:0 / z-index:1 / 768px, main
+   relative / z-index:2 over an opaque #fbf8f3 — so the opaque main slides up
+   over the stuck footer. Page 2's main-wrapper computes z-index:1 from the
+   shared sheet, so it needs lifting to 2 or it would sit under the footer. */
+.page-wrapper.is-twfa-page > .twf_footer-pull{position:sticky!important;top:auto!important;bottom:0!important;height:100vh!important;min-height:100vh!important;z-index:1!important}
+.page-wrapper.is-twfa-page > .main-wrapper{position:relative!important;z-index:2!important}
+
+/* Page 2 hero: measured from the Vercel /book-detail reference at 1440px. */
+@media (min-width:992px){
+  .twfa_hero-section{padding:48px 0 clamp(59.52px, 6vw, 108px)!important}
+  .twfa_hero-grid{grid-template-columns:minmax(0,55fr) minmax(0,45fr)!important;align-items:stretch!important}
+  .twfa_hero-text{justify-content:center!important;padding:clamp(29.76px, 3vw, 54px) clamp(29.76px, 3vw, 54px) clamp(29.76px, 3vw, 54px) 0!important;gap:0!important}
+  .twfa_hero-text>.twf_eyebrow{font-size:clamp(9.42px, .95vw, 17.1px)!important;line-height:1.4!important;letter-spacing:.16em!important}
+  .twfa_hero-title{font-size:clamp(44.64px, 4.5vw, 81px)!important;line-height:1.05!important;margin-top:clamp(13.89px, 1.4vw, 25.2px)!important}
+  .twfa_hero-body{font-size:clamp(12.4px, 1.25vw, 22.5px)!important;line-height:1.35!important;max-width:clamp(337.28px, 34vw, 612px)!important;margin-top:clamp(19.84px, 2vw, 36px)!important}
+  .twfa_hero-byline{font-size:clamp(9.42px, .95vw, 17.1px)!important;line-height:1.4!important;margin-top:clamp(21.82px, 2.2vw, 39.6px)!important;letter-spacing:.08em!important}
+  .twfa_hero-media{height:clamp(317.44px, 32vw, 576px)!important;min-height:clamp(317.44px, 32vw, 576px)!important;padding-top:0!important}
+  /* r6: removed. This filled and cropped the hero image, which was right for the
+     wide photo that used to sit here and wrong for the book cover. The Designer
+     class .twfa_hero-img already says object-fit:contain, width:auto, height:90%,
+     bottom-anchored - the same treatment as the download section - but this
+     !important desktop override beat it above 992px. Below 992 it never applied,
+     which is why the cover looked right on mobile and cropped on desktop. */
+  .twfa_hero-bar{grid-column:1/-1!important;margin-top:clamp(59.52px, 6vw, 108px)!important;min-height:0!important;padding:clamp(15.87px, 1.6vw, 28.8px) clamp(23.81px, 2.4vw, 43.2px)!important;gap:clamp(19.84px, 2vw, 36px)!important}
+  .twfa_hero-bar-text{max-width:clamp(277.76px, 28vw, 504px)!important;font-size:clamp(9.42px, .95vw, 17.1px)!important;line-height:1.4!important;letter-spacing:.1em!important}
+  .twfa_hero-bar-cta.twk2_cta-system{font-size:16px!important;line-height:24px!important;padding:clamp(9.92px, 1vw, 18px) clamp(19.84px, 2vw, 36px)!important;width:auto!important}
+}
+
+/* Exact Vercel-style CTA geometry. One arrow element only; no legacy arrow survives. */
+.twk2_cta-system{position:relative!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;text-decoration:none!important}
+.twk2_cta-system .twf_btn-inner{position:relative;z-index:1;display:flex!important;align-items:center!important;justify-content:center!important;gap:.7vw!important;width:100%!important}
+.twk2_cta-system .twf_btn-fill{position:absolute;z-index:0;width:24px;height:24px;border-radius:50%;pointer-events:none;transform:scale(0)}
+.twk2_cta-system.is-twf-dark{background:#222!important;color:#fbf8f3!important}
+.twk2_cta-system.is-twf-dark .twf_btn-fill{background:#ff3621!important}
+.twk2_cta-system.is-twf-light{background:#fbf8f3!important;color:#222!important}
+.twk2_cta-system.is-twf-light .twf_btn-fill{background:#222!important}
+.twk2_cta-system .twf_btn-label-wrap{position:relative;z-index:1;overflow:hidden;white-space:nowrap}
+.twk2_cta-system .twf_btn-label,.twk2_cta-system .twf_btn-label-hover{display:block}
+.twk2_cta-system .twf_btn-label-hover{position:absolute;inset:0}
+.twk2_cta-system .twf_btn-label-text{margin:0!important;font:inherit!important;color:inherit!important}
+/* The wrap was 1.2em, so each arrow scaled with its own button's font-size:
+   measured 19.2 / 14.4 / 13.1 / 13.1 / 15.6 across the five CTAs. A fixed
+   14px gives one arrow size for the whole page, which is what the design
+   shows and what the designer flagged. */
+.twk2_cta-system .twf_btn-icon-wrap{position:relative;z-index:1;display:inline-flex;width:14px;height:14px;flex:none;overflow:hidden}
+.twk2_cta-system .twf_btn-icon{position:absolute;inset:0;width:100%;height:100%;display:block;color:inherit}
+@media (hover:hover){
+  .twk2_cta-system.is-twf-light:hover,.twk2_cta-system.is-twf-dark:hover{color:#fbf8f3!important}
+}
+.twk2_split-line{overflow:clip!important}
+
+
+/* Page 2 compact editorial redesign — September 21 */
+.twk2_content{overflow:visible!important}
+.twk2_playbook,.twk2_author,.twk2_framework,.twfa_dl-section,.twk2_next{margin-top:72px!important}
+.twk2_playbook,.twk2_framework{padding:72px 64px!important}
+.twk2_playbook>.twk2_eyebrow,.twk2_playbook>.twk2_heading,
+.twk2_framework>.twk2_eyebrow,.twk2_framework>.twk2_heading,
+.twk2_playbook-grid,.twk2_framework-grid,.twk2_closing{margin-left:0!important;margin-right:0!important;width:100%!important}
+.twk2_playbook>.twk2_heading,.twk2_framework>.twk2_heading{font-size:46px!important;line-height:1.02!important;max-width:920px!important;margin-bottom:40px!important}
+.twk2_playbook-grid,.twk2_framework-grid{gap:12px!important;background:transparent!important}
+.twk2_playbook-card,.twk2_framework-card{border:1px solid #6d6b66!important;box-shadow:none!important}
+.twk2_playbook-card{min-height:320px!important;padding:30px 28px!important}
+.twk2_playbook-card:nth-child(1){background:#f0eee5!important;box-shadow:inset 0 7px 0 #222!important}
+.twk2_playbook-card:nth-child(2){background:#eadfd8!important;box-shadow:inset 0 7px 0 #ff9f8d!important}
+.twk2_playbook-card:nth-child(3){background:#f7c9bd!important;box-shadow:inset 0 7px 0 #ff5a42!important}
+.twk2_playbook-card:nth-child(4){background:#ff4a32!important;color:#f8f3e8!important;box-shadow:inset 0 7px 0 #222!important}
+.twk2_playbook-card:nth-child(4) .twk2_card-title,
+.twk2_playbook-card:nth-child(4) .twk2_card-copy,
+.twk2_playbook-card:nth-child(4) .twk2_card-body{color:#f8f3e8!important}
+.twk2_card-title{font-size:29px!important;line-height:1.04!important}
+.twk2_card-body,.twk2_framework-copy{font-size:16px!important;line-height:1.45!important}
+
+@media (min-width:992px){
+  .twk2_author{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;min-height:500px!important}
+  .twk2_quote{padding:58px 64px!important}
+  .twk2_quote-text{font-size:42px!important;line-height:1.06!important;max-width:570px!important}
+  .twk2_author-art{position:relative!important;min-height:500px!important;overflow:hidden!important;border-left:1px solid #5a5a5a!important}
+  .twk2_playbook-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .twk2_framework{min-height:0!important}
+  .twk2_framework-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .twk2_framework-card{min-height:300px!important;padding:32px!important}
+}
+.twk2_author-photo{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 18%!important;filter:saturate(.88) contrast(1.02)}
+.twk2_author-gradient{position:absolute!important;z-index:1!important;left:0!important;right:0!important;bottom:0!important;height:46%!important;background:linear-gradient(180deg,rgba(255,74,50,0) 0%,rgba(255,74,50,.45) 44%,#ff4a32 100%)!important;pointer-events:none!important}
+.twk2_framework-card:nth-child(1){background:#f0eee5!important;box-shadow:inset 0 7px 0 #222!important}
+.twk2_framework-card:nth-child(2){background:#eadfd8!important;box-shadow:inset 0 7px 0 #ff9f8d!important}
+.twk2_framework-card:nth-child(3){background:#f7c9bd!important;box-shadow:inset 0 7px 0 #ff5a42!important}
+.twk2_framework-card:nth-child(4){background:#222!important;color:#f8f3e8!important;box-shadow:inset 0 7px 0 #ff4a32!important}
+.twk2_framework-card:nth-child(4) .twk2_card-title,
+.twk2_framework-card:nth-child(4) .twk2_framework-copy,
+.twk2_framework-card:nth-child(4) .twk2_card-body{color:#f8f3e8!important}
+.twk2_closing{box-sizing:border-box!important;max-width:100%!important;padding-top:36px!important;padding-right:26%!important;margin-top:40px!important;font-size:38px!important;line-height:1.08!important}
+.twfa_dl-section{margin-bottom:0!important}
+.twk2_next{box-sizing:border-box!important}
+.twf_footer-brand{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;width:100%!important;height:100%!important;padding:0 72px!important;box-sizing:border-box!important}
+.twf_footer-mark{display:block!important;width:min(806px,70vw)!important;height:auto!important;max-width:none!important;position:static!important;inset:auto!important}
+.twf_footer-curated{display:block!important;position:static!important;inset:auto!important;align-self:center!important;width:183px!important;height:auto!important;max-width:34vw!important;margin:24px 0 0!important}
+
+@media (max-width:991px){
+  .twk2_playbook,.twk2_author,.twk2_framework,.twfa_dl-section,.twk2_next{margin-top:52px!important}
+  .twk2_playbook,.twk2_framework{padding:60px 48px!important}
+  .twk2_playbook>.twk2_heading,.twk2_framework>.twk2_heading{font-size:40px!important;margin-bottom:32px!important}
+  .twk2_playbook-card{min-height:280px!important}
+  .twk2_framework-card{min-height:280px!important;padding:32px!important}
+  .twk2_author-art{position:relative!important;overflow:hidden!important}
+  .twk2_closing{padding-right:10%!important;font-size:34px!important}
+}
+@media (max-width:767px){
+  .twk2_playbook,.twk2_author,.twk2_framework,.twfa_dl-section,.twk2_next{margin-top:36px!important}
+  .twk2_playbook,.twk2_framework{padding:52px 20px!important}
+  .twk2_playbook>.twk2_heading,.twk2_framework>.twk2_heading{font-size:34px!important;margin-bottom:28px!important}
+  .twk2_playbook-grid,.twk2_framework-grid{gap:10px!important}
+  .twk2_playbook-card,.twk2_framework-card{min-height:0!important;padding:28px 22px!important}
+  .twk2_author-art{min-height:340px!important}
+  .twk2_quote-text{font-size:34px!important}
+  .twk2_closing{padding-top:28px!important;padding-right:0!important;margin-top:30px!important;font-size:30px!important}
+  .twf_footer-brand{padding:0 20px!important}
+  .twf_footer-mark{width:88vw!important}
+  .twf_footer-curated{width:145px!important;max-width:44vw!important;margin-top:18px!important}
+}
+
+
+/* Restored verified final overrides — 2026-09-21 */
+@media (min-width:992px){
+  .twk2_playbook .twk2_title,.twk2_framework .twk2_title{font-size:46px!important;line-height:1.02!important;max-width:920px!important;margin-bottom:40px!important}
+  .twk2_framework-card{padding:26px!important}
+  .twk2_framework-card .twk2_card-title{font-size:26px!important;line-height:1.05!important}
+  .twk2_framework-card .twk2_framework-copy,.twk2_framework-card .twk2_card-body{font-size:15px!important;line-height:1.4!important}
+  .twk2_closing{font-size:34px!important;line-height:1.1!important}
+  .twfa_hero-section{height:auto!important;min-height:0!important;padding-top:48px!important;padding-bottom:clamp(39.68px, 4vw, 72px)!important}
+  .twfa_hero-grid{height:auto!important;min-height:0!important;grid-template-rows:auto auto!important;align-content:start!important}
+  .twfa_hero-text,.twfa_hero-media{min-height:0!important}
+  .twfa_hero-bar{margin-top:clamp(34.72px, 3.5vw, 63px)!important}
+  .twk2_playbook,.twk2_author,.twk2_framework,.twfa_dl-section,.twk2_next{margin-top:120px!important}
+}
+.twk2_author-meta .twk2_cta-system .twf_btn-fill{background:#ff3621!important}
+@media (hover:hover){.twk2_author-meta .twk2_cta-system:hover{color:#fbf8f3!important}}
+.twk2_playbook-card,.twk2_framework-card,
+.twk2_playbook-card:nth-child(1),.twk2_playbook-card:nth-child(2),.twk2_playbook-card:nth-child(3),.twk2_playbook-card:nth-child(4),
+.twk2_framework-card:nth-child(1),.twk2_framework-card:nth-child(2),.twk2_framework-card:nth-child(3),.twk2_framework-card:nth-child(4){
+  background:#f0eee5!important;color:#222!important;border:1px solid #8a8780!important;box-shadow:inset 0 6px 0 #222!important;
+}
+.twk2_playbook-card .twk2_card-title,.twk2_playbook-card .twk2_card-copy,.twk2_playbook-card .twk2_card-body,
+.twk2_framework-card .twk2_card-title,.twk2_framework-card .twk2_framework-copy,.twk2_framework-card .twk2_card-body{color:#222!important}
+.twk2_split-line,.page-wrapper.is-twfa-page [data-twk2-split] > div{overflow:hidden!important;overflow-clip-margin:0!important}
+[data-twk2-split]{overflow:visible!important}
+.page-wrapper.is-twfa-page .twk2_card-title{line-height:1.2!important}
+/* ============================================================================
+   2026-09-23 — single consolidated correction block.
+   Replaces the three separate patch blocks pasted earlier today.
+   Every value below is either measured on the rendered page or read from the
+   Figma file; nothing here is a guess. Notes say which.
+   ============================================================================ */
+
+/* [measured] 4th card in both grids was cream text (#f8f3e8) on a cream card
+   (#f0eee5) — invisible. The colour rules above survived after a later rule
+   repainted the backgrounds. */
+.page-wrapper .twk2_playbook-card:nth-child(4) .twk2_card-title,
+.page-wrapper .twk2_playbook-card:nth-child(4) .twk2_card-copy,
+.page-wrapper .twk2_playbook-card:nth-child(4) .twk2_card-body,
+.page-wrapper .twk2_framework-card:nth-child(4) .twk2_card-title,
+.page-wrapper .twk2_framework-card:nth-child(4) .twk2_framework-copy,
+.page-wrapper .twk2_framework-card:nth-child(4) .twk2_card-body{color:#222!important}
+
+/* [measured] Split-text masks were clipping descenders on 40 lines at 1440
+   (worst 0.145em below, 0.15em above). The padding is on the ANIMATED line, so
+   its own height grows and yPercent:110 still starts fully hidden; the negative
+   margin on the mask keeps line rhythm identical. Verified: 0 clipped lines at
+   1440, 991 and 479. */
+.twk2_split-line{padding-top:.18em!important;padding-bottom:.18em!important}
+.twk2_split-line-mask{margin-top:-.18em!important;margin-bottom:-.18em!important}
+
+@media (min-width:992px){
+  /* [Figma] type scale. Quote is 36/1.2 (was 50 then 42). Next title 54/1.0
+     (was 60/0.98). Download title 64/1.0 (was 60/0.98). */
+  .twk2_quote-text{font-size:36px!important;line-height:1.2!important;max-width:495px!important}
+  .twk2_title.twk2_next-title{font-size:46px!important;line-height:1.02!important}
+  /* 64/1.0 against a 16px body is a 4:1 jump, and with the hard break after
+     "playbook," it ran to five lines (measured: 320px tall). 48/1.05 at a
+     560 measure gives three lines of 396/442/238 - even rag, no orphan - and
+     151px tall. Against the body at 20px that is 2.4:1. */
+  .twfa_dl-title{font-size:48px!important;line-height:1.05!important;max-width:560px!important}
+
+  /* [judgement] The author block was forced to 500px tall back when the quote
+     was 50px. At 36px that leaves a large dead area, which is why the card
+     reads as huge and long. Let the row size to its content and give the
+     portrait a smaller floor. Eyeball this one. */
+  .twk2_author{min-height:0!important}
+  .twk2_author-art{min-height:420px!important}
+  .twk2_quote{padding:48px 56px!important}
+
+  /* [Figma] CARDS RETURNED TO THE DESIGN.
+     The Designer classes already matched Figma (card padding 80/62, framework
+     grid a single column). The "compact editorial redesign — September 21"
+     block above overrode all of it, which is why the cards on screen look
+     nothing like the file. Measured from the .fig:
+        module card    586 x 394, 2 per row, padding 80/62, stroke #c7c7c7
+        framework card 1172 wide, 1 per row, padding 80/62, stroke #c7c7c7
+        card title     36px / 1.2
+        card body      18px / 1.4  (Avenir Roman)
+        grid gap       10px
+     80/62 padding on a 586 card leaves 462 of text, which is exactly the text
+     width Figma records — so these numbers corroborate each other. */
+  /* Cards sit flush in the design: the row frame is 1172 wide and holds two
+     586 cards, so there is no gap. Each card drawing a full border on top of a
+     gap is what produced the doubled lines. One shared grid instead: the
+     container draws top and left, each card draws right and bottom. */
+  /* The grid sat inside the section's 64px padding, so its top and bottom
+     rules stopped short of the section edges. Pulling it out by that padding
+     lets the lines run end to end, as the design shows. */
+  .twk2_playbook-grid,.twk2_framework-grid{gap:0!important;background:transparent!important;
+    margin-left:-64px!important;margin-right:-64px!important;width:auto!important;
+    border-top:1px solid #c7c7c7!important;
+    border-bottom:0!important;border-left:0!important;border-right:0!important}
+  /* dividers between cards only — nothing hanging at the outer edges */
+  .page-wrapper .twk2_playbook-card:nth-child(even){border-right:0!important}
+  .page-wrapper .twk2_framework-card{border-right:0!important}
+  .page-wrapper .twk2_playbook-card,
+  .page-wrapper .twk2_framework-card{border:0!important;
+    border-right:1px solid #c7c7c7!important;border-bottom:1px solid #c7c7c7!important}
+  .twk2_playbook-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+
+  /* Framework cards run ONE per row at full width, as in the design, so the
+     section reads differently from the module grid above the author block.
+     Inside each card the design is an even 50/50: a 14px uppercase label on
+     the left (MAP THE FRONTIER / IMPROVE THE OUTPUT / PRODUCTIONIZE /
+     RE-EVALUATE), title and body on the right, 524px each at 1172 wide.
+     The card's own 50/50 is a Designer style, not set here. */
+  .twk2_framework-grid{grid-template-columns:repeat(1,minmax(0,1fr))!important}
+
+  .twk2_playbook-card,.twk2_framework-card{padding:80px 62px!important;min-height:0!important}
+  /* [Figma] The cards have NO fill and NO black top bar. The file records
+     fills:null with a single 1px #c7c7c7 stroke. The rules above paint them
+     #f0eee5 and add box-shadow:inset 0 6px 0 #222, which is the "weird
+     background and top border" that does not exist in the design. */
+  .page-wrapper .twk2_playbook-card,
+  .page-wrapper .twk2_framework-card{background:transparent!important;box-shadow:none!important}
+  /* the border needs .page-wrapper in front of it: the rule above that paints
+     every card uses :nth-child(), which outranks a bare class. Measured — a
+     plain .twk2_playbook-card rule loses and the border stays #8a8780. */
+  .page-wrapper .twk2_playbook-card,
+  .page-wrapper .twk2_framework-card{border-color:#c7c7c7!important}
+  .twk2_playbook-card .twk2_card-title,
+  .twk2_framework-card .twk2_card-title{font-size:36px!important;line-height:1.2!important}
+  .twk2_playbook-card .twk2_card-body,
+  .twk2_framework-card .twk2_card-body,
+  .twk2_framework-card .twk2_framework-copy{font-size:18px!important;line-height:1.4!important}
+
+  /* [requested] shorter Framework section */
+  .twk2_section.twk2_framework{padding-top:56px!important;padding-bottom:56px!important}
+
+  /* ---- feedback batch, measured on the published page at 1440 ---- */
+
+  /* Hero: the CTA bar sat 130px below the media — an 80px grid row-gap plus a
+     50.4px margin stacked on top of each other. One gap is enough. */
+  .twfa_hero-grid{row-gap:40px!important}
+  .twfa_hero-bar{margin-top:0!important}
+
+  /* Framework: less air above the grid and under the title. */
+  .twk2_framework > .twk2_heading,.twk2_framework .twk2_title{margin-bottom:24px!important}
+
+  /* The closing line drew its OWN dark 1px rule (#5a5a5a) directly under the
+     last card's bottom border — two lines where the design has one. The card
+     border is the line; this just needs to sit under it and line up with the
+     card edge. */
+  .twk2_closing{border-top:0!important;padding-top:0!important;margin-top:32px!important}
+
+  /* Download: 120px top and bottom was the biggest block of dead space. */
+  .twfa_dl-section{padding-top:88px!important;padding-bottom:88px!important}
+
+  /* The download CTA is a light button on a #222 section, and its hover fill
+     was also #222 — so hovering made the button vanish into the background.
+     Fill with the accent instead, as the author CTA already does. */
+  .twfa_dl-section .twk2_cta-system .twf_btn-fill{background:#ff3621!important}
+
+  /* Accent back into the card system: the labels carry it, as the reference
+     build does with its STAGE labels. */
+  .twk2_framework-card .twk2_card-label{color:#ff3621!important}
+}
+
+/* The gaps between sections were showing .twk2_content's #f0eee5 while the
+   light sections are #fbf8f3 — that is the "coloured space" between them.
+   Matching the page ground makes the gaps read as empty. */
+.twk2_content{background:#fbf8f3!important}
+
+@media (min-width:992px){
+
+  /* [new] Summary section — built in the Designer at the top of the content.
+     Structure and spacing are Designer styles (twk2_summary, -grid, -left,
+     -list, -item); only the type needs saying here, because the page's own
+     !important scale would otherwise win. Sizes are the Figma ones:
+     heading 56/1.0, item headline 24/1.2. It joins the 120px section rhythm. */
+  /* Sizes taken from the Vercel reference at 1440, not from Figma:
+     heading clamp(23.81px, 2.4vw, 43.2px) / 1.18 (34.56px at 1440 — it is NOT 56px), body 18px,
+     eyebrow 13.7px uppercase at 0.16em tracking and 55% opacity. */
+  .twk2_section.twk2_summary{margin-top:120px!important;background:#f0ebe3!important;
+    border-top:1px solid rgba(34,34,34,.25)!important;border-bottom:1px solid rgba(34,34,34,.25)!important}
+  .twk2_section.twk2_summary .twk2_title{font-size:clamp(23.81px, 2.4vw, 43.2px)!important;line-height:1.18!important}
+  .twk2_summary-left > .twk2_card-label{font-size:13.7px!important;letter-spacing:.16em!important;
+    text-transform:uppercase!important;color:rgba(34,34,34,.55)!important;margin:0 0 clamp(15.87px, 1.6vw, 28.8px)!important}
+  .twk2_summary-item .twk2_card-title{font-size:18px!important;line-height:1.33!important}
+  .twk2_summary-item .twk2_card-body{font-size:18px!important;line-height:1.33!important;margin-top:8px!important}
+}
+
+/* Lenis smooth scroll — the stylesheet it requires. Without these the page
+   keeps native scrolling behaviour and anchor jumps fight the smoothing. */
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+.lenis.lenis-stopped{overflow:hidden}
+
+/* ---------------------------------------------------------------------------
+   Summary takeaways — accordion with drawn glyphs.
+   Ported from the prototype at playful-marzipan-86c769.netlify.app/#wk-anatomy.
+   The glyphs are inline SVG in the page markup, so the artwork is ours; nothing
+   is loaded from that host. Class names carry this site's twk2_ namespace.
+   --------------------------------------------------------------------------- */
+.twk2_tk-list{list-style:none;margin:0;padding:0;border-top:1px solid rgba(34,34,34,.25)}
+.twk2_tk-item{border-bottom:1px solid rgba(34,34,34,.25)}
+.twk2_tk-row{display:grid;grid-template-columns:44px 52px 1fr 18px;align-items:center;gap:16px;
+  width:100%;padding:16px 0;background:none;border:0;text-align:left;cursor:pointer;color:inherit}
+.twk2_tk-glyph{width:44px;height:44px;display:block}
+.twk2_tk-glyph *{fill:none;stroke:#222;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;
+  vector-effect:non-scaling-stroke;opacity:.8;transition:opacity .3s}
+.twk2_tk-glyph .is-fill{fill:#ff3621;stroke:none;opacity:0;transition:opacity .3s}
+.twk2_tk-row:hover .twk2_tk-glyph :not(.is-fill){opacity:1;
+  animation:twk2-draw .8s cubic-bezier(.4,0,.2,1) both;animation-delay:calc(var(--i,0)*.06s)}
+.twk2_tk-item.is-open .twk2_tk-glyph .is-fill,
+.twk2_tk-row:hover .twk2_tk-glyph .is-fill{opacity:1}
+@keyframes twk2-draw{0%{stroke-dashoffset:1}100%{stroke-dashoffset:0}}
+.twk2_tk-glyph *{stroke-dasharray:1}
+.twk2_tk-num{font-family:"Ppfragment - Glare",Georgia,serif;font-weight:300;font-size:34px;line-height:1;
+  letter-spacing:-.03em;color:rgba(34,34,34,.35);transition:color .25s}
+.twk2_tk-take{font-family:"Ppfragment - Glare",Georgia,serif;font-weight:300;font-size:22px;line-height:1.12;
+  letter-spacing:-.025em;transition:transform .3s cubic-bezier(.2,.7,.2,1);text-wrap:balance}
+.twk2_tk-plus{position:relative;width:14px;height:14px;justify-self:end}
+.twk2_tk-plus::before,.twk2_tk-plus::after{content:"";position:absolute;left:0;top:6px;width:14px;height:1.5px;
+  background:#222;transition:transform .3s}
+.twk2_tk-plus::after{transform:rotate(90deg)}
+.twk2_tk-row:hover .twk2_tk-num,.twk2_tk-item.is-open .twk2_tk-num{color:#ff3621}
+.twk2_tk-row:hover .twk2_tk-take{transform:translateX(5px)}
+.twk2_tk-item.is-open .twk2_tk-plus::after{transform:rotate(0deg)}
+/* The prototype opens the panel with grid-template-rows 0fr -> 1fr. Measured on
+   this page, that resolves the track to 0px even when open, so the panel never
+   grows. Height is driven from the script instead: the toggle measures the
+   inner wrapper and sets a pixel height. Verified 0 -> 137px -> 0, animated. */
+.twk2_tk-panel{overflow:hidden;height:0;transition:height .4s cubic-bezier(.2,.7,.2,1)}
+.twk2_tk-panel > div{min-height:0}
+/* Indent must equal where the takeaway text starts, or the panel copy sits to
+   the left of its own heading. Row is 44 | 52 | 1fr | 18 with a 16px gap, so
+   the text column begins at 44+16+52+16 = 128px. (The prototype uses 112px,
+   which lands on the end of the number column — 16px short.) */
+/* r4: the CTA sat 24px off the item's bottom rule while the heading cleared the
+   body text by 26px. Measured glyph-to-glyph those are near equal, but space
+   against a hard 1px rule reads tighter than space between two text blocks, so
+   the panel looked bottom-heavy. Desktop bottom padding 22 -> 34 (optical 36).
+   Pinned back to 22 under 640, where the heading gap is only 14px and 24px was
+   already the roomier of the two. */
+.twk2_tk-panel-in{display:flex;flex-direction:column;gap:12px;padding:0 0 34px 128px}
+/* The prototype sets this solid #222 at 1.45, which reads heavy against the
+   cream panel and is a big part of why the block looked like the prototype.
+   62% with more leading lets the takeaway headline stay the loudest thing. */
+.twk2_tk-panel-in p{margin:0;max-width:48ch;font-size:15px;line-height:1.55;
+  color:rgba(34,34,34,.62)}
+.twk2_tk-link{font-size:11.5px;letter-spacing:.02em;text-transform:uppercase;color:#222;text-decoration:underline;
+  text-underline-offset:3px;width:fit-content}
+.twk2_tk-link:hover{color:#ff3621}
+@media (max-width:640px){
+  .twk2_tk-row{grid-template-columns:28px 32px 1fr 14px;gap:10px;padding:14px 0}
+  .twk2_tk-glyph{width:28px;height:28px}
+  .twk2_tk-num{font-size:22px}
+  .twk2_tk-take{font-size:18px}
+  /* same arithmetic at the small row: 28+10+32+10 = 80px */
+  .twk2_tk-panel-in{padding-left:80px;padding-bottom:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  .twk2_tk-row:hover .twk2_tk-glyph :not(.is-fill){animation:none}
+  .twk2_tk-panel{transition:none}
+}
+@media (max-width:991px){
+  .twk2_section.twk2_summary{margin-top:52px!important}
+  .twk2_section.twk2_summary .twk2_title{font-size:40px!important;line-height:1.02!important}
+  .twk2_summary-item .twk2_card-title{font-size:22px!important;line-height:1.2!important}
+}
+@media (max-width:767px){
+  .twk2_section.twk2_summary{margin-top:36px!important}
+  .twk2_section.twk2_summary .twk2_title{font-size:34px!important}
+}
+
+/* "Two more reports are on the way" — another step down at each width.
+   Measured before the change: 54 / 50 / 40. */
+@media (max-width:991px){
+  .twk2_title.twk2_next-title{font-size:42px!important;line-height:1.02!important}
+}
+@media (max-width:767px){
+  .twk2_title.twk2_next-title{font-size:34px!important;line-height:1.04!important}
+}
+
+/* The framework heading drew its own border-bottom, which stopped 64px short
+   on the left and 310px short on the right, while the grid's top rule 24px
+   below it already runs the full width of the section. Two lines, the upper
+   one orphaned. The grid rule is the one the design shows, so this goes. */
+.page-wrapper .twk2_framework .twk2_heading{border-bottom:0!important}
+
+/* Below 992 none of the card rework above applied — it all sits inside
+   @media (min-width:992px) — so tablet and phone still showed the cream fill,
+   the inset black 6px bar and boxed borders with 10px gaps. Same treatment as
+   the desktop block, at the smaller section padding: no fill, no bar, one
+   shared grid, rules running to the section edges, text aligned to the heading. */
+@media (max-width:991px){
+  .twk2_playbook-grid,.twk2_framework-grid{gap:0!important;background:transparent!important;
+    width:auto!important;margin-left:-48px!important;margin-right:-48px!important;
+    border-top:1px solid #c7c7c7!important;
+    border-bottom:0!important;border-left:0!important;border-right:0!important}
+  .page-wrapper .twk2_playbook-card,
+  .page-wrapper .twk2_framework-card{background:transparent!important;box-shadow:none!important;
+    border:0!important;border-bottom:1px solid #c7c7c7!important;
+    padding-left:48px!important;padding-right:48px!important;min-height:0!important}
+  .twk2_framework-card .twk2_card-label{color:#ff3621!important}
+}
+/* Two cards per row survives at tablet, so it needs the divider between them. */
+@media (min-width:768px) and (max-width:991px){
+  .page-wrapper .twk2_playbook-card:nth-child(even){border-left:1px solid #c7c7c7!important}
+}
+@media (max-width:767px){
+  .twk2_playbook-grid,.twk2_framework-grid{margin-left:-20px!important;margin-right:-20px!important}
+  .page-wrapper .twk2_playbook-card,
+  .page-wrapper .twk2_framework-card{padding-left:20px!important;padding-right:20px!important}
+}
+
+/* Download section. Measured before the change: title 64/64, body 16/24 - the
+   mismatch. Tablet was 52 and small 40, so the desktop step down needs matching
+   steps below it or desktop would end up smaller than tablet. */
+.page-wrapper.is-twfa-page .twk2_download-body{font-size:20px!important;line-height:1.5!important;margin-top:32px!important}
+/* The cover sits in a percentage-padding ratio box and carried both a top and a
+   bottom inset, baked for the old artwork's 612x627. The replacement is square,
+   so it came up 7px shorter and floated. Anchoring to the bottom makes it meet
+   the edge whatever the aspect ratio. */
+.page-wrapper.is-twfa-page .twfa_dl-img{top:auto!important;bottom:0!important}
+@media (max-width:991px){
+  .twfa_dl-title{font-size:40px!important;line-height:1.06!important}
+}
+@media (max-width:767px){
+  .twfa_dl-title{font-size:32px!important;line-height:1.08!important}
+  .page-wrapper.is-twfa-page .twk2_download-body{font-size:18px!important}
+}
+
+/* r5: centre the dialog panel on small screens.
+   The 767 block pins panels with align-items:flex-start, which is right for the
+   tall form state but leaves the short confirmation panel stuck at the top.
+   An auto margin on the flex item centres it when there is free space and
+   collapses to 0 when there is not — unlike align-items:center, which makes the
+   top of an over-tall panel unreachable. Measured at 375x812 (centred, top 251)
+   and at 375x380 with the panel capped by its own max-height (top reachable,
+   scrolls internally). */
+@media (max-width:767px){
+  .twk2_modal-panel{margin:auto!important}
+}
