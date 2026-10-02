@@ -600,6 +600,7 @@
     );
     shake();
     say(msg || 'Something went wrong — pull the tab to try again');
+    document.dispatchEvent(new CustomEvent('bread:submit-failed'));
   }
 
   function updateRevealTexts(n, nameOverride) {
