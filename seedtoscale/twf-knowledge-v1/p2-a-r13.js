@@ -1,0 +1,216 @@
+/* p2-a-r13 = r12 with summary accordion copy from the client (2026-11-25):
+   01 retitled "Understanding the agent data layer.", its text extended (client
+   wording, kept as given) and its link removed; 02's text replaced; 03's link hidden;
+   04's text shortened and link label now "Download thesis". Link 02 unchanged. Nothing else differs. */
+/* p2-a-r12 = r11 with the summary accordion copy from the client doc (2026-11-24):
+   01, 03 and 04 retitled, 04's text replaced, and 03's market-map link restored
+   now that #twk2-market-map exists. Links 01, 02 and 04 unchanged. Nothing else differs.
+   p2-a-r11 = r10 with item 02 redrawn as six nodes joined by one path (the
+   client asked for at least six dots: "six decisions"). Own drawing, no library.
+   Nothing else differs.
+   p2-a-r10 = r9 with the 03 "Explore the market map" link left out (no market
+   map section yet). Nothing else differs.
+   p2-a-r8: The Working Knowledge No. 02, "Agents Need a Scalable Data World".
+   Supersedes r7 (r7 handled one author CTA; r8 enhances both).
+   Derived from p2-a-r6 (No. 01). Only content changed, no behaviour:
+   - CTA labels read "Download Thesis" (the issue is a thesis, not a report).
+   - Summary accordion rows 01-04 carry the No. 02 copy and links.
+   - Accent runs list the No. 02 headings.
+   - Anchors use the twk2- namespace (twk2-parts, twk2-decisions,
+     twk2-market-map, twk2-download); the doc's bare #parts etc. are not used
+     because sitewide scripts query ids globally.
+   - The author-photo injection is removed: r6 hard-coded Tarun Raheja's photo
+     and alt text, and No. 02 has two authors and no supplied photos.
+   Glyph artwork is reused from r6 by position, unreviewed for No. 02. */
+(function(){
+  var root=document.querySelector('.page-wrapper.is-twfa-page');
+  if(root){
+    root.dataset.twfAnimReady='1';
+    root.__twfHoverBound=true;
+  }
+
+  function iconMarkup(direction){
+    var path=direction==='down'
+      ? '<path d="M8 3v10M4.5 9.5 8 13l3.5-3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>'
+      : '<path d="M3 8h10M9 4.5 13 8l-4 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>';
+    return '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true" data-button-icon class="twf_btn-icon">'+path+'</svg>';
+  }
+  function buttonMarkup(label,direction){
+    return '<div class="twf_btn-inner"><div data-button-fill class="twf_btn-fill"></div><div class="twf_btn-label-wrap"><div data-button-label class="twf_btn-label"><p class="twf_btn-label-text">'+label+'</p></div><div aria-hidden="true" data-button-label-hover class="twf_btn-label-hover"><p class="twf_btn-label-text">'+label+'</p></div></div><div class="twf_btn-icon-wrap">'+iconMarkup(direction)+'</div></div>';
+  }
+  function enhanceButton(el,label,variant,direction){
+    if(!el)return;
+    el.setAttribute('data-button','');
+    el.setAttribute('data-button-arrow',direction);
+    el.removeAttribute('twf-anim');
+    el.classList.add('twk2_cta-system','twf_cta','w-inline-block');
+    el.classList.remove('w-button','is-twf-light','is-twf-dark');
+    el.classList.add(variant==='dark'?'is-twf-dark':'is-twf-light');
+    el.innerHTML=buttonMarkup(label,direction);
+  }
+  enhanceButton(document.querySelector('.twfa_hero-bar-cta'),'Download Thesis','dark','down');
+  /* No. 02 has two authors, so two profile CTAs; each keeps the label set in the Designer. */
+  document.querySelectorAll('.twk2_author-meta .twf_cta').forEach(function(a){
+    enhanceButton(a,(a.textContent||'View Profile').replace(/\s+/g,' ').trim(),'light','right');
+  });
+  enhanceButton(document.querySelector('.twfa_dl-section .twf_cta'),'Download Thesis','light','down');
+  enhanceButton(document.querySelector('.twk2_notify'),'Notify Me','dark','right');
+  /* Summary section CTA: same button as the other four, not a bare text link.
+     enhanceButton builds the fill, the sliding label and the two animated
+     arrows, and initExactButtons below wires the GSAP hover. */
+  enhanceButton(document.querySelector('.twk2_summary-left a'),'Download Thesis','dark','down');
+
+  /* Summary takeaways: drawn glyphs + accordion, ported from the prototype.
+     The SVG artwork is inline here, so it is ours — nothing is fetched from
+     the prototype's host. Styling lives in the head under .twk2_tk-*.
+     This is the page's contents list: one entry per section, in page order,
+     and each entry's link goes to the section its own text is about. An
+     earlier version reused the framework's four card titles here and then
+     sent each one to a different section, so the text and the link under it
+     described different things. Each body below paraphrases that section's
+     own copy rather than introducing a new claim. */
+  /* r9: 03 now carries the stack of three layers (moved from 02); the Phosphor
+     arrows-clockwise glyph that was on 03 is gone, and with it the per-item vb,
+     so all four glyphs use the default '0 0 48 48'.
+     r9: 02 is Lucide's git-branch (ISC Licence; portions Copyright (c) Cole Bemis
+     2013-2022 as Feather, MIT, and Lucide Contributors 2022), redrawn x2 from its
+     24 grid onto the 48 grid with the same 6..42 bounds, as stroked parts that draw
+     in order; the accent sits on the trunk.
+     r6: 02 is a stack of three layers in place of r5's coins, which read as money
+     rather than accrual. Drawn on the 48 grid with the same 6..42 bounds as 01.
+     The layers are listed and staggered bottom-up (--i 0, 2, 4) so the stack
+     builds from its base on hover; that runs 1.04s, the same as 01. The accent
+     is r=3 to match the dots on 01 and 04. */
+  var TK=[
+    {n:'01',t:'Understanding the agent data layer.',
+     w:'The report follows agent state from creation to reuse, compares six data decisions across six functions, maps the companies and projects providing those capabilities, and examines how maintained data supports reliable context and the takeaways for the founders.',
+     g:'<rect x="6" y="6" width="36" height="36" pathLength="1" style="--i:0"></rect><line x1="30" y1="6" x2="30" y2="42" pathLength="1" style="--i:1"></line><line x1="38" y1="6" x2="38" y2="42" pathLength="1" style="--i:2"></line><line x1="6" y1="18" x2="42" y2="18" pathLength="1" style="--i:3"></line><line x1="6" y1="30" x2="42" y2="30" pathLength="1" style="--i:4"></line><circle class="is-fill" cx="34" cy="12" r="3" pathLength="1" style="--i:5"></circle>'},
+    {n:'02',t:'Six decisions for managing agent state.',
+     w:'Every agent workload has to decide six things about its state: what the object is, which version is current, how it is found, where it lives and for how long, who can read or change it, and what it depends on. The questions are the same for every workload, but the answers differ.',
+     g:'<circle cx="12" cy="9" r="3.5" pathLength="1" style="--i:0"></circle><line x1="15.5" y1="9" x2="32.5" y2="9" pathLength="1" style="--i:0.5"></line><circle cx="36" cy="9" r="3.5" pathLength="1" style="--i:1"></circle><line x1="36" y1="12.5" x2="36" y2="20.5" pathLength="1" style="--i:1.5"></line><circle cx="36" cy="24" r="3.5" pathLength="1" style="--i:2"></circle><line x1="32.5" y1="24" x2="15.5" y2="24" pathLength="1" style="--i:2.5"></line><circle cx="12" cy="24" r="3.5" pathLength="1" style="--i:3"></circle><line x1="12" y1="27.5" x2="12" y2="35.5" pathLength="1" style="--i:3.5"></line><circle cx="12" cy="39" r="3.5" pathLength="1" style="--i:4"></circle><line x1="15.5" y1="39" x2="32.5" y2="39" pathLength="1" style="--i:4.5"></line><circle cx="36" cy="39" r="3.5" pathLength="1" style="--i:5"></circle><circle class="is-fill" cx="12" cy="9" r="3" pathLength="1" style="--i:5"></circle>'},
+    {n:'03',t:'Companies building the agent data layer, mapped.',
+     w:'Explore thirteen capability areas, from repositories and memory to retrieval and storage. The map shows companies and projects providing these capabilities. The report then asks where a recurring customer problem could support an independent product.',
+     g:'<path d="M6 32L24 42L42 32" pathLength="1" style="--i:0"></path><path d="M6 24L24 34L42 24" pathLength="1" style="--i:2"></path><path d="M6 16L24 6L42 16L24 26Z" pathLength="1" style="--i:4"></path><circle class="is-fill" cx="24" cy="16" r="3" pathLength="1" style="--i:5"></circle>'},
+    {n:'04',t:'Three takeaways.',
+     w:'What changed? Where does the opportunity lie? What remains unproven? The report ends with three takeaways for founders building the agent data layer, drawing on everything before them.',
+     g:'<rect x="7" y="7" width="34" height="34" pathLength="1" style="--i:0"></rect><path d="M15 25 L22 32 L34 17" pathLength="1" style="--i:1"></path><circle class="is-fill" cx="34" cy="17" r="3" pathLength="1" style="--i:2"></circle>'}
+  ];
+  /* Each entry links to the section it summarises. */
+  var TK_LINK=[
+    /* r13: item 01 has no link (client, 2026-11-25). */
+    null,
+    {h:'#twk2-decisions',l:'Explore the six decisions \u2192'},
+    /* r13: item 03's link hidden (client, 2026-11-25). */
+    null,
+    {h:'#twk2-download',l:'Download thesis \u2192'}
+  ];
+  /* Accent runs. The design colours the opening clause of each heading
+     #ff3621 and the remainder #222 — a character-style override in the Figma
+     file, not a separate element. Each pair below is [heading, red part] read
+     out of that file. The last two are inferred from their siblings: the file
+     has no override recorded for them.
+     This runs before SplitText so the spans are carried into the line masks. */
+  var RED=[
+    /* No. 02. The copy doc says "the first phrase of each heading" without
+       naming where it ends; the runs below are the assistant's reading and are
+       unconfirmed. The doc also calls some runs orange and some red; twk2_accent
+       is the one colour (#ff3621) this stylesheet has. */
+    ['Agent state becomes infrastructure','Agent state'],
+    ['Making state reusable','Making state'],
+    ['Different architectures, recurring decisions','Different architectures'],
+    ['A map of the agent data layer','A map'],
+    ['Data makes context durable','Data makes context'],
+    ['Takeaway. What founders still need to prove','Takeaway.'],
+    ['Six decisions for managing agent state.','Six decisions'],
+    ['One more report is on the way. Get word the day it ships.','One more report']
+  ];
+  function paintAccent(el,red){
+    var raw=el.textContent;
+    var re=new RegExp(red.split(/\s+/).map(function(w){
+      return w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    }).join('\\s+'));
+    var m=re.exec(raw);
+    if(!m)return;
+    var start=m.index,end=start+m[0].length,pos=0;
+    var walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null),nodes=[],n;
+    while((n=walker.nextNode()))nodes.push(n);
+    nodes.forEach(function(tn){
+      var t=tn.nodeValue,a=pos,b=pos+t.length;pos=b;
+      var s=Math.max(start,a),e=Math.min(end,b);
+      if(s>=e)return;
+      var frag=document.createDocumentFragment();
+      if(s>a)frag.appendChild(document.createTextNode(t.slice(0,s-a)));
+      var span=document.createElement('span');
+      span.className='twk2_accent';
+      span.textContent=t.slice(s-a,e-a);
+      frag.appendChild(span);
+      if(e<b)frag.appendChild(document.createTextNode(t.slice(e-a)));
+      tn.parentNode.replaceChild(frag,tn);
+    });
+  }
+  Array.prototype.forEach.call(
+    document.querySelectorAll('.twk2_card-title,.twk2_title,.twk2_framework-title'),
+    function(el){
+      if(el.querySelector('.twk2_accent'))return;
+      var flat=el.textContent.replace(/\s+/g,' ').trim();
+      for(var i=0;i<RED.length;i++){
+        if(flat===RED[i][0]){paintAccent(el,RED[i][1]);break;}
+      }
+    });
+
+  /* Anchors for the takeaway links. Webflow's API cannot write an element id
+     (it is a setting, not an attribute), so they are assigned here. */
+  [['.twk2_playbook','twk2-parts'],
+   ['.twk2_framework','twk2-decisions'],
+   ['[data-twk2-market]','twk2-market-map'],
+   ['.twfa_dl-section','twk2-download']].forEach(function(p){
+    var el=document.querySelector(p[0]);
+    if(el&&!el.id)el.id=p[1];
+  });
+
+  var tkList=document.querySelector('.twk2_summary-list');
+  if(tkList){
+    tkList.innerHTML='<ol class="twk2_tk-list">'+TK.map(function(it,i){
+      var id='twk2-tk-p'+(i+1);
+      return '<li class="twk2_tk-item">'+
+        '<button class="twk2_tk-row" type="button" aria-expanded="false" aria-controls="'+id+'">'+
+          '<svg class="twk2_tk-glyph" viewBox="'+(it.vb||'0 0 48 48')+'" aria-hidden="true">'+it.g+'</svg>'+
+          '<span class="twk2_tk-num">'+it.n+'</span>'+
+          '<span class="twk2_tk-take">'+it.t+'</span>'+
+          '<span class="twk2_tk-plus" aria-hidden="true"></span>'+
+        '</button>'+
+        '<div class="twk2_tk-panel" id="'+id+'"><div><div class="twk2_tk-panel-in">'+
+          '<p>'+it.w+'</p>'+
+          (TK_LINK[i]?'<a class="twk2_tk-link" href="'+TK_LINK[i].h+'">'+TK_LINK[i].l+'</a>':'')+
+        '</div></div></div></li>';
+    }).join('')+'</ol>';
+    tkList.addEventListener('click',function(e){
+      var row=e.target.closest('.twk2_tk-row');
+      if(!row||!tkList.contains(row))return;
+      var item=row.parentElement,panel=item.querySelector('.twk2_tk-panel');
+      var open=item.classList.toggle('is-open');
+      row.setAttribute('aria-expanded',open?'true':'false');
+      /* height is set here, not in CSS: the 0fr/1fr grid trick resolves to 0px
+         on this page, so the panel is measured and given a pixel height. */
+      panel.style.height=open?panel.firstElementChild.scrollHeight+'px':'0px';
+    });
+    window.addEventListener('resize',function(){
+      Array.prototype.forEach.call(tkList.querySelectorAll('.twk2_tk-item.is-open'),function(it){
+        var p=it.querySelector('.twk2_tk-panel');
+        p.style.height=p.firstElementChild.scrollHeight+'px';
+      });
+    });
+  }
+
+  var splitSelector='.twfa_hero-title,.twfa_hero-body,.twk2_title,.twk2_card-title,.twk2_card-body,.twk2_quote-text,.twk2_closing,.twfa_dl-title,.twk2_download-body,.twk2_next-title';
+  Array.prototype.forEach.call(document.querySelectorAll(splitSelector),function(el){
+    el.style.visibility='hidden';
+    el.setAttribute('data-twk2-split','');
+  });
+
+  var footer=document.querySelector('.twf_footer-pull');
+  if(footer){
+    footer.className='twf_footer-pull is-twf-reveal';
+    footer.innerHTML='<div class="twf_footer-brand"><img src="https://cdn.prod.website-files.com/6410c40c8f9e67469272e6db/6aaf840f76ee55a919a91b4c_twf-sts-wordmark-cream.svg" loading="lazy" alt="SeedToScale" class="twf_footer-mark"><img src="https://cdn.prod.website-files.com/6410c40c8f9e67469272e6db/64272120257befb8ee0cff4d_curated-by-accel.svg" loading="lazy" alt="Curated by Accel" class="twf_footer-curated"></div>';
+  }
+})();
